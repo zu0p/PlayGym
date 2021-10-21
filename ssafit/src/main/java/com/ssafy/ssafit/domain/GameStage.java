@@ -16,22 +16,17 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @ToString
-public class Score {
+public class GameStage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id; // 기본키
 	
-	private int star;
+	@NotNull
+	private int stage;
 	
 	@ManyToOne
-	@JoinColumn(name="gameid")
+	@JoinColumn(name="gid")
 	@NotNull
-	private GameStage gameId;
-	
-	@ManyToOne
-	@JoinColumn(name="subid")
-	@NotNull
-	private SubUser subId;
-	
+	private Game gid;
 }

@@ -23,7 +23,6 @@ public class Game {
 	@NotNull
 	private String gameName;
 	
-	@NotNull
-	private int stage;
+	
 	
 }
