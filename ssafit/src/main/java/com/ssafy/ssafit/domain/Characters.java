@@ -1,5 +1,6 @@
 package com.ssafy.ssafit.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @ToString
-public class Character {
+public class Characters {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,6 @@ public class Character {
 	private int price;
 	
 	@NotNull
-	private int imageLink;
+	private String imageLink;
 
 }

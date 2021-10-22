@@ -16,12 +16,13 @@ spring:
 #      maximumPoolSize : 50
       
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
        show_sql: true
-#       format_sql: true
+       format_sql: true
 
         
 logging.level:

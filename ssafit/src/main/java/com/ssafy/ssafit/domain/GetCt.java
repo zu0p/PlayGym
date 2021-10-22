@@ -25,7 +25,7 @@ public class GetCt {
 	@ManyToOne
 	@JoinColumn(name="ctid")
 	@NotNull
-	private Character ctid;
+	private Characters ctid;
 	
 	@ManyToOne
 	@JoinColumn(name="sid")
