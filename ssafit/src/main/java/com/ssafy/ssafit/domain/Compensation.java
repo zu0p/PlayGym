@@ -27,7 +27,7 @@ public class Compensation {
 	@ManyToOne
 	private MainUser pid;
 	
-	@JoinColumn(name="pid")
+	@JoinColumn(name="sid")
 	@ManyToOne
 	private SubUser sid;
 }
