@@ -24,11 +24,10 @@ public class MotionModel {
 	
 	private String name;
 	
-	private String address;
+	private String modelLink;
+	private String mvLink;
 	
-	@ManyToOne
-	@JoinColumn(name="gid")
-	@NotNull
-	private Game gid;
+	private int ageStep;
+	
 
 }

@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.sun.istack.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,22 +14,20 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @ToString
-public class Score {
-
+public class Compensation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id; // 기본키
-	
+	private long cid;
 	private int exp;
+	private String title;
+	private String detail;
+	private boolean basic;
 	
+	@JoinColumn(name="pid")
 	@ManyToOne
-	@JoinColumn(name="gameid")
-	@NotNull
-	private GameStage gameId;
+	private MainUser pid;
 	
+	@JoinColumn(name="pid")
 	@ManyToOne
-	@JoinColumn(name="subid")
-	@NotNull
-	private SubUser subId;
-	
+	private SubUser sid;
 }

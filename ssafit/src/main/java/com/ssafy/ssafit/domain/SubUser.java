@@ -27,6 +27,11 @@ public class SubUser {
 	@JoinColumn(name="mainuser")
 	@NotNull
 	private MainUser mainUser;
+	
+	private int age;
+	private int tall;
+	private int weight;
+	private long cid;
 
 }
 

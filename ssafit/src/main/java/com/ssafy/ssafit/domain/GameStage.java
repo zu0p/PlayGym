@@ -23,7 +23,7 @@ public class GameStage {
 	private long id; // 기본키
 	
 	@NotNull
-	private int stage;
+	private int ageStep;
 	
 	@ManyToOne
 	@JoinColumn(name="gid")
