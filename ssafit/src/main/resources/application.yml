@@ -24,7 +24,9 @@ spring:
        show_sql: true
        format_sql: true
 
-        
+jwt:
+  secret: jwtsecret
+          
 logging.level:
   org.hibernate.SQL: error
   
