@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,15 +43,27 @@ public class UserController {
 	
 	 // 로그인
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> user) {
+    public Map<String, Object> login(@RequestBody Map<String, String> user) {
     	System.out.println("debug");
         MainUser member = userRepository.findByUserId(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        
+        Map<String, Object> list = new HashMap<String, Object>();
+        list.put("userId", member.getId());
+        list.put("email", member.getEmail());
+        list.put("name", member.getName());
+        list.put("phone", member.getPhone());
+        list.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        return list;
     }
-
+    
+    @GetMapping("/user/ds")
+    public String aa() {
+    	return "check";
+    }
+    
 	
 }
