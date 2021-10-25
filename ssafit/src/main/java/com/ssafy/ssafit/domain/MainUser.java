@@ -12,12 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +49,8 @@ public class MainUser implements UserDetails{
 	//nullable=false null을 넣은 엔티티를 생성하면 생성이 된 뒤 Repository에 전달되고,
 	//이 값이 DB에 넘어간 뒤에 예외가 발생해 위험한 오류
 	
-	@Column(unique=true, nullable=false)
+	@Column(unique=true)
+	@NotNull
 	private String userId;
 	
 	//유저 비밀번호
@@ -61,6 +62,8 @@ public class MainUser implements UserDetails{
 	private String name;
 	
 	//유저 이메일
+	
+	@Email
 	@NotNull
 	private String email;
 	

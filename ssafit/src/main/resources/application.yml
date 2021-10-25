@@ -16,9 +16,9 @@ spring:
 #      maximumPoolSize : 50
       
   jpa:
-    generate-ddl: true
+#    generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
        show_sql: true

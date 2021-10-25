@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +26,11 @@ public class Compensation {
 	
 	@JoinColumn(name="pid")
 	@ManyToOne
+	@NotNull
 	private MainUser pid;
 	
 	@JoinColumn(name="sid")
 	@ManyToOne
+	@NotNull
 	private SubUser sid;
 }
