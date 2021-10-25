@@ -1,8 +1,8 @@
 package com.ssafy.ssafit.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
+public interface MainUserService{
 
-public interface MainUserDetailsService {
-
-	public UserDetails loadMainUserid(String token);
+	public void deleteMember(long id);
+	
+	
 }

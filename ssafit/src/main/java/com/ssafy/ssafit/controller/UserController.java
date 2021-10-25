@@ -47,9 +47,11 @@ public class UserController {
 	                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
 	                .build()).getId();
 		} catch(ConstraintViolationException e) {
+			ret.put("detailError", "propertyNull");
 			ret.put("result","속성 값에 null이 존재합니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
 		}catch (DataIntegrityViolationException e) {
+			ret.put("detailError", "existId");
 			ret.put("result","이미 있는 아이디 입니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
 		} 
