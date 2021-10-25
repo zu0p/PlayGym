@@ -52,6 +52,7 @@ public class UserController {
         }
         
         Map<String, Object> list = new HashMap<String, Object>();
+        list.put("id", member.getId());
         list.put("userId", member.getId());
         list.put("email", member.getEmail());
         list.put("name", member.getName());
