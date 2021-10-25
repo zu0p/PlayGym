@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
@@ -35,8 +36,8 @@ public class UserController {
 	private final MainuserRepository userRepository;
 	
 	@PostMapping("/join")
-	public ResponseEntity<Map<String,Object>> join(@RequestBody Map<String, String> user) {
-		Map<String,Object> ret = new HashMap<String, Object>();
+	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
+//		Map<String,Object> ret = new HashMap<String, Object>();
 		try {
 			userRepository.save(MainUser.builder()
 	                .userId(user.get("userid"))
@@ -47,16 +48,12 @@ public class UserController {
 	                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
 	                .build()).getId();
 		} catch(ConstraintViolationException e) {
-			ret.put("detailError", "propertyNull");
-			ret.put("result","속성 값에 null이 존재합니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
+			
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"propertyNull"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}catch (DataIntegrityViolationException e) {
-			ret.put("detailError", "existId");
-			ret.put("result","이미 있는 아이디 입니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"existId"),HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
-		ret.put("result","회원가입이 완료되었습니다.");
-		return ResponseEntity.status(HttpStatus.OK).body(ret);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"회원가입이 완료되었습니다."),HttpStatus.OK);
 		
 		
 	}

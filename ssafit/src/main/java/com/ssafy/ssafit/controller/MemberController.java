@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.service.MainUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,15 @@ public class MemberController {
 	private final MainUserService mainUserService;
 	
 	@DeleteMapping("/delete")
-	public ResponseEntity<Map<String,Object>> deleteMember(@RequestParam long id){
+	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
 		Map<String,Object> ret = new HashMap<String, Object>();
 		try {
 			mainUserService.deleteMember(id);
 		} catch (Exception e) {
-			ret.put("result", "삭제하는데 문제가 발행했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
-		ret.put("result", "정상적으로 삭제되었습니다.");
-		return ResponseEntity.status(HttpStatus.OK).body(ret);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
 	
