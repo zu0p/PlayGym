@@ -51,10 +51,12 @@ public class UserController {
 	                .roles(Collections.singletonList("ROLE_USER")) // 理쒖큹 媛��엯�떆 USER 濡� �꽕�젙
 	                .build()).getId();
 		} catch(ConstraintViolationException e) {
-			ret.put("result","�냽�꽦 媛믪뿉 null�씠 議댁옱�빀�땲�떎.");
+			ret.put("detailError", "propertyNull");
+			ret.put("result","속성 값에 null이 존재합니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
 		}catch (DataIntegrityViolationException e) {
-			ret.put("result","�씠誘� �엳�뒗 �븘�씠�뵒 �엯�땲�떎.");
+			ret.put("detailError", "existId");
+			ret.put("result","이미 있는 아이디 입니다.");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ret);
 		} 
 		ret.put("result","�쉶�썝媛��엯�씠 �셿猷뚮릺�뿀�뒿�땲�떎.");
