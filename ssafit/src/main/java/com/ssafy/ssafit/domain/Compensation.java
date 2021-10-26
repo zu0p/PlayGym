@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class Compensation {
 	private boolean basic;
 	
 	@JoinColumn(name="pid")
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private MainUser pid;
 	
