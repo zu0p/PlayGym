@@ -6,4 +6,5 @@ public interface CompensationMapping {
 	String getTitle();
 	String getDetail();
 	int getExp();
+	boolean getBasic();
 }

@@ -22,7 +22,9 @@ public class CompensationServiceImpl implements CompensationService {
 	@Override
 	public List<CompensationMapping> findPidCps(long id) {
 		MainUser m =mainuserRepository.findById(id).orElse(null);
-		return compensationRepository.findByPid(m).orElse(null);
+		List<CompensationMapping> res = compensationRepository.findByPid(m).orElse(null);
+		res.addAll(compensationRepository.findByBasic(true).orElse(null));
+		return res;
 	}
 	@Override
 	public void saveCompensation(Map<String, Object> map) {
@@ -31,7 +33,7 @@ public class CompensationServiceImpl implements CompensationService {
 		c.setExp(Integer.parseInt(String.valueOf(map.get("exp"))));
 		c.setTitle((String)map.get("title"));
 		c.setDetail((String)map.get("detail"));
-		c.setBasic((boolean)map.get("basic"));
+		c.setBasic(false);
 		MainUser m =mainuserRepository.findById(Long.parseLong(String.valueOf(map.get("pid")))).orElse(null);
 		c.setPid(m);
 		compensationRepository.save(c);
