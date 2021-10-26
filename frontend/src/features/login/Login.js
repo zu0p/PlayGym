@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Link, NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { requestLoginUser } from '../../app/actions/userActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 export function Login() {
+  const dispatch = useDispatch()
+
   const [id, setId] = useState('')
   const [idError, setIdError] = useState('')
   const [clickedId, setClickedId] = useState(false)
@@ -75,6 +79,18 @@ export function Login() {
     }
   }
 
+  const onloginClick=()=>{
+    // 로그인 수행 후 홈페이지로 이동
+    let param = {
+      userId: id,
+      userPwd: pw
+    }
+
+    dispatch(
+      requestLoginUser(param)
+    )
+  }
+
   return (
     <div>
       <h1>PlayGym</h1>
@@ -98,7 +114,7 @@ export function Login() {
         onFocus={ () => { if (!clickedPw) { setPwError('비밀번호는 필수 항목입니다.'); setClickedPw(true); } } }
         onChange={ handlePwChange }
       />
-      <Button><Link to="/home">go home</Link></Button>
+      <Button onClick={onloginClick}>LogIn</Button>
     </div>
   );
 }
