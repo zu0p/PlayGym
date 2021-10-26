@@ -60,7 +60,7 @@ public class UserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"회원가입이 완료되었습니다."),HttpStatus.OK);
 	}
 	
-	 // 濡쒓렇�씤
+	 // 로그인
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> user) {
     	System.out.println("debug");
