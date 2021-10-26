@@ -36,10 +36,10 @@ export function Login() {
   }
 
   // to properly log state hook data, refer Notion: setState is asynchronous.
-  useEffect(() => {
-    console.log('id:', id)
-    console.log('pw:', pw)
-  }, [id, pw])
+  // useEffect(() => {
+  //   console.log('id:', id)
+  //   console.log('pw:', pw)
+  // }, [id, pw])
 
   const handlePwChange = (e) => {
     setPw(e.target.value)
