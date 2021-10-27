@@ -1,5 +1,7 @@
 package com.ssafy.ssafit.domain;
 
+
+import javax.persistence.Column;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,17 +13,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @ToString
+@Builder
 public class SubUser {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(columnDefinition = "INT UNSIGNED")
 	private long sid; // 기본키
 	
 	@NotNull
@@ -42,5 +48,23 @@ public class SubUser {
 	@JoinColumn(name="cid")
 	private GetCt cid;
 
+	@Builder
+	public SubUser(String nickName, MainUser mainUser, int age, int tall, int weight, GetCt cid) {
+		this.nickName = nickName;
+		this.mainUser = mainUser;
+		this.age = age;
+		this.tall = tall;
+		this.weight = weight;
+		this.cid = cid;
+	}
+	
+	public void update(String nickName, MainUser mainUser, int age, int tall, int weight) {
+		this.nickName = nickName;
+		this.mainUser = mainUser;
+		this.age = age;
+		this.tall = tall;
+		this.weight = weight;
+	}
+	
 }
 
