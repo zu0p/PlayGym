@@ -158,7 +158,7 @@ export function Login() {
         alignItems="center"
         spacing={4}
       >
-        <Grid item mt={"20%"} >
+        <Grid item mt={"10%"} >
           <img src={logo} width="150"/>
         </Grid>
         <Grid item>
