@@ -52,9 +52,8 @@ public class UserController {
 	                .roles(Collections.singletonList("ROLE_USER")) // 理쒖큹 媛��엯�떆 USER 濡� �꽕�젙
 	                .build()).getId();
 		} catch(ConstraintViolationException e) {
-			
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"propertyNull"),HttpStatus.INTERNAL_SERVER_ERROR);
-		}catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"existId"),HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"회원가입이 완료되었습니다."),HttpStatus.OK);

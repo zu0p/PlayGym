@@ -5,12 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.repository.GetCtRepository;
+import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.repository.SubUserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,13 +28,27 @@ public class SubUserServiceImpl implements SubUserService {
 
 	private final SubUserRepository subUserRepository;
 	private final GetCtRepository getCtRepository;
+	private final MainuserRepository mainuserRepository;
 	
 	// 서브 계정 추가
 	@Override
-	public void addSubUser(SubUser subUser) {
+	public void addSubUser(Map<String, String> subUser) {
 		try {
-			subUserRepository.save(subUser);
-		} catch (Exception e) {
+			subUserRepository.save((SubUser.builder()
+					.nickName(subUser.get("nickName"))
+					.age(Integer.parseInt(subUser.get("age")))
+					.weight(Integer.parseInt(subUser.get("weight")))
+					.tall(Integer.parseInt(subUser.get("tall")))
+					.mainUser(mainuserRepository.findByUserId(subUser.get("id")).get())
+					.build()
+					));
+		} catch(ConstraintViolationException e) {
+			throw e;
+		}
+		catch (DataIntegrityViolationException e) {
+			throw e;
+		}
+		catch (Exception e) {
 			throw e;
 		}
 	}

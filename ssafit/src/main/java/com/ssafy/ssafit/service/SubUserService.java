@@ -9,7 +9,7 @@ import com.ssafy.ssafit.domain.SubUser;
 public interface SubUserService {
 	
 	//서브(자녀) 계정 추가
-	public void addSubUser(SubUser inputSubUser);
+	public void addSubUser(Map<String, String> subUser);
 	
 	//자신의 서브(자녀) 계정 목록 조회
 	public List<SubUser> getMySubUserList(MainUser mainuser);
