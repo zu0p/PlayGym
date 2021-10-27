@@ -3,10 +3,11 @@ import { Route, Link, NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { requestLoginUser } from '../../app/actions/userActions';
 import logo from '../../images/play_gym_logo.png';
+import cloudImage from '../../images/background_cloud.png'
 import Grid from '@mui/material/Grid';
 import styles from './Login.module.css';
-import {SubmitButton, LoginTextField} from './styledComponent';
-
+import {SubmitButton, LoginTextField, BackAnimation, SmallButton} from './styledComponent';
+import { motion } from "framer-motion"
 
 export function Login() {
   const dispatch = useDispatch()
@@ -96,6 +97,59 @@ export function Login() {
 
   return (
     <div className={styles.login_container} >
+
+      <BackAnimation 
+        animate={{ 
+          scale: 2, 
+          x:100, 
+          y:100,
+          position: 'fixed',
+          top:'-100px',
+          left:'-100px'
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <img src={cloudImage} style={{width:'250px'}}/>
+      </BackAnimation>
+      <BackAnimation 
+        animate={{ 
+          scale: 2, 
+          x:-200, 
+          y:100,
+          position: 'fixed',
+          top:'-100px',
+          left:'100%'
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <img src={cloudImage} style={{width:'250px'}}/>
+      </BackAnimation>
+      <BackAnimation 
+        animate={{ 
+          scale: 2, 
+          x:100, 
+          y:-200,
+          position: 'fixed',
+          top:'100%',
+          left:'-100px'
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <img src={cloudImage} style={{width:'250px'}}/>
+      </BackAnimation>
+      <BackAnimation 
+        animate={{ 
+          scale: 2, 
+          x:-250, 
+          y:-200,
+          position: 'fixed',
+          top:'100%',
+          left:'100%'
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <img src={cloudImage} style={{width:'250px'}}/>
+      </BackAnimation>
       {/* <h1>{ id }, { pw }</h1> */}
       <Grid
         container
@@ -104,7 +158,7 @@ export function Login() {
         alignItems="center"
         spacing={4}
       >
-        <Grid item mt={"20%"} mb={5}>
+        <Grid item mt={"20%"} >
           <img src={logo} width="150"/>
         </Grid>
         <Grid item>
@@ -138,6 +192,11 @@ export function Login() {
           >
             LogIn
           </SubmitButton>
+        </Grid>
+
+        <Grid item>
+          <SmallButton>sign up</SmallButton>
+          <SmallButton>Forget password?</SmallButton>
         </Grid>
       </Grid>
     </div>

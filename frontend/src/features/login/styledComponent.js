@@ -2,6 +2,8 @@
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { motion } from "framer-motion"
+import cloudImage from '../../images/background_cloud.png'
 
 export const SubmitButton = styled(Button)({
   boxShadow: 'none',
@@ -15,6 +17,7 @@ export const SubmitButton = styled(Button)({
   color: '#22220B',
   width: '300px',
   height: '50px',
+  fontWeight: 'bold',
   '&:hover': {
     backgroundColor: '#A3C653',
     borderColor: '#A3C653',
@@ -60,3 +63,32 @@ export const LoginTextField = styled(TextField)({
     },
   },
 });
+
+export const BackAnimation = styled(motion.div)({
+  width: '200px',
+  height: '200px',
+})
+
+export const SmallButton = styled(Button)({
+  margin: '0 10px 0 10px',
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 15,
+  padding: '6px 12px',
+  lineHeight: 1.5,
+  color: '#A3C653',
+  height: '30px',
+  borderRadius: 0,
+  borderBottom: 'solid 2px #A3C653',
+  '&:hover': {
+    color: '#22220B',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    color: '#22220B',
+    boxShadow: 'none',
+  },
+  '&:focus': {
+    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+  },
+})
