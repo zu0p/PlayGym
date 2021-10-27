@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +22,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 
+import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
-
 
 @RestController
 @RequestMapping
@@ -49,7 +52,7 @@ public class UserController {
 	                .password(passwordEncoder.encode(user.get("password")))
 	                .name(user.get("name"))
 	                .phone(user.get("phone"))
-	                .roles(Collections.singletonList("ROLE_USER")) // 理쒖큹 媛��엯�떆 USER 濡� �꽕�젙
+	                .roles(Collections.singletonList("ROLE_USER")) //
 	                .build()).getId();
 		} catch(ConstraintViolationException e) {
 			
@@ -60,14 +63,14 @@ public class UserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"회원가입이 완료되었습니다."),HttpStatus.OK);
 	}
 	
-	 // 濡쒓렇�씤
+	 // 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> user) {
     	System.out.println("debug");
         MainUser member = userRepository.findByUserId(user.get("userid"))
-                .orElseThrow(() -> new IllegalArgumentException("媛��엯�릺吏� �븡�� E-MAIL �엯�땲�떎."));
+                .orElseThrow(() -> new IllegalArgumentException("."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("�옒紐삳맂 鍮꾨�踰덊샇�엯�땲�떎.");
+            throw new IllegalArgumentException(".");
         }
         
         Map<String, Object> list = new HashMap<String, Object>();
@@ -85,17 +88,44 @@ public class UserController {
     	return "check";
     }
     
+    //비밀번호 확인 처리 요청
+    @PostMapping("/checkPw")
+    public String checkPw(@RequestBody String pw, HttpSession session) throws Exception {
+    	String result = null;
+    	MainUser user = (MainUser) session.getAttribute("login");
+    	if(passwordEncoder.matches(pw, user.getPassword())){
+    		result = "pwConfirmOk";
+    	}else {
+    		result = "pwConfirmNo";
+    	}
+    	return result;
+    }
+    
+    
+    //부모 회원정보 조회
+    @GetMapping("/search")
+    public ResponseEntity<ApiResMessage> findUser(@RequestParam Long id) {
+    	Optional<MainUser> user = userRepository.findById(id);
+    	try {
+    		user.get();
+    	}catch(Exception e) {
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500, null, "Not Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    
     // 유저 정보 수정
-    @PutMapping("/user")
+    @PutMapping("/update")
     public Optional<MainUser> update(
     		@RequestParam Long id,
     		@RequestBody MainUser user){
-    	System.out.println("update");
+//    	System.out.println("update");
     	Optional<MainUser> updateUser = userRepository.findById(id);
     	
     	updateUser.ifPresent(selectUser -> {
     		selectUser.setName(user.getName());
-    		selectUser.setPassword(user.getPassword());
+    		selectUser.setPassword(passwordEncoder.encode(user.getPassword()));
     		selectUser.setPhone(user.getPhone());
     		selectUser.setEmail(user.getEmail());
     		
