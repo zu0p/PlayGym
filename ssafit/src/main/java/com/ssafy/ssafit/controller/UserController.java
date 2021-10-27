@@ -28,6 +28,7 @@ import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
+import com.ssafy.ssafit.service.MainUserService;
 
 import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
@@ -90,17 +91,18 @@ public class UserController {
     
     //비밀번호 확인 처리 요청
     @PostMapping("/checkPw")
-    public String checkPw(@RequestBody String pw, HttpSession session) throws Exception {
-    	String result = null;
-    	MainUser user = (MainUser) session.getAttribute("login");
-    	if(passwordEncoder.matches(pw, user.getPassword())){
-    		result = "pwConfirmOk";
+    public boolean checkPw(@RequestBody Map<String, String> user) throws Exception {
+    	MainUser member = userRepository.findByUserId(user.get("userid"))
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    	System.out.println(member);
+    	boolean result = false;
+    	if(passwordEncoder.matches(user.get("password"), member.getPassword())){
+    		result = true;
     	}else {
-    		result = "pwConfirmNo";
+    		result = false;
     	}
     	return result;
     }
-    
     
     //부모 회원정보 조회
     @GetMapping("/search")

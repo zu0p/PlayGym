@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class MainUserServiceImpl implements MainUserService{
-
+	
 	private final MainuserRepository mainuserRepository;
 	private final SubuserRepository subuserRepository;
 	private final GetCtRepository getCtRepository;
