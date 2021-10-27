@@ -1,7 +1,6 @@
 package com.ssafy.ssafit.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,18 +15,13 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @ToString
-public class Compensation {
+public class RequestCps {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long cid;
-	private int exp;
-	private String title;
-	private String detail;
-	private boolean basic;
+	private long id;
 	
-	@JoinColumn(name="pid")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="cid")
+	@ManyToOne
 	@NotNull
-	private MainUser pid;
-	
+	private Compensation cid;
 }
