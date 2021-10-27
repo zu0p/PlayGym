@@ -33,6 +33,9 @@ dependencies {
 	
 	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+	
+	// https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
 }
 
 test {
