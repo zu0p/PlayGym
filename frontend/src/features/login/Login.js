@@ -2,8 +2,41 @@ import React, { useEffect, useState } from 'react';
 import { Route, Link, NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { requestLoginUser } from '../../app/actions/userActions';
+import logo from '../../images/play_gym_logo.png';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import styles from './Login.css';
+
+import { styled } from '@mui/material/styles';
+const SubmitButton = styled(Button)({
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 16,
+  padding: '6px 12px',
+  border: '3px solid',
+  lineHeight: 1.5,
+  backgroundColor: '#FFFFFF',
+  borderColor: '#A3C653',
+  color: '#22220B',
+  width: '200px',
+  height: '50px',
+  '&:hover': {
+    backgroundColor: '#A3C653',
+    borderColor: '#A3C653',
+    color: '#FFFFFF',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: '#A3C653',
+    borderColor: '#A3C653',
+    color: '#FFFFFF',
+  },
+  '&:focus': {
+    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+  },
+});
 
 export function Login() {
   const dispatch = useDispatch()
@@ -92,29 +125,51 @@ export function Login() {
   }
 
   return (
-    <div>
-      <h1>PlayGym</h1>
-      <h1>{ id }, { pw }</h1>
-      <TextField
-        required
-        error={ idValidation() }
-        helperText={ idError }
-        id="outlined-required"
-        label="ID"
-        onFocus={ () => { if (!clickedId) { setIdError('ID는 필수 항목입니다.'); setClickedId(true); } } }
-        onChange={ handleIdChange }
-      />
-      <TextField
-        required
-        error={ pwValidation() }
-        helperText={ pwError }
-        id="outlined-required"
-        label="PW"
-        type="password"
-        onFocus={ () => { if (!clickedPw) { setPwError('비밀번호는 필수 항목입니다.'); setClickedPw(true); } } }
-        onChange={ handlePwChange }
-      />
-      <Button onClick={onloginClick}>LogIn</Button>
+    <div className={styles.login_container} style={{background:'#D5E8A6', height: '100vh'}}>
+      {/* <h1>{ id }, { pw }</h1> */}
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
+        <Grid item mt={"20%"} mb={5}>
+          <img src={logo} width="150"/>
+        </Grid>
+        <Grid item>
+          <TextField
+            required
+            error={ idValidation() }
+            helperText={ idError }
+            id="outlined-required"
+            label="ID"
+            onFocus={ () => { if (!clickedId) { setIdError('ID는 필수 항목입니다.'); setClickedId(true); } } }
+            onChange={ handleIdChange }
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            required
+            error={ pwValidation() }
+            helperText={ pwError }
+            id="outlined-required"
+            label="PW"
+            type="password"
+            onFocus={ () => { if (!clickedPw) { setPwError('비밀번호는 필수 항목입니다.'); setClickedPw(true); } } }
+            onChange={ handlePwChange }
+          />
+        </Grid>
+        <Grid item>
+          <SubmitButton 
+            variant="outlined" 
+            size="large"
+            onClick={onloginClick}
+          >
+            LogIn
+          </SubmitButton>
+        </Grid>
+      </Grid>
     </div>
   );
 }

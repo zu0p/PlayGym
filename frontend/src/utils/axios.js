@@ -13,7 +13,7 @@ export const request = (method, url, data) => {
     .catch((err) => console.log(err));
 };
 
-function createInstance(){
+const createInstance=()=>{
   const instance = axios.create()
   return setInterceptors(instance)
 }
