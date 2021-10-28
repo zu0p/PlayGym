@@ -37,7 +37,7 @@ export function Signup() {
     ID: '아이디는 필수 항목입니다.',
     PW: '비밀번호는 필수 항목입니다.',
     NAME: '이름은 필수 항목입니다.',
-    PHONE: '',
+    PHONE: '전화번호는 필수 항목입니다.',
   }
 
   // const onloginClick=()=>{

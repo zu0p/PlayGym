@@ -17,12 +17,22 @@ export const ID = value => {
     return '아이디는 6~16자 사이로 입력해 주세요.'
 
   if (value.search(/[`~!@#$%^&*|\\\'\";:\/?]/gi) !== -1) 
-    return '아이디는 6~16자 사이로 입력해 주세요.'
+    return '아이디는 특수문자를 제외하고 입력해 주세요.'
   // need to find regex to catch spacebars in id
+
+  if (value.search(/\s/) !== -1)
+    return '아이디는 공백을 제외하고 입력해 주세요.'
+
+  if (!/^[a-z]+[a-z0-9]{5,19}$/gi.test(value))
+    return '영문자로 시작하는 영문자 또는 숫자여야 합니다.'
+
   return ''
 }
 
 export const PW = value => {
+  if (value === '') 
+    return '비밀번호는 필수 항목입니다.'
+
   if (value.length < 8 || value.length > 16) 
     return '비밀번호는 8~16자 사이로 입력해 주세요.'
     
@@ -37,6 +47,9 @@ export const PW = value => {
 }
 
 export const NAME = value => {
+  if (value === '') 
+    return '이름은 필수 항목입니다.'
+
   if (value.length < 2 || value.length > 10) 
     return '이름은 2~10자 사이로 입력해 주세요.'
 
@@ -47,5 +60,10 @@ export const NAME = value => {
 }
 
 export const PHONE = value => {
+  console.log(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(value))
+  if (value === '')
+    return '전화번호는 필수 항목입니다.'
+  if (!/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(value))
+    return '올바른 전화번호를 입력해 주세요.'
   return ''
 }

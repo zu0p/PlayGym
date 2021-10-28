@@ -2,8 +2,6 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
 
 export const EMAIL = (isClicked, value) => {
   if (isClicked) {
-    if (value === '') 
-      return true
     if (!emailRegex.test(value))
       return true 
   }
@@ -12,10 +10,16 @@ export const EMAIL = (isClicked, value) => {
 
 export const ID = (isClicked, value) => {
   if (isClicked) {
-    if (value === '') 
-      return true
     if (value.length < 6 || value.length > 16) 
       return true
+    if (value.search(/[`~!@#$%^&*|\\\'\";:\/?]/gi) !== -1) 
+      return true
+    if (value.search(/\s/) !== -1)
+      return true
+    if (!/^[a-z]+[a-z0-9]{5,19}$/gi.test(value))
+      return true
+    
+
   }
   return false
 }
@@ -46,7 +50,8 @@ export const NAME = (isClicked, value) => {
 
 export const PHONE = (isClicked, value) => {
   if (isClicked) {
-    return true
+    if (!/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(value))
+      return true
   }
   return false
 }
