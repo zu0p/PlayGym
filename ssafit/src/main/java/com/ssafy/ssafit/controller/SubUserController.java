@@ -44,16 +44,17 @@ public class SubUserController {
 	}
 	
 	// 서브 계정(자녀) 계정 목록 조회
-	@GetMapping("/sub/{mainuser}")
-	public ResponseEntity<List<SubUser>> getMySubUserList(@PathVariable MainUser mainuser) {
-		List<SubUser> result = null;
+	@GetMapping("/sub/{id}")
+	public ResponseEntity<List<Map<String, Object>>> getMySubUserList(@PathVariable long id) {
+		List<Map<String, Object>>result = null;
 		try {
-			result = subUserService.getMySubUserList(mainuser);
+			result = subUserService.getMySubUserList(id);
 		} catch (Exception e) {
-			return new ResponseEntity<List<SubUser>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
+			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return new ResponseEntity<List<SubUser>>(result, HttpStatus.OK);
+		return new ResponseEntity<List<Map<String, Object>>>(result, HttpStatus.OK);
 	}
 	
 	// 서브 유저 정보 조회

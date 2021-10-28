@@ -12,7 +12,7 @@ public interface SubUserService {
 	public void addSubUser(Map<String, String> subUser);
 	
 	//자신의 서브(자녀) 계정 목록 조회
-	public List<SubUser> getMySubUserList(MainUser mainuser);
+	public List<Map<String, Object>> getMySubUserList(long id);
 	
 	//서브 계정 정보 조회
 	public Map<String, Object> getSubUserInfo(long sid);
