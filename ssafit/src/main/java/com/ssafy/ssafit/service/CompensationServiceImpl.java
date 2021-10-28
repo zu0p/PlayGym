@@ -3,6 +3,7 @@ package com.ssafy.ssafit.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class CompensationServiceImpl implements CompensationService {
 	
 	private final MainuserRepository mainuserRepository;
 	private final CompensationRepository compensationRepository;
+	
 	@Override
 	public List<CompensationMapping> findPidCps(long id) {
 		MainUser m =mainuserRepository.findById(id).orElse(null);
