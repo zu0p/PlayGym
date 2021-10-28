@@ -18,8 +18,14 @@ public interface SubUserService {
 	public Map<String, Object> getSubUserInfo(long sid);
 	
 	//서브 계정 정보 수정
-	public void modifySubUser(SubUser inputSubUser);
+	public void modifySubUser(Map<String, String> subUser);
 	
 	//서브계정 삭제
 	public void deleteSub(long sid);
+	
+	// 캐릭터 선택
+	
+	// 캐릭터 변경
+		
+	// 획득한 캐릭터 목록 조회
 }

@@ -89,14 +89,14 @@ public class SubUserServiceImpl implements SubUserService {
 
 	// 자녀 계정 정보 수정
 	@Override
-	public void modifySubUser(SubUser subUser) {
+	public void modifySubUser(Map<String, String> subUser) {
 		try {
-			Optional<SubUser> s = subUserRepository.findBySid(subUser.getSid());
-			s.ifPresent(updatedSub ->{
-				updatedSub.setNickName(subUser.getNickName());
-				updatedSub.setAge(subUser.getAge());
-				updatedSub.setTall(subUser.getTall());
-				updatedSub.setWeight(subUser.getWeight());
+			Optional<SubUser> s = subUserRepository.findBySid(Long.parseLong(subUser.get("sid")));
+			s.ifPresent(updatedSub -> {
+				updatedSub.setNickName(subUser.get("nickName"));
+				updatedSub.setAge(Integer.parseInt(subUser.get("age")));
+				updatedSub.setTall(Integer.parseInt(subUser.get("tall")));
+				updatedSub.setWeight(Integer.parseInt(subUser.get("weight")));
 				subUserRepository.save(updatedSub);
 			});
 		} catch (Exception e) {
@@ -104,6 +104,7 @@ public class SubUserServiceImpl implements SubUserService {
 		}
 	}
 	
+	// 자녀 계정 삭제
 	@Override
 	public void deleteSub(long sid) {
 		SubUser su = subUserRepository.findById(sid).orElse(null);
@@ -111,6 +112,11 @@ public class SubUserServiceImpl implements SubUserService {
 		su.setCid(null);
 		getCtRepository.delete(gc);
 		subUserRepository.deleteById(su.getSid());
-
 	}
+	
+	// 캐릭터 선택
+	
+	// 캐릭터 변경
+		
+	// 획득한 캐릭터 목록 조회
 }
