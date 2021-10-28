@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +31,18 @@ public class CompensationController {
 	@GetMapping("/cps")
 	public ResponseEntity<ApiResMessage> findPidCompensation(@RequestParam long id){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CompensationMapping> list = compensationService.findPidCps(1);
+		List<CompensationMapping> list=null;
+		try {
+			list = compensationService.findPidCps(1);
+		}catch (Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Faild"),HttpStatus.NO_CONTENT);
+		}
+		
 		if(list.size()==0||list==null) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(204,null,"No Content"),HttpStatus.NO_CONTENT);
 		}
 		map.put("list",list);
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Success"),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@PostMapping("/cps")
@@ -47,4 +54,17 @@ public class CompensationController {
 		}
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/cps")
+	public ResponseEntity<ApiResMessage> deleteCompensation(@RequestParam long id){
+		try {
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
+	}
+	
 }

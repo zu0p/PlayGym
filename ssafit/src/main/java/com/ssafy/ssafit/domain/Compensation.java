@@ -20,14 +20,20 @@ public class Compensation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long cid;
+	
 	private int exp;
+	
 	private String title;
+	
 	private String detail;
+	
+	//lombok getter 시 getBasicX isBasic
 	private boolean basic;
 	
 	@JoinColumn(name="pid")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
 	private MainUser pid;
+
 	
 }

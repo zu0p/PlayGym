@@ -9,5 +9,6 @@ public interface CompensationService {
 
 	public List<CompensationMapping> findPidCps(long id);
 	public void saveCompensation(Map<String,Object> map);
+	public void deleteCps(long id);
 	
 }

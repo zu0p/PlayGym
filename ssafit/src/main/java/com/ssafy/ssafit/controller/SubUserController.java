@@ -23,7 +23,7 @@ import com.ssafy.ssafit.service.SubUserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/sub")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*" )
 public class SubUserController {
@@ -32,8 +32,8 @@ public class SubUserController {
 	private final SubUserService subUserService;
 	
 	// 서브 계정 추가
-	@PostMapping("/add")
-	public ResponseEntity<ApiResMessage> addSubUser(@RequestBody SubUser subUser){
+	@PostMapping("/sub/add")
+	public ResponseEntity<ApiResMessage> addSubUser(@RequestBody Map<String, String> subUser){
 		try {
 			subUserService.addSubUser(subUser);
 		} catch (Exception e) {
@@ -43,7 +43,7 @@ public class SubUserController {
 	}
 	
 	// 서브 계정(자녀) 계정 목록 조회
-	@GetMapping("/{mainuser}")
+	@GetMapping("/sub/{mainuser}")
 	public ResponseEntity<List<SubUser>> getMySubUserList(@PathVariable MainUser mainuser) {
 		List<SubUser> result = null;
 		try {
@@ -56,7 +56,7 @@ public class SubUserController {
 	}
 	
 	// 서브 유저 정보 조회
-	@GetMapping("/profile/{sid}")
+	@GetMapping("/sub/profile/{sid}")
 	public ResponseEntity<Map<String, Object>> getSubUserInfo(@PathVariable long sid) {
 		Map<String, Object> result = null;;
 		try {
@@ -68,8 +68,8 @@ public class SubUserController {
 	}
 	
 	// 자녀 계정 정보 수정
-	@PutMapping("/modify")
-	public ResponseEntity<ApiResMessage> modifySubUser(@RequestBody SubUser subUser) {
+	@PutMapping("/sub/modify")
+	public ResponseEntity<ApiResMessage> modifySubUser(@RequestBody Map<String, String> subUser) {
 		try {
 			subUserService.modifySubUser(subUser);
 		}
@@ -81,7 +81,7 @@ public class SubUserController {
 	}
 	
 	// 자녀 계정 정보 삭제
-	@DeleteMapping("/{sid}")
+	@DeleteMapping("/sub/{sid}")
 	public ResponseEntity<ApiResMessage> delete(@PathVariable long sid) {
 		try {
 			subUserService.deleteSub(sid);
@@ -90,4 +90,10 @@ public class SubUserController {
 		}
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
+	
+	// 캐릭터 선택
+	
+	// 캐릭터 변경
+	
+	// 획득한 캐릭터 목록 조회
 }
