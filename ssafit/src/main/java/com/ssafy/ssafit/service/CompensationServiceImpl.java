@@ -51,7 +51,6 @@ public class CompensationServiceImpl implements CompensationService {
 		compensationRepository.save(c);
 		
 		if(map.containsKey("child")) {
-			System.out.println(map.get("child").getClass());
 			List<Object> list = (List<Object>) map.get("child");
 			for(int i=0;i<list.size();i++) {
 				SubUser su = subUserRepository.findById(Long.valueOf(String.valueOf(list.get(i)))).orElse(null);
@@ -67,6 +66,7 @@ public class CompensationServiceImpl implements CompensationService {
 	public void deleteCps(long id) {
 		
 		Compensation c = compensationRepository.findById(id).get();
+		
 		if(c!=null && !c.isBasic()) {
 			compensationRepository.deleteById(id);
 		}

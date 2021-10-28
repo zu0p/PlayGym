@@ -58,10 +58,21 @@ public class CompensationController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
 	
+	@DeleteMapping("/getcps")
+	public ResponseEntity<ApiResMessage> deletegetCps(@RequestParam long id){
+		try {
+			getCpsService.deleteGetCps(id);
+		}catch(Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
+	}
+	
 	@DeleteMapping("/cps")
 	public ResponseEntity<ApiResMessage> deleteCompensation(@RequestParam long id){
 		try {
-			getCpsService.deleteGetCps(id);
+			compensationService.deleteCps(id);
 		}catch(Exception e) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -80,5 +91,8 @@ public class CompensationController {
 		
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
+	
+	
+	
 	
 }

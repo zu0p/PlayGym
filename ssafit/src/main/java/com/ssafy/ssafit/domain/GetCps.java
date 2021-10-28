@@ -1,6 +1,9 @@
 package com.ssafy.ssafit.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,8 +37,14 @@ public class GetCps {
 	@NotNull
 	private Compensation cpsid; 
 	
+	@Enumerated(EnumType.STRING)
+	private RequestStatus status; //요청상태 [Request, Wait]
+	
+	
+	//새롭게 생성시
 	public GetCps(SubUser subid, Compensation cpsid) {
 		this.subid=subid;
 		this.cpsid=cpsid;
+		this.status=RequestStatus.Wait;
 	}
 }
