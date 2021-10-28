@@ -72,6 +72,7 @@ public class MainUser implements UserDetails{
 	@NotNull
 	private String phone;
 	
+	@Builder.Default
 	@OneToMany(mappedBy = "mainUser")
 	private List<SubUser> subusers = new ArrayList<SubUser>();
 	

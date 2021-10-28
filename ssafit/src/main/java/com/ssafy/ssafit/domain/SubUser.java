@@ -22,7 +22,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Builder
 public class SubUser {
 	
 	@Id

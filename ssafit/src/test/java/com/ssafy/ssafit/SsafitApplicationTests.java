@@ -1,13 +1,10 @@
 package com.ssafy.ssafit;
 
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ssafy.ssafit.domain.Compensation;
-import com.ssafy.ssafit.dto.CompensationMapping;
 import com.ssafy.ssafit.service.CompensationService;
 
 @SpringBootTest
@@ -28,7 +25,6 @@ class SsafitApplicationTests {
 //		for(CompensationMapping c : list) {
 //			System.out.println(c);
 //		}
-		compensationService.deleteCps(1);
 	}
 
 }
