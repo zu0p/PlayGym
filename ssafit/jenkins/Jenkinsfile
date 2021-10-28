@@ -10,19 +10,19 @@ pipeline {
 	stages {
 		// 실제 작업이 수행되는 블록
 		// 해당 stage 명으로 jenkins 화면에 표시된다
-		stage('Build and Test') {
-      // docker image에 명시된 image를 활용하여 steps 수행
-      agent {
-        docker {
-          image 'gradle:6.7'
-          args '-v /root/.gradle:/root/.gradle'
-        }
-      }
-      options { skipDefaultCheckout(false) }
-      steps {
-        sh 'gradle build'
-      }
-    }
+		// stage('Build and Test') {
+    //   // docker image에 명시된 image를 활용하여 steps 수행
+    //   agent {
+    //     docker {
+    //       image 'gradle:6.7'
+    //       args '-v /root/.gradle:/root/.gradle'
+    // 		}
+    //   }
+    //   options { skipDefaultCheckout(false) }
+    //   steps {
+    //     sh 'gradle build'
+    //   }
+    // }
 		stage('Docker build') {
 			agent any
 			steps {
