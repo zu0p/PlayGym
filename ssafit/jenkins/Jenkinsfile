@@ -22,7 +22,7 @@ pipeline {
 			steps {
 				sh '../gradlew clean build'
 			}
-		// }
+		}
 		stage('Docker build') {
 			agent any
 			steps {
