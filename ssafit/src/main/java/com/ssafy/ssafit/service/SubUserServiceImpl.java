@@ -1,5 +1,6 @@
 package com.ssafy.ssafit.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +56,24 @@ public class SubUserServiceImpl implements SubUserService {
 	
 	// 서브 계정(자녀) 계정 목록 조회
 	@Override
-	public List<SubUser> getMySubUserList(MainUser mainuser) {
-		List<SubUser> result;
+	public List<Map<String, Object>> getMySubUserList(long id) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 		try {
-			result = subUserRepository.findByMainUser(mainuser).orElse(null);
+			MainUser m = mainuserRepository.findById(id).get();
+			List<SubUser> temp = subUserRepository.findByMainUser(m).orElse(null);
+			if(temp != null) {
+				for(SubUser su :  temp) {
+					Map<String, Object> obj = new HashMap<String, Object>();
+					obj.put("sid", su.getSid());
+					obj.put("nickName", su.getNickName());
+					obj.put("age", su.getAge());
+					obj.put("weight", su.getWeight());
+					obj.put("tall", su.getTall());
+					
+					result.add(obj);
+				}
+			}
+			
 		} catch (Exception e) {
 			throw e;
 		}	
@@ -79,7 +94,7 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("tall", subUser.getTall());
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
-				obj.put("mainuser", subUser.getMainUser());
+				obj.put("id", subUser.getMainUser().getId());
 			}	
 		} catch (Exception e) {
 			throw e;
@@ -107,14 +122,19 @@ public class SubUserServiceImpl implements SubUserService {
 	// 자녀 계정 삭제
 	@Override
 	public void deleteSub(long sid) {
-		SubUser su = subUserRepository.findById(sid).orElse(null);
-		GetCt gc = su.getCid();
-		su.setCid(null);
-		getCtRepository.delete(gc);
-		subUserRepository.deleteById(su.getSid());
+		try {
+			SubUser su = subUserRepository.findBySid(sid).get();
+			if(su != null) {
+				GetCt gc = su.getCid();
+				if(gc != null) getCtRepository.delete(gc);
+				su.setCid(null);
+				subUserRepository.deleteById(sid);
+			}
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
-	
-	// 캐릭터 선택
 	
 	// 캐릭터 변경
 		
