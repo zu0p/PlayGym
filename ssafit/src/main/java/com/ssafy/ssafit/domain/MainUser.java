@@ -73,7 +73,8 @@ public class MainUser implements UserDetails{
 	private String phone;
 	
 	@OneToMany(mappedBy = "mainUser")
-	private List<SubUser> subusers = new ArrayList<SubUser>();
+	private List<SubUser> subUsers = new ArrayList<SubUser>();
+	
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Builder.Default

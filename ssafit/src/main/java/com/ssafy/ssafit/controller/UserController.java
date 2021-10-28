@@ -94,10 +94,6 @@ public class UserController {
     	}
     	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
     }
-    @GetMapping("/user/ds")
-    public String aa() {
-    	return "check";
-    }
     
     //비밀번호 확인 처리 요청
     @PostMapping("/checkPw")
