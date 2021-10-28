@@ -25,6 +25,7 @@ import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
+import com.ssafy.ssafit.service.MainUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +39,7 @@ public class UserController {
 	private final PasswordEncoder passwordEncoder;	
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MainuserRepository userRepository;
+	private final MainUserService mainUserService;
 	
 	@PostMapping("/join")
 	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
@@ -56,6 +58,8 @@ public class UserController {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"propertyNull"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"existId"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}catch(Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Faild"),HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"회원가입이 완료되었습니다."),HttpStatus.OK);
 	}
@@ -80,6 +84,13 @@ public class UserController {
         return list;
     }
     
+    @GetMapping("/check")
+    public ResponseEntity<ApiResMessage> IdCheck(@RequestParam String id){
+    	if(!mainUserService.existId(id)) {
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"existId"),HttpStatus.OK);
+    	}
+    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
+    }
     @GetMapping("/user/ds")
     public String aa() {
     	return "check";

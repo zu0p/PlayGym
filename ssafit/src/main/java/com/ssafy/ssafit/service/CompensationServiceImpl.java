@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssafit.domain.Compensation;
 import com.ssafy.ssafit.domain.MainUser;
@@ -36,7 +37,25 @@ public class CompensationServiceImpl implements CompensationService {
 		c.setBasic(false);
 		MainUser m =mainuserRepository.findById(Long.parseLong(String.valueOf(map.get("pid")))).orElse(null);
 		c.setPid(m);
+		savecps(c);
+	}
+	@Override
+	@Transactional
+	public void deleteCps(long id) {
+		
+		Compensation c = compensationRepository.findById(id).get();
+		if(c!=null && !c.isBasic()) {
+			compensationRepository.deleteById(id);
+		}
+		
+
+	}
+	
+	@Transactional
+	public void savecps(Compensation c) {
 		compensationRepository.save(c);
 	}
+	
+	
 
 }
