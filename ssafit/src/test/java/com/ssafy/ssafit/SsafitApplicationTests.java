@@ -14,7 +14,7 @@ import com.ssafy.ssafit.service.CompensationService;
 class SsafitApplicationTests {
 	@Autowired
 	private CompensationService compensationService;
-//	@Test
+	@Test
 	void contextLoads() {
 //		Map<String,Object> map = new HashMap<String, Object>();
 //		
@@ -24,10 +24,11 @@ class SsafitApplicationTests {
 //		map.put("detail","저녁 10시 이후 한시간 놀 수 있어요");
 //		map.put("basic",true);
 		System.out.println("sd");
-		List<CompensationMapping> list = compensationService.findPidCps(1);
-		for(CompensationMapping c : list) {
-			System.out.println(c);
-		}
+//		List<CompensationMapping> list = compensationService.findPidCps(1);
+//		for(CompensationMapping c : list) {
+//			System.out.println(c);
+//		}
+		compensationService.deleteCps(1);
 	}
 
 }

@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
@@ -70,6 +71,9 @@ public class MainUser implements UserDetails{
 	//유저 전화번호
 	@NotNull
 	private String phone;
+	
+	@OneToMany(mappedBy = "mainUser")
+	private List<SubUser> subusers = new ArrayList<SubUser>();
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Builder.Default

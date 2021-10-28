@@ -34,5 +34,14 @@ public class MainUserServiceImpl implements MainUserService{
 		}
 		mainuserRepository.deleteById(id);
 	}
+	@Override
+	public boolean existId(String id) {
+		MainUser m =mainuserRepository.findByUserId(id).orElse(null);
+		
+		if(m==null) {
+			return true;
+		}
+		return false;
+	}
 
 }
