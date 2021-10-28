@@ -26,7 +26,7 @@ pipeline {
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t backend ../Dockerfile'
+				sh 'docker build -t backend /home/ubuntu/S05P31D205/ssafit'
 			}
 		}
 		stage('Docker run') {
