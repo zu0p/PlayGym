@@ -49,13 +49,12 @@ public class SubUser {
 	private GetCt cid;
 
 	@Builder
-	public SubUser(String nickName, MainUser mainUser, int age, int tall, int weight, GetCt cid) {
+	public SubUser(String nickName, MainUser mainUser, int age, int tall, int weight) {
 		this.nickName = nickName;
-		this.mainUser = mainUser;
 		this.age = age;
 		this.tall = tall;
 		this.weight = weight;
-		this.cid = cid;
+		this.mainUser = mainUser;
 	}
 	
 	public void update(String nickName, MainUser mainUser, int age, int tall, int weight) {

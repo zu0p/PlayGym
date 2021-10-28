@@ -39,7 +39,7 @@ public class SubUserServiceImpl implements SubUserService {
 					.age(Integer.parseInt(subUser.get("age")))
 					.weight(Integer.parseInt(subUser.get("weight")))
 					.tall(Integer.parseInt(subUser.get("tall")))
-					.mainUser(mainuserRepository.findByUserId(subUser.get("id")).get())
+					.mainUser(mainuserRepository.findById(Long.parseLong(subUser.get("id"))).get())
 					.build()
 					));
 		} catch(ConstraintViolationException e) {
