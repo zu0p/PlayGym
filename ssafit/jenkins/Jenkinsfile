@@ -14,19 +14,19 @@ pipeline {
 			// docker image에 명시된 image를 활용하여 steps 수행
 			agent {
 				docker {
-					image 'openjdk:8-jdk-alpine'
-					args '-v /root/.m2:/root/.m2'
+					image 'gradle:6.7'
+					args '-v /root/.gradle:/root/.gradle'
 				}
 			}
 			options { skipDefaultCheckout(false) }
 			steps {
-				sh '../gradlew clean build'
+				sh 'gradle build'
 			}
 		}
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t backend:latest /home/ubuntu/docker/jenkins-data/workspace/k5d205'
+				sh 'docker build -t backend ./ssafit/'
 			}
 		}
 		stage('Docker run') {
