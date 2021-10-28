@@ -122,14 +122,19 @@ public class SubUserServiceImpl implements SubUserService {
 	// 자녀 계정 삭제
 	@Override
 	public void deleteSub(long sid) {
-		SubUser su = subUserRepository.findBySid(sid).orElse(null);
-		GetCt gc = su.getCid();
-		su.setCid(null);
-		getCtRepository.delete(gc);
-		subUserRepository.deleteById(su.getSid());
+		try {
+			SubUser su = subUserRepository.findBySid(sid).get();
+			if(su != null) {
+				GetCt gc = su.getCid();
+				if(gc != null) getCtRepository.delete(gc);
+				su.setCid(null);
+				subUserRepository.deleteById(sid);
+			}
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
-	
-	// 캐릭터 선택
 	
 	// 캐릭터 변경
 		
