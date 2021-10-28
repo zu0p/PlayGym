@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompensationServiceImpl implements CompensationService {
 	
 	private final MainuserRepository mainuserRepository;
 	private final CompensationRepository compensationRepository;
+	
 	@Override
 	public List<CompensationMapping> findPidCps(long id) {
 		MainUser m =mainuserRepository.findById(id).orElse(null);
@@ -27,7 +29,9 @@ public class CompensationServiceImpl implements CompensationService {
 		res.addAll(compensationRepository.findByBasic(true).orElse(null));
 		return res;
 	}
+	
 	@Override
+	@Transactional
 	public void saveCompensation(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		Compensation c = new Compensation();
@@ -37,7 +41,7 @@ public class CompensationServiceImpl implements CompensationService {
 		c.setBasic(false);
 		MainUser m =mainuserRepository.findById(Long.parseLong(String.valueOf(map.get("pid")))).orElse(null);
 		c.setPid(m);
-		savecps(c);
+		compensationRepository.save(c);
 	}
 	@Override
 	@Transactional
@@ -51,10 +55,6 @@ public class CompensationServiceImpl implements CompensationService {
 
 	}
 	
-	@Transactional
-	public void savecps(Compensation c) {
-		compensationRepository.save(c);
-	}
 	
 	
 

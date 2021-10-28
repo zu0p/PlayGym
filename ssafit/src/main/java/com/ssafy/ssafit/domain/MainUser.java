@@ -20,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +30,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter
-@ToString
+@ToString(exclude = {"subUsers"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -80,6 +81,10 @@ public class MainUser implements UserDetails{
 	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
+	public void addSubUsers(SubUser s) {
+		this.subUsers.add(s);
+		s.setMainUser(this);
+	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.roles.stream()
