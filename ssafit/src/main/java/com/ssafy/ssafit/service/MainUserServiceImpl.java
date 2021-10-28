@@ -1,6 +1,8 @@
 package com.ssafy.ssafit.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class MainUserServiceImpl implements MainUserService{
-
+	
 	private final MainuserRepository mainuserRepository;
 	private final SubUserRepository subUserRepository;
 	private final GetCtRepository getCtRepository;
