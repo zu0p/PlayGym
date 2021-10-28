@@ -10,23 +10,23 @@ pipeline {
 	stages {
 		// 실제 작업이 수행되는 블록
 		// 해당 stage 명으로 jenkins 화면에 표시된다
-		// stage('Build and Test') {
+		stage('Build and Test') {
 			// docker image에 명시된 image를 활용하여 steps 수행
-		// 	agent any{
-		// 		docker {
-		// 			image 'openjdk:8-jdk-alpine'
-		// 			args '-v /root/.m2:/root/.m2'
-		// 		}
-		// 	}
-		// 	options { skipDefaultCheckout(false) }
-		// 	steps {
-		// 		sh '../gradlew clean build'
-		// 	}
+			agent {
+				docker {
+					image 'openjdk:8-jdk-alpine'
+					args '-v /root/.m2:/root/.m2'
+				}
+			}
+			options { skipDefaultCheckout(false) }
+			steps {
+				sh '../gradlew clean build'
+			}
 		// }
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t backend:latest .'
+				sh 'docker build -t backend:latest /home/ubuntu/docker/jenkins-data/workspace/k5d205'
 			}
 		}
 		stage('Docker run') {
