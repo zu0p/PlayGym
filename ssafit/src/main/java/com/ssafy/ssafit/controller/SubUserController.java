@@ -93,8 +93,6 @@ public class SubUserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
 	
-	// 캐릭터 선택
-	
 	// 캐릭터 변경
 	
 	// 획득한 캐릭터 목록 조회

@@ -64,6 +64,7 @@ public class SubUserServiceImpl implements SubUserService {
 			if(temp != null) {
 				for(SubUser su :  temp) {
 					Map<String, Object> obj = new HashMap<String, Object>();
+					obj.put("sid", su.getSid());
 					obj.put("nickName", su.getNickName());
 					obj.put("age", su.getAge());
 					obj.put("weight", su.getWeight());
@@ -93,7 +94,7 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("tall", subUser.getTall());
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
-				obj.put("mainuser", subUser.getMainUser());
+				obj.put("id", subUser.getMainUser().getId());
 			}	
 		} catch (Exception e) {
 			throw e;
