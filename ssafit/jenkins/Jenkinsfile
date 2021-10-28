@@ -26,7 +26,7 @@ pipeline {
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t backend:latest /home/ubuntu/docker/jenkins-data/workspace/k5d205/ssafit/'
+				sh 'docker build -t backend:latest .'
 			}
 		}
 		stage('Docker run') {
