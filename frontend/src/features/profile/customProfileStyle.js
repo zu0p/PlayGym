@@ -3,6 +3,18 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import Slider, { SliderThumb } from '@mui/material/Slider';
+import { AppBar } from '@mui/material';
+import Grid from '@mui/material/Grid'
+
+export const FullDialogBar = styled(AppBar)({
+  backgroundColor: '#A3C653',
+  boxShadow: 'none'
+})
+
+export const FullDialogGrid = styled(Grid)({
+  backgroundColor: '#D5E8A6',
+  height: '100vh'
+})
 
 export const SliderInput = styled(Slider)({
   color: '#A3C653',

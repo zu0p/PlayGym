@@ -3,7 +3,6 @@ import { Route, Link, NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import styles from './Profile.module.css'
 import Grid from '@mui/material/Grid'
-import { motion } from 'framer-motion'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import AddIcon from '@mui/icons-material/Add'
@@ -11,14 +10,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import GavelIcon from '@mui/icons-material/Gavel';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import AddProfileDialog from './AddProfileDialog'
+import EditMainUserInfoDialog from './EditMainUserInfoDialog'
 import { SmallDarkButton, EditButton } from './customProfileStyle'
-import {BackAnimation} from '../login/styledComponent'
+import { BackAnimation } from '../login/styledComponent'
 import cloudImage from '../../images/background_cloud.png'
 import selectPlayer from '../../images/selectPlayer.png'
-import bear from '../../images/characters/bear.png';
-import cat from '../../images/characters/cat.png';
-import chick from '../../images/characters/chick.png';
-import rabbit from '../../images/characters/rabbit.png';
+import bear from '../../images/characters/bear.png'
+import cat from '../../images/characters/cat.png'
+import chick from '../../images/characters/chick.png'
+import rabbit from '../../images/characters/rabbit.png'
 
 function Player({player}){
   const selectPlayer=()=>{
@@ -67,18 +67,29 @@ export function Profile(){
     }
   ]
 
-  const onEditProfileClick = () => {
-    console.log('edit profile')
-  }
+  // const onEditProfileClick = () => {
+  //   console.log('edit profile')
+  // }
 
   // add profile click -> open dialog
-  const [open, setOpen] = React.useState(false);
+  const [addOpen, setAddOpen] = useState(false);
   const onAddProfileClick = () => {
-    setOpen(true)
+    setAddOpen(true)
   }
 
   const onAddProfileClose = () => {
-    setOpen(false);
+    setAddOpen(false);
+  };
+
+  // main user info edit dialog
+  
+  const [editOpen, setEditOpen] = useState(false);
+  const onEditProfileClick = () => {
+    setEditOpen(true)
+  }
+
+  const onEditProfileClose = () => {
+    setEditOpen(false);
   };
 
   return(
@@ -171,7 +182,7 @@ export function Profile(){
             alignItems="center"
           >
             <SmallDarkButton onClick={onEditProfileClick}>
-              나의 정보 수정하기 <EditIcon />
+              나의 정보 <EditIcon />
             </SmallDarkButton>
             <SmallDarkButton onClick={onEditProfileClick}>
               플레이어 현황 <ChildCareIcon />
@@ -179,7 +190,8 @@ export function Profile(){
           </Grid>
         </Grid>
       </Grid>
-      <AddProfileDialog open={open} getClose={onAddProfileClose}/>
+      <AddProfileDialog open={addOpen} getClose={onAddProfileClose}/>
+      <EditMainUserInfoDialog open={editOpen} getClose={onEditProfileClose}/>
     </div>
   )
 }
