@@ -20,6 +20,15 @@ export function Login() {
   const [pwError, setPwError] = useState('')
   const [clickedPw, setClickedPw] = useState(false)
 
+  const [buttonDisable, setButtonDisable] = useState(true)
+
+  useEffect(()=>{
+    console.log(`id: ${idError} pw: ${pwError}`)
+    if(clickedId && clickedPw && idError=='' && pwError == ''){
+      setButtonDisable(false)
+    }
+  },[idError, pwError])
+
   const handleIdChange = (e) => {
     setId(e.target.value)
 
@@ -86,8 +95,8 @@ export function Login() {
   const onloginClick=()=>{
     // 로그인 수행 후 홈페이지로 이동
     let param = {
-      userId: id,
-      userPwd: pw
+      'userid': id,
+      'password': pw
     }
 
     dispatch(
@@ -156,12 +165,11 @@ export function Login() {
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={4}
       >
-        <Grid item mt={"10%"} >
+        <Grid item mt={"10%"} mb={'30px'}>
           <img src={logo} width="150"/>
         </Grid>
-        <Grid item>
+        <Grid item mb={'35px'}>
           <LoginTextField
             required
             error={ idValidation() }
@@ -172,7 +180,7 @@ export function Login() {
             onChange={ handleIdChange }
           />
         </Grid>
-        <Grid item>
+        <Grid item mb={'35px'}>
           <LoginTextField
             required
             error={ pwValidation() }
@@ -184,11 +192,12 @@ export function Login() {
             onChange={ handlePwChange }
           />
         </Grid>
-        <Grid item>
+        <Grid item mb={'35px'}>
           <SubmitButton 
             variant="outlined" 
             size="large"
             onClick={onloginClick}
+            disabled={buttonDisable}
           >
             LogIn
           </SubmitButton>
