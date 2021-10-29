@@ -124,7 +124,7 @@ public class UserController {
     	}catch(Exception e) {
     		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500, null, "Not Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Test"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     
