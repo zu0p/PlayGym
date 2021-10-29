@@ -5,11 +5,15 @@ import { requestLoginUser } from '../../app/actions/userActions';
 import logo from '../../images/play_gym_logo.png';
 import cloudImage from '../../images/background_cloud.png'
 import Grid from '@mui/material/Grid';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
 import styles from './Login.module.css';
 import {SubmitButton, LoginTextField, BackAnimation, SmallButton} from './styledComponent';
 import { motion } from "framer-motion"
 
-export function Login() {
+export function Login(props) {
   const dispatch = useDispatch()
 
   const [id, setId] = useState('')
@@ -21,9 +25,10 @@ export function Login() {
   const [clickedPw, setClickedPw] = useState(false)
 
   const [buttonDisable, setButtonDisable] = useState(true)
+  const [idAlertOpen, setIdAlertOpen] = useState(false)
+  const [pwdAlertOpen, setPwdAlertOpen] = useState(false)
 
   useEffect(()=>{
-    console.log(`id: ${idError} pw: ${pwError}`)
     if(clickedId && clickedPw && idError=='' && pwError == ''){
       setButtonDisable(false)
     }
@@ -104,12 +109,73 @@ export function Login() {
 
     dispatch(
       requestLoginUser(param)
-    )
+    ).then(res=>{
+      if(res.payload.data.status==200){
+        // 1. save user info at store
+        console.log(res.payload.data.result)
+
+        // 2. go to 'select player' page
+        props.history.push('/profile')
+      }
+    })
+    .catch(err=>{
+      if(err.response.status==401){
+        // incorrect password
+        setPwdAlertOpen(true)
+      }
+      else{
+        // does not exist user id
+        setIdAlertOpen(true)
+      }
+    })
   }
 
   return (
     <div className={styles.login_container} >
+      <Collapse in={idAlertOpen} className={styles.idAlert}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setIdAlertOpen(false);
+                setId('')
+                setPw('')
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          존재하지 않는 아이디입니다.
+        </Alert>
+      </Collapse>
 
+      <Collapse in={pwdAlertOpen} className={styles.idAlert}>
+        <Alert
+          severity="warning"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setPwdAlertOpen(false);
+                setPw('')
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          비밀번호가 틀렸습니다.
+        </Alert>
+      </Collapse>
       <BackAnimation 
         animate={{ 
           scale: 2, 
