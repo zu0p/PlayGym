@@ -184,7 +184,7 @@ export function Profile(){
             <SmallDarkButton onClick={onEditProfileClick}>
               나의 정보 <EditIcon />
             </SmallDarkButton>
-            <SmallDarkButton onClick={onEditProfileClick}>
+            <SmallDarkButton >
               플레이어 현황 <ChildCareIcon />
             </SmallDarkButton>
           </Grid>

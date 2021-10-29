@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import Grid from '@mui/material/Grid'
-import { FullDialogBar, FullDialogGrid } from './customProfileStyle'
+import { FullDialogBar, FullDialogGrid, AddTextField } from './customProfileStyle'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -53,9 +53,22 @@ export default function EditMainUserInfoDialog(props) {
         <FullDialogGrid
           container
           fullScreen
+          direction="column"
+          // justifyContent="center"
+          alignItems="center"
+          spacing={3}
         >
-          <Grid item>
-            info
+          <Grid item mt={10}>
+            <AddTextField value={'real_id'}/>
+          </Grid>
+          <Grid item mt={2}>
+            <AddTextField />
+          </Grid>
+          <Grid item mt={2}>
+            <AddTextField />
+          </Grid>
+          <Grid item mt={2}>
+            <AddTextField />
           </Grid>
         </FullDialogGrid>
       </Dialog>
