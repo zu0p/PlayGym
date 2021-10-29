@@ -22,8 +22,10 @@ export function Signup() {
   }
 
   const [inputs, setInputs] = useState({...defaultInputs})
+  const [clickFlags, setClickFlags] = useState({...defaultFlags})
   const [flags, setFlags] = useState({...defaultFlags})
   const [texts, setTexts] = useState({...defaultTexts})
+  const [buttonActive, setButtonActive] = useState(false)
   
   const labels = {
     EMAIL: '이메일', 
@@ -39,6 +41,29 @@ export function Signup() {
     NAME: '이름은 필수 항목입니다.',
     PHONE: '전화번호는 필수 항목입니다.',
   }
+
+  // activate button
+  const activateButton = () => {
+    console.log(Object.values(flags))
+    for (let flag of Object.values(flags)) {
+      if (flag === true) {
+        setButtonActive(false)
+        return
+      }
+    }
+    for (let clickFlag of Object.values(clickFlags)) {
+      if (!clickFlag) {
+        setButtonActive(false)
+        return
+      }
+    }
+    setButtonActive(true)
+  }
+  
+
+  // useEffect(() => {
+  //   console.log(buttonActive)
+  // }, [buttonActive])
 
   // const onloginClick=()=>{
     //   // 로그인 수행 후 홈페이지로 이동
@@ -67,22 +92,26 @@ export function Signup() {
           
           <Grid item key={input}>
             <SignupTextField
+              type={ input === 'PW' ? 'password' : '' }
               key={input}
               required
-              error={ validators[input](flags[input], inputs[input]) }
+              error={ flags[input] }
               helperText={ texts[input] }
               id="outlined-required"
               label={ labels[input] }
               // onChange={ handlers[i] }
               onFocus={() => { 
-                if (!flags[input]) { 
-                  setFlags({ ...flags, [input]: true });
+                if (!clickFlags[input]) { 
+                  setClickFlags({ ...clickFlags, [input]: true });
                   setTexts({ ...texts, [input]: initialTexts[input] });
+                  setFlags({ ...flags, [input]: true });
                 }
               }}
               onChange={(e) => {
-                setInputs({ ...inputs, [input]: e.target.value })
-                setTexts({ ...texts, [input]: helperText[input](e.target.value) })
+                setInputs({ ...inputs, [input]: e.target.value });
+                setTexts({ ...texts, [input]: helperText[input](e.target.value) });
+                setFlags({ ...flags, [input]: validators[input](clickFlags[input], e.target.value) });
+                activateButton();
               }}
             />
           </Grid>
@@ -92,6 +121,7 @@ export function Signup() {
           <SubmitButton 
             variant="outlined" 
             size="large"
+            disabled={ !buttonActive }
             // onClick={onloginClick}
           >
             회원가입
