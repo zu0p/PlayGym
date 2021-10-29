@@ -9,14 +9,17 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.Characters;
 import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
+import com.ssafy.ssafit.repository.CharacterRepository;
 import com.ssafy.ssafit.repository.GetCtRepository;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.repository.SubUserRepository;
@@ -30,6 +33,7 @@ public class SubUserServiceImpl implements SubUserService {
 	private final SubUserRepository subUserRepository;
 	private final GetCtRepository getCtRepository;
 	private final MainuserRepository mainuserRepository;
+	private final CharacterRepository characterRepository;
 	
 	// 서브 계정 추가
 	@Override
@@ -57,11 +61,12 @@ public class SubUserServiceImpl implements SubUserService {
 	// 서브 계정(자녀) 계정 목록 조회
 	@Override
 	public List<Map<String, Object>> getMySubUserList(long id) {
-		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		List<Map<String, Object>> result = null;
 		try {
 			MainUser m = mainuserRepository.findById(id).get();
 			List<SubUser> temp = subUserRepository.findByMainUser(m).orElse(null);
 			if(temp != null) {
+				result = new ArrayList<Map<String,Object>>();
 				for(SubUser su :  temp) {
 					Map<String, Object> obj = new HashMap<String, Object>();
 					obj.put("sid", su.getSid());
@@ -136,7 +141,53 @@ public class SubUserServiceImpl implements SubUserService {
 		}
 	}
 	
-	// 캐릭터 변경
-		
-	// 획득한 캐릭터 목록 조회
+	 // 획득한 캐릭터 조회
+	@Override
+	public List<Map<String, Object>> getMyCharacters(long sid) {
+		List<Map<String, Object>> result = null;
+		try {
+			List<GetCt> list = getCtRepository.findBySid(sid);
+			if(list != null) {
+				result = new ArrayList<Map<String, Object>>();
+				for(GetCt gc : list) {
+					Map<String, Object> obj = new HashMap<String, Object>();
+					obj.put("character", gc.getCtid());
+					result.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+		return result;
+	}
+	
+	// 캐릭터 획득
+	@Override
+	public void getCharacter(Map<String, Object> input) {
+		try {
+			long sid = (long) input.get("sid");
+			long ctid = (long) input.get("ctid");
+			SubUser s = subUserRepository.findBySid(sid).orElse(null);
+			Characters c = characterRepository.findById(ctid).orElse(null);
+			GetCt gc = GetCt.builder().ctid(c).sid(s).build();
+			getCtRepository.save(gc);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	// 캐릭터 선택(변경)
+	@Override
+	public void setMyCharacter(Map<String, Object> input) {
+		try {
+			long ctid = (long) input.get("ctid");
+			long sid = (long) input.get("sid");
+			SubUser s = subUserRepository.findBySid(sid).orElse(null);
+			Characters c = characterRepository.findById(ctid).orElse(null);
+			GetCt gc = getCtRepository.findBySidAndCtid(s, c);
+			s.setCid(gc);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 }
