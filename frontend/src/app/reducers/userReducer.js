@@ -1,6 +1,15 @@
 import { LOGIN_USER } from '../actions/types'
 
-export default function(state={}, action){
+const userState = {
+  mainUser: {
+    id: '',
+    name: '',
+    email: '',
+    phone: null
+  }
+}
+
+export default function(state=userState, action){
   switch(action.type){
     case LOGIN_USER:
       return {...state, loginSuccess: action.payload}
