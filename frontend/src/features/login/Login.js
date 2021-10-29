@@ -114,7 +114,11 @@ export function Login(props) {
         // 1. save user info at store
         console.log(res.payload.data.result)
 
-        // 2. go to 'select player' page
+        // 2. save token into localStorage
+        localStorage.setItem('access-token', res.payload.data.result.token)
+        console.log(localStorage.getItem('access-token'))
+
+        // 3. go to 'select player' page
         props.history.push('/profile')
       }
     })

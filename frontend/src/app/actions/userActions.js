@@ -1,5 +1,5 @@
 import { LOGIN_USER } from './types'
-import { request } from '../../utils/axios'
+import { request, requestWithAuth } from '../../utils/axios'
 
 const USER_URL = ''
 
