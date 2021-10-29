@@ -69,7 +69,8 @@ public class UserController {
 	 // 로그인
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> user) {
-    	System.out.println("debug");
+    	System.out.println("debug" + user);
+    	
         MainUser member = userRepository.findByUserId(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
