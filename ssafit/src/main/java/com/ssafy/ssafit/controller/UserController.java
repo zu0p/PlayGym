@@ -68,22 +68,28 @@ public class UserController {
 	
 	 // 로그인
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> user) {
+    public ResponseEntity<ApiResMessage> login(@RequestBody Map<String, String> user) {
+    	MainUser member=null;
     	
-        MainUser member = userRepository.findByUserId(user.get("userid"))
-                .orElseThrow(() -> new IllegalArgumentException("."));
+    	try {
+    		member = userRepository.findByUserId(user.get("userid")).orElse(null);
+    	}catch(Exception e){
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+        
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException(".");
+        	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
         }
         
-        Map<String, Object> list = new HashMap<String, Object>();
-        list.put("id", member.getId());
-        list.put("userId", member.getId());
-        list.put("email", member.getEmail());
-        list.put("name", member.getName());
-        list.put("phone", member.getPhone());
-        list.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
-        return list;
+        Map<String, Object> userinfo = new HashMap<String, Object>();
+        userinfo.put("id", member.getId());
+        userinfo.put("userId", member.getId());
+        userinfo.put("email", member.getEmail());
+        userinfo.put("name", member.getName());
+        userinfo.put("phone", member.getPhone());
+        userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        
+        return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,userinfo,"Success"),HttpStatus.OK);
     }
     
     @GetMapping("/check")
