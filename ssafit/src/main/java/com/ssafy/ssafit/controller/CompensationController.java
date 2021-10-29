@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.Compensation;
 import com.ssafy.ssafit.dto.CompensationMapping;
 import com.ssafy.ssafit.service.CompensationService;
+import com.ssafy.ssafit.service.GetCpsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +30,13 @@ import lombok.RequiredArgsConstructor;
 public class CompensationController {
 	
 	private final CompensationService compensationService;
+	private final GetCpsService getCpsService;
 	@GetMapping("/cps")
 	public ResponseEntity<ApiResMessage> findPidCompensation(@RequestParam long id){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CompensationMapping> list=null;
 		try {
-			list = compensationService.findPidCps(1);
+			list = compensationService.findPidCps(id);
 		}catch (Exception e) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Faild"),HttpStatus.NO_CONTENT);
 		}
@@ -55,16 +58,41 @@ public class CompensationController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
 	
+	@DeleteMapping("/getcps")
+	public ResponseEntity<ApiResMessage> deletegetCps(@RequestParam long id){
+		try {
+			getCpsService.deleteGetCps(id);
+		}catch(Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
+	}
+	
 	@DeleteMapping("/cps")
 	public ResponseEntity<ApiResMessage> deleteCompensation(@RequestParam long id){
 		try {
-			
+			compensationService.deleteCps(id);
 		}catch(Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
+	}
+	
+	@PostMapping("/getcps")
+	public ResponseEntity<ApiResMessage> getCps(@RequestBody Map<String,Object> map){
+		try {
+			getCpsService.insertGetCps((List<Object>) map.get("child"), Long.valueOf(String.valueOf(map.get("cid"))));
+		}catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
+	
+	
+	
 	
 }

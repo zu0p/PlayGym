@@ -68,34 +68,37 @@ public class UserController {
 	
 	 // 로그인
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> user) {
-    	System.out.println("debug");
-        MainUser member = userRepository.findByUserId(user.get("userid"))
-                .orElseThrow(() -> new IllegalArgumentException("."));
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException(".");
-        }
+    public ResponseEntity<ApiResMessage> login(@RequestBody Map<String, String> user) {
+    	MainUser member=null;
+    	
+    	try {
+    		member = userRepository.findByUserId(user.get("userid")).orElse(null);
+    		if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+            	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
+            }
+    	}catch(Exception e){
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
         
-        Map<String, Object> list = new HashMap<String, Object>();
-        list.put("id", member.getId());
-        list.put("userId", member.getId());
-        list.put("email", member.getEmail());
-        list.put("name", member.getName());
-        list.put("phone", member.getPhone());
-        list.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
-        return list;
+        
+        
+        Map<String, Object> userinfo = new HashMap<String, Object>();
+        userinfo.put("id", member.getId());
+        userinfo.put("userId", member.getId());
+        userinfo.put("email", member.getEmail());
+        userinfo.put("name", member.getName());
+        userinfo.put("phone", member.getPhone());
+        userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        
+        return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,userinfo,"Success"),HttpStatus.OK);
     }
     
     @GetMapping("/check")
     public ResponseEntity<ApiResMessage> IdCheck(@RequestParam String id){
     	if(!mainUserService.existId(id)) {
-    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"existId"),HttpStatus.OK);
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"existId"),HttpStatus.OK);
     	}
     	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
-    }
-    @GetMapping("/user/ds")
-    public String aa() {
-    	return "check";
     }
     
     //비밀번호 확인 처리 요청
@@ -122,7 +125,7 @@ public class UserController {
     	}catch(Exception e) {
     		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500, null, "Not Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Test"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
     
