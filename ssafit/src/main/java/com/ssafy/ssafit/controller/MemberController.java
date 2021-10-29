@@ -38,9 +38,5 @@ public class MemberController {
 		
 	}
 	
-	@GetMapping("/test")
-	public String sd() {
-		return "why";
-	}
 
 }
