@@ -73,13 +73,14 @@ public class UserController {
     	
     	try {
     		member = userRepository.findByUserId(user.get("userid")).orElse(null);
+    		if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+            	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
+            }
     	}catch(Exception e){
     		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
     	}
         
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-        	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
-        }
+        
         
         Map<String, Object> userinfo = new HashMap<String, Object>();
         userinfo.put("id", member.getId());
