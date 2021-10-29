@@ -1,7 +1,8 @@
 import axios from "axios";
 import {setInterceptors} from "./interceptor";
 
-const DOMAIN = 'http://'
+const DOMAIN = 'http://k5d205.p.ssafy.io:8080'
+// axios.defaults.withCredentials = true; // for cookie data
 
 export const request = (method, url, data) => {
   return axios({
