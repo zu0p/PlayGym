@@ -15,13 +15,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function EditMainUserInfoDialog(props) {
-
+  const [inputDisable, setInputDisable] = React.useState(true)
   const handleClose = () => {
     props.getClose(true)
   }
 
   const onEditClick = () => {
-
+    setInputDisable(false)
+    console.log(document.getElementById('editButton'))
   }
 
   return (
@@ -45,30 +46,30 @@ export default function EditMainUserInfoDialog(props) {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               My page
             </Typography>
-            <Button autoFocus color="inherit" onClick={onEditClick}>
+            <Button autoFocus color="inherit" onClick={onEditClick} id="editButton">
               edit
             </Button>
           </Toolbar>
         </FullDialogBar>
         <FullDialogGrid
           container
-          fullScreen
           direction="column"
           // justifyContent="center"
           alignItems="center"
           spacing={3}
         >
+          email id pwd name phone
           <Grid item mt={10}>
-            <AddTextField value={'real_id'}/>
+            <h5>Name</h5><AddTextField disabled={inputDisable} style={{width:'300px'}} value={'name'}/>
           </Grid>
           <Grid item mt={2}>
-            <AddTextField />
+            <h5>ID</h5><AddTextField disabled={inputDisable} style={{width:'300px'}}/>
           </Grid>
           <Grid item mt={2}>
-            <AddTextField />
+            <h5>E-mail</h5><AddTextField disabled={inputDisable} style={{width:'300px'}}/>
           </Grid>
           <Grid item mt={2}>
-            <AddTextField />
+            <h5>Phone</h5><AddTextField disabled={inputDisable} style={{width:'300px'}}/>
           </Grid>
         </FullDialogGrid>
       </Dialog>
