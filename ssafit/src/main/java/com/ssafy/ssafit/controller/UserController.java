@@ -96,7 +96,7 @@ public class UserController {
     @GetMapping("/check")
     public ResponseEntity<ApiResMessage> IdCheck(@RequestParam String id){
     	if(!mainUserService.existId(id)) {
-    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"existId"),HttpStatus.OK);
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"existId"),HttpStatus.OK);
     	}
     	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
     }
