@@ -27,6 +27,9 @@ export function Login() {
     if(clickedId && clickedPw && idError=='' && pwError == ''){
       setButtonDisable(false)
     }
+    else{
+      setButtonDisable(true)
+    }
   },[idError, pwError])
 
   const handleIdChange = (e) => {
