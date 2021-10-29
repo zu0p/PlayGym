@@ -1,0 +1,38 @@
+.profile_container{
+  background: #D5E8A6;
+  height: 100vh;
+  position: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1, h5{
+  color: #A3C653;
+}
+
+.player{
+  background-color: white;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border: solid 3px #A3C653;
+  cursor: pointer;
+}
+
+.player:hover{
+  background-color: #B9D279;
+}
+
+.dialog{
+  color: #A3C653;
+}
+
+.texts{
+  margin-left: 20px;
+  height: 30px;
+  color: #22220B;
+}
