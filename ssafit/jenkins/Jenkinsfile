@@ -5,7 +5,7 @@ pipeline {
 	// gitlab의 소스를 jenkins 디렉토리로 내려받을 시
 	// skipDefaultCheckout(true)일 경우 내려받는 프로세스 skip
 	// skipDefaultCheckout(false)일 경우 gitlab 소스 체크
-	options { skipDefaultCheckout(true) }
+	options { skipDefaultCheckout(false) }
 	// stage의 모음
 	stages {
 		// 실제 작업이 수행되는 블록
