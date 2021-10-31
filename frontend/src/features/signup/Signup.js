@@ -83,14 +83,13 @@ export function Signup() {
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={4}
         >
-        <Grid item mt={"20%"} mb={5}>
+        <Grid item mt={"10%"} mb={'30px'}>
           <img src={logo} width="150" alt="" />
         </Grid>
         {Object.keys(inputs).map((input => (
           
-          <Grid item key={input}>
+          <Grid item key={input} mb={'35px'}>
             <SignupTextField
               type={ input === 'PW' ? 'password' : '' }
               key={input}
