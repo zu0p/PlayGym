@@ -5,6 +5,7 @@ import './App.css';
 import { Counter } from './features/counter/Counter';
 import { Home } from './features/home/Home';
 import { Login } from './features/login/Login'
+import { Signup } from './features/signup/Signup'
 import { Profile } from './features/profile/Profile';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" exact component={Login} />
         <Route path="/home" component={Home} />
         <Route path="/profile" component={Profile} />
+        <Route path="/signup" component={Signup} />
       </BrowserRouter>
     </div>
   );

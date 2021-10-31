@@ -60,12 +60,6 @@ export function Login(props) {
     return false
   }
 
-  // to properly log state hook data, refer Notion: setState is asynchronous.
-  // useEffect(() => {
-  //   console.log('id:', id)
-  //   console.log('pw:', pw)
-  // }, [id, pw])
-
   const handlePwChange = (e) => {
     setPw(e.target.value)
 
@@ -277,7 +271,9 @@ export function Login(props) {
         </Grid>
 
         <Grid item>
-          <SmallButton>sign up</SmallButton>
+          <Link to="signup" style={{ textDecoration: 'none' }}>
+            <SmallButton>sign up</SmallButton>
+          </Link>
           <SmallButton>Forget password?</SmallButton>
         </Grid>
       </Grid>
