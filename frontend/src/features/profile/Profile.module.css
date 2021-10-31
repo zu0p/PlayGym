@@ -36,3 +36,15 @@ h1, h5{
   height: 30px;
   color: #22220B;
 }
+
+.player_static {
+  background-color: white;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border: solid 3px #A3C653;
+}
