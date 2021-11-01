@@ -122,7 +122,7 @@ public class UserController {
     }
     
     //비밀번호 확인 처리 요청
-    @PostMapping("/checkPw")
+    @PostMapping("/user/checkPw")
     public boolean checkPw(@RequestBody Map<String, String> user) throws Exception {
     	MainUser member = userRepository.findByUserId(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -137,7 +137,7 @@ public class UserController {
     }
     
     //부모 회원정보 조회
-    @GetMapping("/search")
+    @GetMapping("/user/search")
     public ResponseEntity<ApiResMessage> findUser(@RequestParam Long id) {
     	Optional<MainUser> user = userRepository.findById(id);
     	try {
@@ -150,7 +150,7 @@ public class UserController {
     
     
     // 유저 정보 수정
-    @PutMapping("/update")
+    @PutMapping("/user/update")
     public Optional<MainUser> update(
     		@RequestParam Long id,
     		@RequestBody MainUser user){
