@@ -1,7 +1,9 @@
 package com.ssafy.ssafit.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 import com.ssafy.ssafit.service.MainUserService;
+import com.ssafy.ssafit.service.SubUserService;
 
 import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +46,7 @@ public class UserController {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MainuserRepository userRepository;
 	private final MainUserService mainUserService;
+	private final SubUserService subUserService;
 	
 	@PostMapping("/join")
 	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
@@ -115,26 +119,37 @@ public class UserController {
     	}
     	return result;
     }
-    
-    //부모 회원정보 조회
+    //부모 정보 조회
     @GetMapping("/user/search")
-    public ResponseEntity<ApiResMessage> findUser(@RequestParam Long id) {
-    	Optional<MainUser> user = userRepository.findById(id);
+    public Map<String, Object> findUser(@RequestParam Long id) {
+    	Map<String, Object> obj = null;
+    	List<Map<String, Object>> result = null;
     	try {
-    		user.get();
-    	}catch(Exception e) {
-    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500, null, "Not Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    		result = subUserService.getMySubUserList(id);
+    		Optional<MainUser> user = userRepository.findById(id);
+    		if(user != null) {
+    			obj = new HashMap<String, Object>();
+    			MainUser mUser = user.get();
+    			obj.put("id", mUser.getId());
+    			obj.put("userid", mUser.getUserId());
+    			obj.put("password", mUser.getPassword());
+    			obj.put("email", mUser.getEmail());
+    			obj.put("name", mUser.getName());
+    			obj.put("phone", mUser.getPhone());
+    			obj.put("subUsers", result);
+    		}
     	}
-    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Test"), HttpStatus.INTERNAL_SERVER_ERROR);
+    	catch (Exception e) {
+    		throw e;
+    	}
+    	return obj;
     }
-    
     
     // 유저 정보 수정
     @PutMapping("/user/update")
     public Optional<MainUser> update(
     		@RequestParam Long id,
     		@RequestBody MainUser user){
-//    	System.out.println("update");
     	Optional<MainUser> updateUser = userRepository.findById(id);
     	
     	updateUser.ifPresent(selectUser -> {
