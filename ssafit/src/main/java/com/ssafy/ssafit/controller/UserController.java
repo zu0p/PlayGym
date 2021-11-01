@@ -84,7 +84,7 @@ public class UserController {
         
         Map<String, Object> userinfo = new HashMap<String, Object>();
         userinfo.put("id", member.getId());
-        userinfo.put("userId", member.getId());
+        userinfo.put("userId", member.getUserId());
         userinfo.put("email", member.getEmail());
         userinfo.put("name", member.getName());
         userinfo.put("phone", member.getPhone());
