@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import javax.validation.ConstraintViolationException;
 
@@ -48,12 +49,14 @@ public class UserController {
 	
 	@PostMapping("/join")
 	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
-//		Map<String,Object> ret = new HashMap<String, Object>();
 		try {
-			userRepository.save(MainUser.builder()
+			String password = user.get("password");
+			if(!Pattern.matches("^((?=.*[A-Za-z])(?=.*[0-9])(?=.*[`~!@#$%^&*\\-\\+\\=\\?.,<>\\[\\]\\{\\}\\;\\:\\'\\\"])).{8,20}$", password))
+				return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Invaildate password"),HttpStatus.INTERNAL_SERVER_ERROR);
+				userRepository.save(MainUser.builder()
 	                .userId(user.get("userid"))
 					.email(user.get("email"))
-	                .password(passwordEncoder.encode(user.get("password")))
+	                .password(passwordEncoder.encode(password))
 	                .name(user.get("name"))
 	                .phone(user.get("phone"))
 	                .roles(Collections.singletonList("ROLE_USER")) //
