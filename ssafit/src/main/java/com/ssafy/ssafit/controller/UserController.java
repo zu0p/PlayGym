@@ -1,7 +1,9 @@
 package com.ssafy.ssafit.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
+import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 import com.ssafy.ssafit.service.MainUserService;
+import com.ssafy.ssafit.service.SubUserService;
 
-import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,6 +45,7 @@ public class UserController {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MainuserRepository userRepository;
 	private final MainUserService mainUserService;
+	private final SubUserService subUserService;
 	
 	@PostMapping("/join")
 	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
@@ -82,12 +88,32 @@ public class UserController {
         
         
         Map<String, Object> userinfo = new HashMap<String, Object>();
+        Map<String, Object> child = new HashMap<String,Object>();
         userinfo.put("id", member.getId());
-        userinfo.put("userId", member.getId());
+        userinfo.put("userId", member.getUserId());
         userinfo.put("email", member.getEmail());
         userinfo.put("name", member.getName());
         userinfo.put("phone", member.getPhone());
         userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        
+//        List <SubUser> list  = member.getSubUsers();
+//        List<SubUser> sub = new ArrayList<SubUser>();
+//        for(SubUser s : list) {
+//        	SubUser sb= new SubUser();
+//        	sb.setSid(s.getSid());
+//        	sb.setNickName(s.getNickName());
+//        	sb.setCid(s.getCid());
+//        	if(sb.getCid()!=null) {
+//        		
+//        		for(GetCt gc : s.getGetchracters()) {
+//        			if(sb.getCid()==gc.getCtid().getId()) {
+//        				
+//        			}
+//        		}
+//        	}
+//        	sub.add(sb);
+//        }
+//        userinfo.put("child",sub);
         
         return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,userinfo,"Success"),HttpStatus.OK);
     }
@@ -101,7 +127,7 @@ public class UserController {
     }
     
     //비밀번호 확인 처리 요청
-    @PostMapping("/checkPw")
+    @PostMapping("/user/checkPw")
     public boolean checkPw(@RequestBody Map<String, String> user) throws Exception {
     	MainUser member = userRepository.findByUserId(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
@@ -114,26 +140,37 @@ public class UserController {
     	}
     	return result;
     }
-    
-    //부모 회원정보 조회
-    @GetMapping("/search")
-    public ResponseEntity<ApiResMessage> findUser(@RequestParam Long id) {
-    	Optional<MainUser> user = userRepository.findById(id);
+    //부모 정보 조회
+    @GetMapping("/user/search")
+    public Map<String, Object> findUser(@RequestParam Long id) {
+    	Map<String, Object> obj = null;
+    	List<Map<String, Object>> result = null;
     	try {
-    		user.get();
-    	}catch(Exception e) {
-    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500, null, "Not Find User"), HttpStatus.INTERNAL_SERVER_ERROR);
+    		result = subUserService.getMySubUserList(id);
+    		Optional<MainUser> user = userRepository.findById(id);
+    		if(user != null) {
+    			obj = new HashMap<String, Object>();
+    			MainUser mUser = user.get();
+    			obj.put("id", mUser.getId());
+    			obj.put("userid", mUser.getUserId());
+    			obj.put("password", mUser.getPassword());
+    			obj.put("email", mUser.getEmail());
+    			obj.put("name", mUser.getName());
+    			obj.put("phone", mUser.getPhone());
+    			obj.put("subUsers", result);
+    		}
     	}
-    	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200, null, "Test"), HttpStatus.INTERNAL_SERVER_ERROR);
+    	catch (Exception e) {
+    		throw e;
+    	}
+    	return obj;
     }
     
-    
     // 유저 정보 수정
-    @PutMapping("/update")
+    @PutMapping("/user/update")
     public Optional<MainUser> update(
     		@RequestParam Long id,
     		@RequestBody MainUser user){
-//    	System.out.println("update");
     	Optional<MainUser> updateUser = userRepository.findById(id);
     	
     	updateUser.ifPresent(selectUser -> {
@@ -147,4 +184,18 @@ public class UserController {
     	return updateUser;
     }
 	
+    
+
+	@DeleteMapping("/user/delete")
+	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
+		Map<String,Object> ret = new HashMap<String, Object>();
+		try {
+			mainUserService.deleteMember(id);
+		} catch (Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
+		
+	}
 }
