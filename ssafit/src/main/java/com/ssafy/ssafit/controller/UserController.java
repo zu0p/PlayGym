@@ -73,17 +73,18 @@ public class UserController {
     	
     	try {
     		member = userRepository.findByUserId(user.get("userid")).orElse(null);
+    		if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+            	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
+            }
     	}catch(Exception e){
     		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
     	}
         
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-        	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
-        }
+        
         
         Map<String, Object> userinfo = new HashMap<String, Object>();
         userinfo.put("id", member.getId());
-        userinfo.put("userId", member.getId());
+        userinfo.put("userId", member.getUserId());
         userinfo.put("email", member.getEmail());
         userinfo.put("name", member.getName());
         userinfo.put("phone", member.getPhone());
@@ -95,7 +96,7 @@ public class UserController {
     @GetMapping("/check")
     public ResponseEntity<ApiResMessage> IdCheck(@RequestParam String id){
     	if(!mainUserService.existId(id)) {
-    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"existId"),HttpStatus.OK);
+    		return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"existId"),HttpStatus.OK);
     	}
     	return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
     }

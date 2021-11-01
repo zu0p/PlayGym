@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
-import com.ssafy.ssafit.domain.MainUser;
-import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.service.SubUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -54,13 +52,15 @@ public class SubUserController {
 			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+		if(result == null) 
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
 		return new ResponseEntity<List<Map<String, Object>>>(result, HttpStatus.OK);
 	}
 	
 	// 서브 유저 정보 조회
 	@GetMapping("/sub/profile/{sid}")
 	public ResponseEntity<Map<String, Object>> getSubUserInfo(@PathVariable long sid) {
-		Map<String, Object> result = null;;
+		Map<String, Object> result = null;
 		try {
 			result = subUserService.getSubUserInfo(sid);
 		} catch (Exception e) {
@@ -94,7 +94,44 @@ public class SubUserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
 	
-	// 캐릭터 변경
+	// 캐릭터 획득하기
+	@PostMapping("/sub/getch")
+	public ResponseEntity<ApiResMessage> getCharacter(@RequestBody Map<String, Object> input){
+		try {
+			subUserService.getCharacter(input);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Error"),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+	}
 	
 	// 획득한 캐릭터 목록 조회
+	@GetMapping("/sub/mych")
+	public ResponseEntity<List<Map<String, Object>>> getMyCharacters(@PathVariable long sid) {
+		List<Map<String, Object>> result = null;
+		try {
+			result = subUserService.getMyCharacters(sid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		if(result == null) return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+		
+		return new ResponseEntity<List<Map<String,Object>>>(result, HttpStatus.OK);
+	}
+	
+	// 대표 캐릭터 선택
+	@PutMapping("/sub/setch")
+	public ResponseEntity<ApiResMessage> setMyCharacter(@RequestBody Map<String, Object> input){
+		try {
+			subUserService.setMyCharacter(input);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+	}
 }

@@ -45,6 +45,7 @@ public class SubUser {
 	
 	@NotNull
 	private int age;
+	@NotNull
 	private int tall;
 	@NotNull
 	private int weight;

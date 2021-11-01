@@ -22,10 +22,13 @@ public interface SubUserService {
 	
 	//서브계정 삭제
 	public void deleteSub(long sid);
-	
-	// 캐릭터 선택
-	
-	// 캐릭터 변경
 		
 	// 획득한 캐릭터 목록 조회
+	public List<Map<String, Object>> getMyCharacters(long sid);
+	
+	// 캐릭터 획득
+	public void getCharacter(Map<String, Object> input);
+	
+	// 캐릭터 선택(변경)
+	public void setMyCharacter(Map<String, Object> input);
 }
