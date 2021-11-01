@@ -4,25 +4,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.MainUser;
@@ -46,12 +43,14 @@ public class UserController {
 	
 	@PostMapping("/join")
 	public ResponseEntity<ApiResMessage> join(@RequestBody Map<String, String> user) {
-//		Map<String,Object> ret = new HashMap<String, Object>();
 		try {
-			userRepository.save(MainUser.builder()
+			String password = user.get("password");
+			if(!Pattern.matches("^((?=.*[A-Za-z])(?=.*[0-9])(?=.*[`~!@#$%^&*\\-\\+\\=\\?.,<>\\[\\]\\{\\}\\;\\:\\'\\\"])).{8,20}$", password))
+				return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Invaildate password"),HttpStatus.INTERNAL_SERVER_ERROR);
+				userRepository.save(MainUser.builder()
 	                .userId(user.get("userid"))
 					.email(user.get("email"))
-	                .password(passwordEncoder.encode(user.get("password")))
+	                .password(passwordEncoder.encode(password))
 	                .name(user.get("name"))
 	                .phone(user.get("phone"))
 	                .roles(Collections.singletonList("ROLE_USER")) //

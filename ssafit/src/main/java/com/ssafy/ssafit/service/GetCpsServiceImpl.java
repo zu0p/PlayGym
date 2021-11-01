@@ -31,7 +31,6 @@ public class GetCpsServiceImpl implements GetCpsService {
 				getCpsRepository.save(new GetCps(su, c));
 			}
 		}
-		
 	}
 	
 	@Override
@@ -42,7 +41,4 @@ public class GetCpsServiceImpl implements GetCpsService {
 		getCpsRepository.delete(gc);
 		
 	}
-	
-	
-
 }
