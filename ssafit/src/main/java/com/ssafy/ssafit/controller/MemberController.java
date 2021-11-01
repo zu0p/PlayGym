@@ -23,20 +23,20 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*" )
 public class MemberController {
 	
-	private final MainUserService mainUserService;
-	
-	@DeleteMapping("/delete")
-	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
-		Map<String,Object> ret = new HashMap<String, Object>();
-		try {
-			mainUserService.deleteMember(id);
-		} catch (Exception e) {
-			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
-			
-		}
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
-		
-	}
+//	private final MainUserService mainUserService;
+//	
+//	@DeleteMapping("/delete")
+//	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
+//		Map<String,Object> ret = new HashMap<String, Object>();
+//		try {
+//			mainUserService.deleteMember(id);
+//		} catch (Exception e) {
+//			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
+//			
+//		}
+//		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
+//		
+//	}
 	
 
 }

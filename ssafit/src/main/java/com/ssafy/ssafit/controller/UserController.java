@@ -7,33 +7,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
+import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 import com.ssafy.ssafit.service.MainUserService;
 import com.ssafy.ssafit.service.SubUserService;
 
-import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -87,12 +85,32 @@ public class UserController {
         
         
         Map<String, Object> userinfo = new HashMap<String, Object>();
+        Map<String, Object> child = new HashMap<String,Object>();
         userinfo.put("id", member.getId());
         userinfo.put("userId", member.getUserId());
         userinfo.put("email", member.getEmail());
         userinfo.put("name", member.getName());
         userinfo.put("phone", member.getPhone());
         userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+        
+//        List <SubUser> list  = member.getSubUsers();
+//        List<SubUser> sub = new ArrayList<SubUser>();
+//        for(SubUser s : list) {
+//        	SubUser sb= new SubUser();
+//        	sb.setSid(s.getSid());
+//        	sb.setNickName(s.getNickName());
+//        	sb.setCid(s.getCid());
+//        	if(sb.getCid()!=null) {
+//        		
+//        		for(GetCt gc : s.getGetchracters()) {
+//        			if(sb.getCid()==gc.getCtid().getId()) {
+//        				
+//        			}
+//        		}
+//        	}
+//        	sub.add(sb);
+//        }
+//        userinfo.put("child",sub);
         
         return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,userinfo,"Success"),HttpStatus.OK);
     }
@@ -163,4 +181,18 @@ public class UserController {
     	return updateUser;
     }
 	
+    
+
+	@DeleteMapping("/user/delete")
+	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
+		Map<String,Object> ret = new HashMap<String, Object>();
+		try {
+			mainUserService.deleteMember(id);
+		} catch (Exception e) {
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
+		
+	}
 }
