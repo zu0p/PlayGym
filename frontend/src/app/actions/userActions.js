@@ -1,4 +1,4 @@
-import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, GET_CHILDRED_USER } from './types'
+import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, GET_CHILDRED_USER, ADD_CHILD_USER } from './types'
 import { request, requestWithAuth } from '../../utils/axios'
 
 export function requestLoginUser(userInfo){  
@@ -56,6 +56,14 @@ export function requestGetChildren(userId){
   const returnData = requestWithAuth('get', `/user/sub/${userId}`)
   return {
     type: GET_CHILDRED_USER,
+    payload: returnData
+  }
+}
+
+export function requestAddChild(childInfo){
+  const returnData = requestWithAuth('post', `/user/sub/add`, childInfo)
+  return {
+    type: ADD_CHILD_USER,
     payload: returnData
   }
 }
