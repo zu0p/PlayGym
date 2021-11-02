@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*" )
+@CrossOrigin(origins = "*"  )
 public class UserController {
 	
 	private final PasswordEncoder passwordEncoder;	
@@ -176,6 +176,7 @@ public class UserController {
 		try {
 			mainUserService.deleteMember(id);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
