@@ -1,7 +1,9 @@
 package com.ssafy.ssafit.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,8 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.ssafy.ssafit.security.CorsFilter;
 import com.ssafy.ssafit.security.JwtAuthenticationFilter;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 
@@ -34,19 +41,51 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
 		http.httpBasic().disable() // rest api 만을 고려하여 기본 설정은 해제하겠습니다.
+				.cors().configurationSource(corsConfigurationSource())
+				.and()
 				.csrf().disable() // csrf 보안 토큰 disable처리.
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 역시 사용하지
-																							// 않습니다.
-				.and().authorizeRequests() // 요청에 대한 사용권한 체크
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/user/**").hasRole("USER").anyRequest()
-				.permitAll() // 그외 나머지 요청은 누구나 접근 가능
-				.and().addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-						UsernamePasswordAuthenticationFilter.class);
+				.and()
+//				.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)
+				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+						UsernamePasswordAuthenticationFilter.class).authorizeRequests()// 요청에 대한 사용권한 체크
+				
+				.antMatchers(HttpMethod.OPTIONS,"/user/**").hasRole("USER")
+				.anyRequest().permitAll(); // 그외 나머지 요청은 누구나 접근 가능
+	
 		// JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
 	}
+	
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+    	
+    	CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+//        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    	
+    	
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+//        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+    }
 }
