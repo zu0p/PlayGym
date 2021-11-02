@@ -10,7 +10,7 @@ import com.ssafy.ssafit.domain.SubUser;
 
 public interface GetCtRepository extends JpaRepository<GetCt, Long>{
 
-	List<GetCt> findBySid(long sid);
+	List<GetCt> findBySid(SubUser subUser);
 	GetCt findBySidAndCtid(SubUser s, Characters c);
 
 }

@@ -107,7 +107,7 @@ public class SubUserController {
 	}
 	
 	// 획득한 캐릭터 목록 조회
-	@GetMapping("/sub/mych")
+	@GetMapping("/sub/mych/{sid}")
 	public ResponseEntity<List<Map<String, Object>>> getMyCharacters(@PathVariable long sid) {
 		List<Map<String, Object>> result = null;
 		try {

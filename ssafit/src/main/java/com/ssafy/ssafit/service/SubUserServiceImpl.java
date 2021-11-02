@@ -147,7 +147,7 @@ public class SubUserServiceImpl implements SubUserService {
 	public List<Map<String, Object>> getMyCharacters(long sid) {
 		List<Map<String, Object>> result = null;
 		try {
-			List<GetCt> list = getCtRepository.findBySid(sid);
+			List<GetCt> list = getCtRepository.findBySid(subUserRepository.findById(sid).get());
 			if(list != null) {
 				result = new ArrayList<Map<String, Object>>();
 				for(GetCt gc : list) {
