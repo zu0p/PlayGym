@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.Characters;
 import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
+import com.ssafy.ssafit.dto.SubUserDto;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.security.JwtTokenProvider;
 import com.ssafy.ssafit.service.MainUserService;
@@ -75,45 +77,23 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResMessage> login(@RequestBody Map<String, String> user) {
     	MainUser member=null;
-    	
+    	 Map<String, Object> userinfo = new HashMap<String, Object>();
     	try {
     		member = userRepository.findByUserId(user.get("userid")).orElse(null);
     		if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             	return new ResponseEntity<ApiResMessage>(new ApiResMessage(401,null,"Failed"),HttpStatus.UNAUTHORIZED);
             }
+    	        userinfo.put("id", member.getId());
+    	        userinfo.put("userId", member.getUserId());
+    	        userinfo.put("email", member.getEmail());
+    	        userinfo.put("name", member.getName());
+    	        userinfo.put("phone", member.getPhone());
+    	        userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
+    	       
+    	        userinfo.put("child", mainUserService.loginService(member));
     	}catch(Exception e){
     		return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-        
-        
-        
-        Map<String, Object> userinfo = new HashMap<String, Object>();
-        Map<String, Object> child = new HashMap<String,Object>();
-        userinfo.put("id", member.getId());
-        userinfo.put("userId", member.getUserId());
-        userinfo.put("email", member.getEmail());
-        userinfo.put("name", member.getName());
-        userinfo.put("phone", member.getPhone());
-        userinfo.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRoles()));
-        
-//        List <SubUser> list  = member.getSubUsers();
-//        List<SubUser> sub = new ArrayList<SubUser>();
-//        for(SubUser s : list) {
-//        	SubUser sb= new SubUser();
-//        	sb.setSid(s.getSid());
-//        	sb.setNickName(s.getNickName());
-//        	sb.setCid(s.getCid());
-//        	if(sb.getCid()!=null) {
-//        		
-//        		for(GetCt gc : s.getGetchracters()) {
-//        			if(sb.getCid()==gc.getCtid().getId()) {
-//        				
-//        			}
-//        		}
-//        	}
-//        	sub.add(sb);
-//        }
-//        userinfo.put("child",sub);
         
         return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,userinfo,"Success"),HttpStatus.OK);
     }
@@ -195,7 +175,7 @@ public class UserController {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Deleted Error"),HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 		
 	}
 }

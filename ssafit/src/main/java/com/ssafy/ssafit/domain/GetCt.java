@@ -1,8 +1,6 @@
 package com.ssafy.ssafit.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,21 +18,21 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GetCt {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="ctid")
 	@NotNull
 	private Characters ctid;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="sid")
 	@NotNull
 	private SubUser sid;
