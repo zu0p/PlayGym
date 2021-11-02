@@ -83,7 +83,7 @@ export default function AddProfileDialog(props) {
 
   return (
     <div>
-      <Dialog open={props.open} tytleStyle={styles.dialog}>
+      <Dialog open={props.open} className={styles.dialog}>
         <DialogTitle><h1><AddReactionIcon fontSize="large"/> Add Player</h1></DialogTitle>
         <DialogContent style={{height: '430px', width: '400px'}}>
           <Grid container spacing={4} mt={'5px'}>
