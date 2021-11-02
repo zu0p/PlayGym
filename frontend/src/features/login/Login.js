@@ -126,8 +126,9 @@ export function Login(props) {
           // console.log(res.payload.data.result)
           // console.log(userState)
 
-          // 2. save token into localStorage
+          // 2. save token, main-user key into localStorage
           localStorage.setItem('access-token', res.payload.data.result.token)
+          localStorage.setItem('main-user', res.payload.data.result.id)
           // console.log(localStorage.getItem('access-token'))
 
           // 3. go to 'select player' page

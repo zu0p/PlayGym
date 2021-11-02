@@ -9,15 +9,20 @@ import styles from './Profile.module.css'
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { AddButton, CancelButton, AddTextField, SelectInput, SliderInput } from './customProfileStyle';
 import { Grid, Select } from '@mui/material';
+import { requestAddChild } from '../../app/actions/userActions'
+import { useDispatch } from 'react-redux';
 
 export default function AddProfileDialog(props) {
+  const dispatch = useDispatch()
+
   const [tall, setTall] = useState(90)
   const [weight, setWeight] = useState(20)
-  const [age, setAge] = useState(0)
+  const [age, setAge] = useState(3)
   const [nickName, setNickName] = useState('')
   const [nickNameError, setNickNameError] = useState('')
   const [clickedNickName, setClickedNickName] = useState(false)
   
+  const [add, setAdd] = useState(true)
   const handleTallChange = (e, newTall) => {
     setTall(newTall)
   }
@@ -40,6 +45,7 @@ export default function AddProfileDialog(props) {
     } else {
       // need to find regex to catch spacebars in id
       setNickNameError('')
+      setAdd(false)
     }
   }
 
@@ -54,18 +60,30 @@ export default function AddProfileDialog(props) {
   }
 
   const onClose = () => {
+    setAdd(true)
     props.getClose(true)
   }
 
   const onAdd = () => {
     // add sub proflie
+    const param = {
+      "nickName" : nickName, 
+      "age" : age, 
+      "tall" : tall,
+      "weight" : weight,
+      "id" : localStorage.getItem('main-user') // mainUser id
+    }
+    dispatch(requestAddChild(param))
+      .then(res=>{
+        console.log(res)
+      })
 
-    props.getClose(true)
+    onClose()
   }
 
   return (
     <div>
-      <Dialog open={props.open} tytleStyle={styles.dialog}>
+      <Dialog open={props.open} className={styles.dialog}>
         <DialogTitle><h1><AddReactionIcon fontSize="large"/> Add Player</h1></DialogTitle>
         <DialogContent style={{height: '430px', width: '400px'}}>
           <Grid container spacing={4} mt={'5px'}>
@@ -124,7 +142,7 @@ export default function AddProfileDialog(props) {
         </DialogContent>
         <DialogActions>
           <CancelButton onClick={onClose}>Cancel</CancelButton>
-          <AddButton onClick={onAdd}>Add</AddButton>
+          <AddButton id={'add-button'} onClick={onAdd} disabled={add}>Add</AddButton>
         </DialogActions>
       </Dialog>
     </div>
