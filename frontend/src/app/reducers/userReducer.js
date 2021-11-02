@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER } from '../actions/types'
+import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER } from '../actions/types'
 
 const userState = {
   mainUser: {
@@ -7,7 +7,8 @@ const userState = {
     userId: '',
     name: '',
     email: '',
-    phone: null
+    phone: null,
+    password: ''
   }
 }
 
@@ -25,6 +26,15 @@ const user = createReducer(userState, {
     console.log(action)
   },
   UPDATE_USER: (state, action)=>{
+    console.log(action)
+  },
+  CHECK_PASSWORD: (state, action)=>{
+    console.log(action)
+  },
+  GET_USER: (state, action) => {
+    console.log(action)
+  },
+  GET_CHILDRED_USER: (state, action) => {
     console.log(action)
   }
 })
