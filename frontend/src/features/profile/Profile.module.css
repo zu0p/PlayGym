@@ -36,3 +36,10 @@ h1, h5{
   height: 30px;
   color: #22220B;
 }
+
+.outAlert{
+  border-radius: 0 !important;
+  height: 50px;
+  padding: 10px 10px 10px 10px !important;
+  margin: 0 !important;
+}
