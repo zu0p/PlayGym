@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -77,7 +78,7 @@ public class MainUser implements UserDetails{
 	private String phone;
 	
 	@Builder.Default
-	@OneToMany(mappedBy = "mainUser", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "mainUser", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<SubUser> subUsers = new ArrayList<SubUser>();
 	
 	

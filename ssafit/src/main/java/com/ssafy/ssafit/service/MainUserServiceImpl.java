@@ -35,13 +35,13 @@ public class MainUserServiceImpl implements MainUserService {
 	@Transactional
 	public void deleteMember(long id) {
 		MainUser m = mainuserRepository.findById(id).orElse(null);
-		List<SubUser> sub = subUserRepository.findByMainUser(m).orElse(null);
-		for (SubUser sb : sub) {
-			GetCt gc = sb.getCid();
-			sb.setCid(null);
-			getCtRepository.delete(gc);
-			subUserRepository.deleteById(sb.getSid());
-		}
+//		List<SubUser> sub = subUserRepository.findByMainUser(m).orElse(null);
+//		for (SubUser sb : sub) {
+//			GetCt gc = sb.getCid();
+//			sb.setCid(null);
+//			getCtRepository.delete(gc);
+//			subUserRepository.deleteById(sb.getSid());
+//		}
 		mainuserRepository.deleteById(id);
 	}
 
