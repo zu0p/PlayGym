@@ -27,8 +27,8 @@ public interface SubUserService {
 	public List<Map<String, Object>> getMyCharacters(long sid);
 	
 	// 캐릭터 획득
-	public void getCharacter(Map<String, Object> input);
+	public void getCharacter(Map<String, String> input);
 	
 	// 캐릭터 선택(변경)
-	public void setMyCharacter(Map<String, Object> input);
+	public void setMyCharacter(Map<String, String> input) throws Exception;
 }
