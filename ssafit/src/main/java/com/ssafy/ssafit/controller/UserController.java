@@ -188,7 +188,6 @@ public class UserController {
 
 	@DeleteMapping("/user/delete")
 	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
-		Map<String,Object> ret = new HashMap<String, Object>();
 		try {
 			mainUserService.deleteMember(id);
 		} catch (Exception e) {
