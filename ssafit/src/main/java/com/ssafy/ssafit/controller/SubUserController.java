@@ -96,7 +96,7 @@ public class SubUserController {
 	
 	// 캐릭터 획득하기
 	@PostMapping("/sub/getch")
-	public ResponseEntity<ApiResMessage> getCharacter(@RequestBody Map<String, Object> input){
+	public ResponseEntity<ApiResMessage> getCharacter(@RequestBody Map<String, String> input){
 		try {
 			subUserService.getCharacter(input);
 		} catch (Exception e) {
@@ -107,7 +107,7 @@ public class SubUserController {
 	}
 	
 	// 획득한 캐릭터 목록 조회
-	@GetMapping("/sub/mych")
+	@GetMapping("/sub/mych/{sid}")
 	public ResponseEntity<List<Map<String, Object>>> getMyCharacters(@PathVariable long sid) {
 		List<Map<String, Object>> result = null;
 		try {
@@ -124,7 +124,7 @@ public class SubUserController {
 	
 	// 대표 캐릭터 선택
 	@PutMapping("/sub/setch")
-	public ResponseEntity<ApiResMessage> setMyCharacter(@RequestBody Map<String, Object> input){
+	public ResponseEntity<ApiResMessage> setMyCharacter(@RequestBody Map<String, String> input){
 		try {
 			subUserService.setMyCharacter(input);
 		} catch(Exception e) {

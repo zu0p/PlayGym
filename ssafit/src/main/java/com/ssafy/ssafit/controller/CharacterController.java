@@ -1,8 +1,10 @@
 package com.ssafy.ssafit.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,21 +22,21 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*" )
 public class CharacterController {
 	
+	@Autowired
 	CharacterService characterService;
 	
 	@GetMapping("/chars")
 	public ResponseEntity<List<Map<String, Object>>> getAllCharacters(){
-		List<Map<String, Object>> result = null;
-		
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 		try {
 			result = characterService.getAllCharacters();
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		if(result == null) return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
-		
+		if(result == null) return new ResponseEntity<List<Map<String,Object>>>(result, HttpStatus.NO_CONTENT);
 		return new ResponseEntity<List<Map<String,Object>>>(result, HttpStatus.OK);
 	}
 }

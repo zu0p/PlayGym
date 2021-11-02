@@ -71,7 +71,7 @@ public class SubUserServiceImpl implements SubUserService {
 					obj.put("weight", su.getWeight());
 					obj.put("tall", su.getTall());
 					
-					if(su.getCid() != null) obj.put("image" , su.getCid().getCtid().getImageLink());
+					if(su.getCid() != null) obj.put("image" , su.getCid().getCtid().getImage_link());
 					else obj.put("image", null);
 					
 					result.add(obj);
@@ -99,7 +99,7 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
 				obj.put("id", subUser.getMainUser().getId());
-				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImageLink());
+				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImage_link());
 				else obj.put("image", null);
 			}	
 		} catch (Exception e) {
@@ -147,7 +147,7 @@ public class SubUserServiceImpl implements SubUserService {
 	public List<Map<String, Object>> getMyCharacters(long sid) {
 		List<Map<String, Object>> result = null;
 		try {
-			List<GetCt> list = getCtRepository.findBySid(sid);
+			List<GetCt> list = getCtRepository.findBySid(subUserRepository.findById(sid).get());
 			if(list != null) {
 				result = new ArrayList<Map<String, Object>>();
 				for(GetCt gc : list) {
@@ -164,12 +164,15 @@ public class SubUserServiceImpl implements SubUserService {
 	
 	// 캐릭터 획득
 	@Override
-	public void getCharacter(Map<String, Object> input) {
+	public void getCharacter(Map<String, String> input) {
 		try {
-			long sid = (long) input.get("sid");
-			long cid = (long) input.get("cid");
+			long sid = Long.parseLong(input.get("sid"));
+			long cid = Long.parseLong(input.get("cid"));
 			SubUser s = subUserRepository.findBySid(sid).orElse(null);
 			Characters c = characterRepository.findById(cid).orElse(null);
+			
+			if(getCtRepository.findBySidAndCtid(s, c) != null) return;
+			
 			GetCt gc = GetCt.builder().ctid(c).sid(s).build();
 			getCtRepository.save(gc);
 		} catch (Exception e) {
@@ -179,14 +182,18 @@ public class SubUserServiceImpl implements SubUserService {
 	
 	// 캐릭터 선택(변경)
 	@Override
-	public void setMyCharacter(Map<String, Object> input) {
+	public void setMyCharacter(Map<String, String> input) throws Exception {
 		try {
-			long cid = (long) input.get("cid");
-			long sid = (long) input.get("sid");
+			long sid = Long.parseLong(input.get("sid"));
+			long cid = Long.parseLong(input.get("cid"));
 			SubUser s = subUserRepository.findBySid(sid).orElse(null);
 			Characters c = characterRepository.findById(cid).orElse(null);
 			GetCt gc = getCtRepository.findBySidAndCtid(s, c);
+			
+			if(gc == null) throw new Exception("GC NOT FOUND");
+			
 			s.setCid(gc);
+			subUserRepository.save(s);
 		} catch (Exception e) {
 			throw e;
 		}
