@@ -53,7 +53,7 @@ export function requestGetUser(userId){
 }
 
 export function requestGetChildren(userId){
-  const returnData = requestWithAuth('get', `/user/sub?id=${userId}`)
+  const returnData = requestWithAuth('get', `/user/sub/${userId}`)
   return {
     type: GET_CHILDRED_USER,
     payload: returnData

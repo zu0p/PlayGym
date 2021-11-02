@@ -19,6 +19,7 @@ import bear from '../../images/characters/bear.png'
 import cat from '../../images/characters/cat.png'
 import chick from '../../images/characters/chick.png'
 import rabbit from '../../images/characters/rabbit.png'
+import {requestGetChildren} from '../../app/actions/userActions'
 
 function Player({player}){
   const selectPlayer=()=>{
@@ -44,6 +45,13 @@ function Player({player}){
 }
 
 export function Profile(){
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(requestGetChildren(localStorage.getItem('main-user')))
+      .then(res => {
+        console.log(res)
+      })
+  },[])
   const players = [ // sub user(children) list
     {
       id: 0,

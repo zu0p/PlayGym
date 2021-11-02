@@ -32,7 +32,11 @@ export default function EditMainUserInfoDialog(props) {
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
 
+  // alert
   const [signout, setSignout] = useState(false)
+  const [isCheckPwd, setIsCheckPwd] = useState(false)
+
+  const [correctPwd, setCorrectPwd] = useState(false)
 
   useEffect(()=>{
     dispatch(requestGetUser(localStorage.getItem('main-user')))
@@ -43,12 +47,14 @@ export default function EditMainUserInfoDialog(props) {
         setEmail(res.payload.email)
         setPhone(res.payload.phone)
       })
-  })
+  },[])
 
   const handleClose = () => {
     props.getClose(true)
     setSignout(false)
     setInputDisable(true)
+    setCorrectPwd(false)
+    setIsCheckPwd(false)
   }
 
   const onEditClick = () => {
@@ -76,6 +82,10 @@ export default function EditMainUserInfoDialog(props) {
     }
     else{
       // save(change info)
+      if(!correctPwd){
+        setIsCheckPwd(true)
+        return
+      }
       setInputDisable(true)
       const eButton = document.getElementById('editButton')
       eButton.style.backgroundColor='#A3C653'
@@ -93,8 +103,9 @@ export default function EditMainUserInfoDialog(props) {
         email: email,
         name: name,
         phone: phone,
-        password: newPassword==''?userState.mainUser.password:newPassword
+        password: newPassword==''?password:newPassword
       }
+      console.log(userInfo)
       dispatch(
         requestUpdateUser(userInfo)
       )
@@ -113,10 +124,10 @@ export default function EditMainUserInfoDialog(props) {
       .then(res => {
         if(res.payload){
           // correct password
+          setCorrectPwd(true)
           const checkField = document.getElementById('check_password_field')
           checkField.classList.add(styles.fade_out)
           checkField.style.display = 'none'
-          setPassword('')
 
           const newField = document.getElementById('new_password_field')
           newField.style.display = 'block'
@@ -124,6 +135,7 @@ export default function EditMainUserInfoDialog(props) {
         }
         else{
           // incorrect password
+          setCorrectPwd(false)
           const checkField = document.getElementById('check_password_field')
           // console.log(checkField.children)
           const children = checkField.children
@@ -146,9 +158,10 @@ export default function EditMainUserInfoDialog(props) {
   }
 
   const onOutClick = () => {
-    console.log(signout)
-    setSignout(true)
-    console.log(signout)
+    if(!correctPwd)
+      // console.log(`ccc->${correctPwd}`)
+      setIsCheckPwd(true)
+    else setSignout(true)
   }
 
   const onSignout = () => {
@@ -160,7 +173,7 @@ export default function EditMainUserInfoDialog(props) {
     ).then(res=>{
 
       // back to login page
-      localStorage.removeItem('access-token')
+      localStorage.clear()
       window.location.href = '/'
     })
     
@@ -239,6 +252,31 @@ export default function EditMainUserInfoDialog(props) {
             회원 탈퇴하시면 모든 정보가 삭제 됩니다. 정말로 회원 탈퇴하시겠습니까?
           </Alert>
         </Collapse>
+
+        <Collapse in={isCheckPwd} >
+          <Alert
+            className={styles.outAlert}
+            severity="warning"
+            action={
+              <div>
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setIsCheckPwd(false)
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+              </div>
+            }
+            sx={{ mb: 2 }}
+          >
+            비밀번호를 확인해주세요
+          </Alert>
+        </Collapse>
+
         <FullDialogBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton
