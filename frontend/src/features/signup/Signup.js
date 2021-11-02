@@ -119,7 +119,7 @@ export function Signup(props) {
             sx={{justifyContent: 'center', alignItems: 'center'}}
           >
             <SignupTextField
-              type={ input === 'PW' || 'PWConfirm' ? 'password' : '' }
+              type={ (input === 'PW') || (input === 'PWConfirm') ? 'password' : '' }
               key={input}
               required
               error={ flags[input] }
