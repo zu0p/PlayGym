@@ -54,14 +54,12 @@ public class MainUser implements UserDetails{
 	
 	@Column(unique=true)
 	@NotNull
-	@Pattern(regexp = "^[A-Za-z0-9+]{4,17}$")
-	//최소 4글자에서 최대 17글자, 영문자와 숫자로만 표현
+	@Pattern(regexp = "^[A-Za-z0-9]{4,20}$")
+	//최소 4글자에서 최대 20글자, 영문자와 숫자로만 표현
 	private String userId;
 	
 	//유저 비밀번호
 	@NotNull
-	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
-	//최소 8자, 하나이상의 문자, 하나의 숫자 및 하나의 특수문자
 	private String password;
 	
 	//유저 이름

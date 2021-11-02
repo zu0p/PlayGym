@@ -9,12 +9,8 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.Characters;
 import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
@@ -75,6 +71,9 @@ public class SubUserServiceImpl implements SubUserService {
 					obj.put("weight", su.getWeight());
 					obj.put("tall", su.getTall());
 					
+					if(su.getCid() != null) obj.put("image" , su.getCid().getCtid().getImageLink());
+					else obj.put("image", null);
+					
 					result.add(obj);
 				}
 			}
@@ -100,6 +99,8 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
 				obj.put("id", subUser.getMainUser().getId());
+				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImageLink());
+				else obj.put("image", null);
 			}	
 		} catch (Exception e) {
 			throw e;
@@ -166,9 +167,9 @@ public class SubUserServiceImpl implements SubUserService {
 	public void getCharacter(Map<String, Object> input) {
 		try {
 			long sid = (long) input.get("sid");
-			long ctid = (long) input.get("ctid");
+			long cid = (long) input.get("cid");
 			SubUser s = subUserRepository.findBySid(sid).orElse(null);
-			Characters c = characterRepository.findById(ctid).orElse(null);
+			Characters c = characterRepository.findById(cid).orElse(null);
 			GetCt gc = GetCt.builder().ctid(c).sid(s).build();
 			getCtRepository.save(gc);
 		} catch (Exception e) {
@@ -180,10 +181,10 @@ public class SubUserServiceImpl implements SubUserService {
 	@Override
 	public void setMyCharacter(Map<String, Object> input) {
 		try {
-			long ctid = (long) input.get("ctid");
+			long cid = (long) input.get("cid");
 			long sid = (long) input.get("sid");
 			SubUser s = subUserRepository.findBySid(sid).orElse(null);
-			Characters c = characterRepository.findById(ctid).orElse(null);
+			Characters c = characterRepository.findById(cid).orElse(null);
 			GetCt gc = getCtRepository.findBySidAndCtid(s, c);
 			s.setCid(gc);
 		} catch (Exception e) {
