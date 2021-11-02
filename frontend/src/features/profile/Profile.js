@@ -20,6 +20,7 @@ import cat from '../../images/characters/cat.png'
 import chick from '../../images/characters/chick.png'
 import rabbit from '../../images/characters/rabbit.png'
 import {requestGetChildren} from '../../app/actions/userActions'
+import Logout from '../logout/Logout'
 
 function Player({player}){
   const selectPlayer=()=>{
@@ -102,6 +103,7 @@ export function Profile(){
 
   return(
     <div className={styles.profile_container}>
+      <Logout />
       <BackAnimation 
         animate={{ 
           scale: 0, 

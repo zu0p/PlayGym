@@ -7,6 +7,7 @@ import mugunghwa from '../../images/games/game_mugunghwa.png'
 import follow_me from '../../images/games/game_follow_me.png'
 import word from '../../images/games/game_word.png'
 import { AddButton } from '../profile/customProfileStyle'
+import Logout from '../logout/Logout'
 
 export function Home() {
   const onMugunghwaClick = () => {
@@ -27,6 +28,7 @@ export function Home() {
         justifyContent="center"
         alignItems="center"
       >
+        <Logout />
         <CircleButton >
           <AccountCircleOutlinedIcon fontSize="large"/>
         </CircleButton>

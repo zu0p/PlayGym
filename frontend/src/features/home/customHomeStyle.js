@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 export const CircleButton = styled(Button)({
   position: 'fixed',
   top: '10px',
-  left: '10px',
+  left: '60px',
   minWidth: '40px',
   width: '40px',
   height: '40px',
