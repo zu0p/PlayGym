@@ -77,7 +77,7 @@ public class MainUser implements UserDetails{
 	private String phone;
 	
 	@Builder.Default
-	@OneToMany(mappedBy = "mainUser")
+	@OneToMany(mappedBy = "mainUser", fetch = FetchType.LAZY)
 	private List<SubUser> subUsers = new ArrayList<SubUser>();
 	
 	

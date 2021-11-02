@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,10 @@ import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"getchracters", "getCompensation"})
 public class SubUser {
 	
 	@Id
@@ -38,7 +40,7 @@ public class SubUser {
 	@NotNull
 	private String nickName;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch =FetchType.EAGER)
 	@JoinColumn(name="mainuser")
 	@NotNull
 	private MainUser mainUser;
@@ -50,7 +52,7 @@ public class SubUser {
 	@NotNull
 	private int weight;
 	
-	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name="cid")
 	private GetCt cid;
 	
