@@ -71,7 +71,7 @@ public class SubUserServiceImpl implements SubUserService {
 					obj.put("weight", su.getWeight());
 					obj.put("tall", su.getTall());
 					
-					if(su.getCid() != null) obj.put("image" , su.getCid().getCtid().getImageLink());
+					if(su.getCid() != null) obj.put("image" , su.getCid().getCtid().getImage_link());
 					else obj.put("image", null);
 					
 					result.add(obj);
@@ -99,7 +99,7 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
 				obj.put("id", subUser.getMainUser().getId());
-				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImageLink());
+				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImage_link());
 				else obj.put("image", null);
 			}	
 		} catch (Exception e) {

@@ -6,13 +6,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Getter @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Characters {
 	
 	@Id
@@ -26,6 +32,6 @@ public class Characters {
 	private int price;
 	
 	@NotNull
-	private String imageLink;
+	private String image_link;
 
 }
