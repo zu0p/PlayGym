@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*"  )
+@CrossOrigin(origins = "*")
 public class UserController {
 	
 	private final PasswordEncoder passwordEncoder;	

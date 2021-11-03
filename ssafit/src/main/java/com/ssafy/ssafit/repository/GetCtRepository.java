@@ -12,5 +12,7 @@ public interface GetCtRepository extends JpaRepository<GetCt, Long>{
 
 	List<GetCt> findBySid(SubUser subUser);
 	GetCt findBySidAndCtid(SubUser s, Characters c);
+	void deleteBySid(SubUser su);
+	void deleteAllBySid(SubUser s);
 
 }

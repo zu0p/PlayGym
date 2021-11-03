@@ -19,11 +19,10 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*" )
 public class MemberController {
 	
-//	private final MainUserService mainUserService;
+//	private MainUserService mainUserService;
 //	
 //	@DeleteMapping("/delete")
 //	public ResponseEntity<ApiResMessage> deleteMember(@RequestParam long id){
@@ -37,6 +36,4 @@ public class MemberController {
 //		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.INTERNAL_SERVER_ERROR);
 //		
 //	}
-	
-
 }

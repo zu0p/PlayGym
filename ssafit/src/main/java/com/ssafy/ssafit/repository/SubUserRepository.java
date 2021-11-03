@@ -12,4 +12,5 @@ public interface SubUserRepository extends JpaRepository<SubUser, Long>{
 
 	Optional<List<SubUser>> findByMainUser(MainUser m);
 	Optional<SubUser> findBySid(long sid);
+	void deleteBySid(long sid);
 }

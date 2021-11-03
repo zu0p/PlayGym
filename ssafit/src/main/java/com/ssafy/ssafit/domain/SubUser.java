@@ -52,14 +52,14 @@ public class SubUser {
 	@NotNull
 	private int weight;
 	
-	@OneToOne(cascade = CascadeType.REMOVE)
-	@JoinColumn(name="cid")
+	@JoinColumn(name = "cid")
+	@OneToOne
 	private GetCt cid;
 	
-	@OneToMany(mappedBy = "sid")
+	@OneToMany (mappedBy = "sid", cascade = CascadeType.REMOVE)
 	private List<GetCt> getchracters = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "subid")
+	@OneToMany(mappedBy = "subid", cascade = CascadeType.REMOVE)
 	private List<GetCps> getCompensation = new ArrayList<>();
 
 	@Builder
