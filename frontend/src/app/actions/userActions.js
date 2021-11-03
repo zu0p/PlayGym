@@ -1,5 +1,6 @@
 import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, GET_CHILDRED_USER, ADD_CHILD_USER } from './types'
 import { request, requestWithAuth } from '../../utils/axios'
+import { createAction } from '@reduxjs/toolkit'
 
 export function requestLoginUser(userInfo){  
   const returnData = request('post', '/login', userInfo)
@@ -67,3 +68,17 @@ export function requestAddChild(childInfo){
     payload: returnData
   }
 }
+
+
+export const requestSignupUser = createAction('SIGNUP_USER', function prepare(userInfo) {
+  const returnData = request('post', `/join`, userInfo)
+
+  return { payload: returnData }
+}) 
+
+export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prepare(userInfo) {
+  console.log(userInfo)
+  const returnData = request('get', `/check?id=${userInfo.id}`)
+
+  return { payload: returnData }
+})

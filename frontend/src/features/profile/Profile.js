@@ -11,6 +11,7 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import AddProfileDialog from './AddProfileDialog'
 import EditMainUserInfoDialog from './EditMainUserInfoDialog'
+import { StatDialog } from './StatDialog'
 import { SmallDarkButton, EditButton } from './customProfileStyle'
 import { BackAnimation } from '../login/styledComponent'
 import cloudImage from '../../images/background_cloud.png'
@@ -100,6 +101,15 @@ export function Profile(){
   const onEditProfileClose = () => {
     setEditOpen(false);
   };
+
+  const [statOpen, setStatOpen] = useState(false);
+  const onStatClick = () => {
+    setStatOpen(true)
+  }
+
+  const onStatClose = () => {
+    setStatOpen(false)
+  }
 
   return(
     <div className={styles.profile_container}>
@@ -194,14 +204,15 @@ export function Profile(){
             <SmallDarkButton onClick={onEditProfileClick}>
               나의 정보 <EditIcon />
             </SmallDarkButton>
-            <SmallDarkButton >
+            <SmallDarkButton onClick={onStatClick}>
               플레이어 현황 <ChildCareIcon />
             </SmallDarkButton>
           </Grid>
         </Grid>
       </Grid>
-      <AddProfileDialog open={addOpen} getClose={onAddProfileClose}/>
-      <EditMainUserInfoDialog open={editOpen} getClose={onEditProfileClose}/>
+      <AddProfileDialog open={addOpen} getClose={onAddProfileClose} />
+      <EditMainUserInfoDialog open={editOpen} getClose={onEditProfileClose} />
+      <StatDialog open={statOpen} getClose={onStatClose} />
     </div>
   )
 }

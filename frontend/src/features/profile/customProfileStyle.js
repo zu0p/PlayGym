@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import Slider, { SliderThumb } from '@mui/material/Slider';
-import { AppBar } from '@mui/material';
+import { AppBar, Dialog } from '@mui/material';
 import Grid from '@mui/material/Grid'
 
 export const FullDialogBar = styled(AppBar)({
@@ -103,7 +103,7 @@ export const AddTextField = styled(TextField)({
     },
     '&.Mui-focused fieldset': {
       borderColor: 'white',
-     orderWidth: 3,
+      orderWidth: 3,
     },
   },
 });
