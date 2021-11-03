@@ -44,7 +44,7 @@ pipeline {
 				sh 'docker images -f "dangling=true" -q \
 					| xargs -r docker rmi'
 				// docker container 실행
-				sh 'docker run -d --name backend -p 8080:8080 -v /home/ubuntu/img/:/home/ubuntu/img/ -v /home/ubuntu/model/:/home/ubuntu/model/backend:latest'
+				sh 'docker run -d --name backend -p 8080:8080 -v /home/ubuntu/img/:/home/ubuntu/img/ -v /home/ubuntu/model/:/home/ubuntu/model/ backend:latest'
 			}
 		}
 	}
