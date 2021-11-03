@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import { FullDialogBar, FullDialogGridStat } from './customProfileStyle'
+import { FullDialogBar, FullDialogGrid } from './customProfileStyle'
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,10 +11,25 @@ import styles from './Profile.module.css';
 import bear from '../../images/characters/bear.png'
 import cat from '../../images/characters/cat.png'
 import chick from '../../images/characters/chick.png'
+import { styled } from '@mui/material/styles';
 import { Paper } from '@mui/material';
 import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+
 // import rabbit from '../../images/characters/rabbit.png'
+
+const BorderLinearProgress = styled(LinearProgress)(_ => ({
+  height: 20,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: '#eeeeee'
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: '#FAA085'
+  },
+}));
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -38,7 +53,7 @@ function LinearProgressWithLabel(props) {
 export function StatDialog(props) {
   const [progress, setProgress] = React.useState(0);
   const handleClose = () => {
-    props.getClose(true)
+    props.getClose()
   }
 
   // 아마도 profileList를 prop으로 받아오 지 않 을 까? 모르겠네
@@ -76,7 +91,7 @@ export function StatDialog(props) {
           </Typography>
         </Toolbar>
       </FullDialogBar>
-      <FullDialogGridStat
+      <FullDialogGrid
         container
         direction="column"
         // justifyContent="center"
@@ -84,24 +99,45 @@ export function StatDialog(props) {
         spacing={3}
       >
         {profiles.list.map(profile => (
-          <Grid container sx={{ mt: 10, ml:4, width: '75%' }} >
-            <Grid item direction="column">
-              <div className={styles.player_static}>
-                <img src={profile.pic} width='100px'/>
+          <Grid container sx={{ mt: 10, ml:4, width: '75%' }} key={profile.name} >
+            <Grid direction="column" container item xs={4} alignItems="end">
+              <div>
+                <div className={styles.player_static}>
+                  <img src={profile.pic} width='100px'/>
+                </div>
+                <Typography sx={{ textAlign: 'center'}}>
+                  {profile.name}
+                </Typography>
               </div>
-              <Typography sx={{ textAlign: 'center'}}>
-                {profile.name}
-              </Typography>
             </Grid>
-            <Grid item direction="column" xs container>
-              <LinearProgressWithLabel value={progress} />
-              <Typography>
-                총 소모한 칼로리: {profile.kcal}
-              </Typography>
+            <Grid item xs={8} container>
+              <Grid item container direction="column" xs={6} justifyContent="space-around">
+                <div>
+                  <Typography sx={{fontSize: '30px', textAlign:"center"}}>소모한 칼로리 20kcal</Typography>
+                </div>
+                <Grid item>
+                  <div className={styles.progressbar__container}>
+                    {/* note: negative ml value === width or fontSize / 2 */}
+                    <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
+                      1
+                    </Typography>
+                    <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
+                      1
+                    </Typography>
+                    <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
+                    <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
+                    <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={50} />
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item container direction="column" xs={3} justifyContent="space-around">
+                <Typography sx={{fontSize: '30px'}}></Typography>
+                <Typography sx={{fontSize: '30px'}}>레벨 2000</Typography>
+              </Grid>
             </Grid>
           </Grid>
         ))}
-      </FullDialogGridStat>
+      </FullDialogGrid>
     </Dialog>
   )
 }

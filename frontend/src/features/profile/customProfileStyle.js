@@ -16,12 +16,6 @@ export const FullDialogGrid = styled(Grid)({
   height: '100vh'
 })
 
-export const FullDialogGridStat = styled(Grid) ({
-  backgroundColor: '#D5E8A6',
-  // minHeight: '100vh'
-  // height: '100vh',
-})
-
 export const SliderInput = styled(Slider)({
   color: '#A3C653',
   width: '300px',

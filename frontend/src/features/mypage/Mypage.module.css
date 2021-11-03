@@ -1,0 +1,15 @@
+.container {
+  background: #D5E8A6;
+  height: 100vh;
+}
+
+.progressbar__container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+}

@@ -48,3 +48,14 @@ h1, h5{
   margin: 10px;
   border: solid 3px #A3C653;
 }
+
+.progressbar__container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+}
