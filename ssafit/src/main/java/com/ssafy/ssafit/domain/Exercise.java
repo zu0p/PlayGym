@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,5 +40,6 @@ public class Exercise {
 	
 	@OneToMany(mappedBy = "exec",fetch = FetchType.EAGER, cascade= {CascadeType.REMOVE})
 	@JsonIgnoreProperties({"exec"})
+	@OrderBy("process ASC")
 	private List<ExerciseSub> execSub=new ArrayList<>();
 }
