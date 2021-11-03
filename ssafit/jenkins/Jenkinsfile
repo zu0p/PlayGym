@@ -1,4 +1,4 @@
-// 젠킨스 파이프라인 플러그인을 호출하기 위한 블록
+ // 젠킨스 파이프라인 플러그인을 호출하기 위한 블록
 pipeline {
 	// 파이프라인을 실행하고 싶은 위치 정의
 	agent none
@@ -44,7 +44,7 @@ pipeline {
 				sh 'docker images -f "dangling=true" -q \
 					| xargs -r docker rmi'
 				// docker container 실행
-				sh 'docker run -d --name backend -p 8080:8080 -v /home/ubuntu/img/:/home/ubuntu/img/ backend:latest'
+				sh 'docker run -d --name backend -p 8080:8080 -v /home/ubuntu/img/:/home/ubuntu/img/ -v /home/ubuntu/model/:/home/ubuntu/model/ backend:latest'
 			}
 		}
 	}
