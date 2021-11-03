@@ -38,14 +38,14 @@ public class CompensationController {
 		try {
 			list = compensationService.findPidCps(id);
 		}catch (Exception e) {
-			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Faild"),HttpStatus.NO_CONTENT);
+			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Faild"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		if(list.size()==0||list==null) {
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(204,null,"No Content"),HttpStatus.NO_CONTENT);
 		}
 		map.put("list",list);
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Success"),HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Success"),HttpStatus.OK);
 	}
 	
 	@PostMapping("/cps")

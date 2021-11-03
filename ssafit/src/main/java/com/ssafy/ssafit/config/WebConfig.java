@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/model/**").addResourceLocations("file:///home/ubuntu/model/");
-
+		registry.addResourceHandler("/img/**").addResourceLocations("file:///home/ubuntu/img/");
 	}
 
 }
