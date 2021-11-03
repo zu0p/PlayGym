@@ -8,6 +8,7 @@ import { Login } from './features/login/Login'
 import { Signup } from './features/signup/Signup'
 import { Profile } from './features/profile/Profile';
 import { Mypage } from './features/mypage/Mypage'
+import { FollowMe } from './features/games/followme/FollowMe';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/profile" component={Profile} />
         <Route path="/signup" component={Signup} />
         <Route path="/mypage" component={Mypage} />
+        <Route path="/followme" component={FollowMe} />
       </BrowserRouter>
     </div>
   );

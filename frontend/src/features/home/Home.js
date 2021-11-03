@@ -9,13 +9,14 @@ import word from '../../images/games/game_word.png'
 import { AddButton } from '../profile/customProfileStyle'
 import Logout from '../logout/Logout'
 
-export function Home() {
+export function Home(props) {
   const onMugunghwaClick = () => {
     console.log('무궁화꽃이 피었습니다')
   }
 
   const onFollowMeClick = () => {
     console.log('날 따라해봐요')
+    props.history.push('/followme')
   }
 
   const onWordClick = () => {
