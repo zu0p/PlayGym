@@ -31,4 +31,7 @@ public interface SubUserService {
 	
 	// 캐릭터 선택(변경)
 	public void setMyCharacter(Map<String, String> input) throws Exception;
+	
+	// 캐릭터 삭제 (테스트용)
+	public void deleteAllMyCharacter(Map<String, String> input);
 }

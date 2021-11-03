@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssafit.domain.Characters;
 import com.ssafy.ssafit.domain.GetCt;
@@ -23,6 +24,7 @@ import com.ssafy.ssafit.repository.SubUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class SubUserServiceImpl implements SubUserService {
 
@@ -35,14 +37,39 @@ public class SubUserServiceImpl implements SubUserService {
 	@Override
 	public void addSubUser(Map<String, String> subUser) {
 		try {
-			subUserRepository.save((SubUser.builder()
+			
+			MainUser m = mainuserRepository.findById(Long.parseLong(subUser.get("id"))).get();
+			
+			List<SubUser> temp = subUserRepository.findByMainUser(m).get();
+			int[] gclist = new int[5];
+			
+			for(SubUser s: temp) {
+				if(s.getCid() == null) continue;
+				gclist[(int) s.getCid().getCtid().getId()]++;
+			}
+			
+			long cid = 1;
+			for(int i = 1; i < gclist.length; i++) {
+				if(gclist[i] < gclist[(int)cid]) { 
+					cid = (long)i;
+				}
+			}
+			SubUser newSubUser = SubUser.builder()
 					.nickName(subUser.get("nickName"))
 					.age(Integer.parseInt(subUser.get("age")))
 					.weight(Integer.parseInt(subUser.get("weight")))
 					.tall(Integer.parseInt(subUser.get("tall")))
-					.mainUser(mainuserRepository.findById(Long.parseLong(subUser.get("id"))).get())
-					.build()
-					));
+					.mainUser(m)
+					.build();
+			subUserRepository.save(newSubUser);
+			Characters c = characterRepository.findById(cid).orElse(null);
+			if(getCtRepository.findBySidAndCtid(newSubUser, c) == null) {
+				GetCt gc = GetCt.builder().ctid(c).sid(newSubUser).build();
+				getCtRepository.save(gc);
+				newSubUser.setCid(gc);
+			}
+			subUserRepository.save(newSubUser);
+			
 		} catch(ConstraintViolationException e) {
 			throw e;
 		}
@@ -134,7 +161,8 @@ public class SubUserServiceImpl implements SubUserService {
 				GetCt gc = su.getCid();
 				if(gc != null) getCtRepository.delete(gc);
 				su.setCid(null);
-				subUserRepository.deleteById(sid);
+				getCtRepository.deleteBySid(su);
+				subUserRepository.delete(su);
 			}
 		}
 		catch (Exception e) {
@@ -152,7 +180,11 @@ public class SubUserServiceImpl implements SubUserService {
 				result = new ArrayList<Map<String, Object>>();
 				for(GetCt gc : list) {
 					Map<String, Object> obj = new HashMap<String, Object>();
-					obj.put("character", gc.getCtid());
+					Characters c = gc.getCtid();
+					obj.put("id", c.getId());
+					obj.put("name", c.getName());
+					obj.put("price", c.getPrice());
+					obj.put("image", c.getImage_link());
 					result.add(obj);
 				}
 			}
@@ -193,6 +225,19 @@ public class SubUserServiceImpl implements SubUserService {
 			if(gc == null) throw new Exception("GC NOT FOUND");
 			
 			s.setCid(gc);
+			subUserRepository.save(s);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteAllMyCharacter(Map<String, String> input) {
+		try {
+			long sid = Long.parseLong(input.get("sid"));
+			SubUser s = subUserRepository.findBySid(sid).orElse(null);
+			s.setCid(null);
+			getCtRepository.deleteAllBySid(s);
 			subUserRepository.save(s);
 		} catch (Exception e) {
 			throw e;

@@ -134,4 +134,17 @@ public class SubUserController {
 		
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
+	
+	//서브유저 캐릭터 삭제
+	@DeleteMapping("/sub/delall")
+	public ResponseEntity<ApiResMessage> deleteAllMyCharacter(@RequestBody Map<String, String> input){
+		try {
+			subUserService.deleteAllMyCharacter(input);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+	}
 }
