@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssafit.domain.Exercise;
+import com.ssafy.ssafit.domain.ExerciseSub;
 import com.ssafy.ssafit.domain.Game;
 import com.ssafy.ssafit.repository.ExerciseRepository;
 import com.ssafy.ssafit.repository.GameRepository;
@@ -50,6 +52,8 @@ public class GameServiceImpl implements GameService {
 				listUp.add(list.get(random));
 			}
 		}
+		
+		
 			
 		return listUp;
 	}
