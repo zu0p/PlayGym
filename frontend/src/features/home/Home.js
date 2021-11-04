@@ -12,6 +12,7 @@ import Logout from '../logout/Logout'
 export function Home(props) {
   const onMugunghwaClick = () => {
     console.log('무궁화꽃이 피었습니다')
+    props.history.push('/mugunghwa')
   }
 
   const onFollowMeClick = () => {
