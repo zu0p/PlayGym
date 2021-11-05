@@ -98,3 +98,19 @@ h1, h5{
   align-items: center;
   text-align: center;
 }
+
+.profile_btn{
+  color: #A3C653 !important;
+  background-color: white !important;
+  position: fixed !important;
+  top: 10px;
+  left: 60px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+}
+
+.profile_btn:hover{
+  background-color: #A3C653 !important;
+  color: white !important;
+}

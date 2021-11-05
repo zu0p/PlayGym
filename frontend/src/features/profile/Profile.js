@@ -25,10 +25,13 @@ import Logout from '../logout/Logout'
 
 function Player({player}){
   const selectPlayer=()=>{
-    console.log(player)
+    // console.log(player)
+    localStorage.setItem('sub-user', player.sid)
+    // console.log(localStorage.getItem('sub-user'))
+    window.location = '/home'
   }
   const onEditPlayerClick = (e) => {
-    console.log('ddd')
+    console.log('edit?')
     e.stopPropagation()
     // console.log(player)
   }
@@ -40,7 +43,7 @@ function Player({player}){
         </div>
 
         <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton>
-        {player.name}
+        {player.nickName}
       </Grid>
     </div>
   )
@@ -48,38 +51,38 @@ function Player({player}){
 
 export function Profile(){
   const dispatch = useDispatch()
+  const [players, setPlayers] = useState([])
   useEffect(()=>{
     dispatch(requestGetChildren(localStorage.getItem('main-user')))
       .then(res => {
         console.log(res)
+        setPlayers(res.payload)
       })
   },[])
-  const players = [ // sub user(children) list
-    {
-      id: 0,
-      name: '첫째',
-      image: bear
-    },
-    {
-      id: 1,
-      name: '둘째',
-      image: chick
-    },
-    {
-      id: 2,
-      name: '막둥',
-      image: cat
-    },
-    {
-      id:3,
-      name: '주영',
-      image: rabbit
-    }
-  ]
 
-  // const onEditProfileClick = () => {
-  //   console.log('edit profile')
-  // }
+  useEffect(()=>{console.log(players)},[players])
+  // const players = [ // sub user(children) list
+  //   {
+  //     id: 0,
+  //     name: '첫째',
+  //     image: bear
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '둘째',
+  //     image: chick
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '막둥',
+  //     image: cat
+  //   },
+  //   {
+  //     id:3,
+  //     name: '주영',
+  //     image: rabbit
+  //   }
+  // ]
 
   // add profile click -> open dialog
   const [addOpen, setAddOpen] = useState(false);
@@ -184,7 +187,7 @@ export function Profile(){
             alignItems="center"
             spacing={3}
           >
-            {players.map(item=>(<Player key={item.id} player={item}/>))}
+            {players.map(item=>(<Player key={item.sid} player={item}/>))}
 
             <Tooltip title="Add Player">
               <IconButton onClick={onAddProfileClick}>
