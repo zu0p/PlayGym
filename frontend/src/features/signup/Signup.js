@@ -49,7 +49,6 @@ export function Signup(props) {
 
   useEffect(() => {
     for (let flag of Object.values(flags)) {
-      console.log(clickFlags.PW && flags.PWConfirm)
       if (flag === true) {
         setButtonActive(false)
         return
@@ -70,11 +69,19 @@ export function Signup(props) {
     }
     dispatch(requestIdConfirmUser(params))
       .then(_ => {
+        console.log('header', _.payload.status)
+        console.log('body', _.payload.data.status)
+        console.log(_.payload)
         setFlags({ ...flags, ID: false })
         setTexts({ ...texts, ID: '사용 가능한 아이디입니다.' })
       })
-      .catch(_ => {
-        setTexts({ ...texts, ID: '이미 사용중인 아이디입니다.' })
+      .catch(err => {
+        if (err.response.status === 401)
+          setTexts({ ...texts, ID: '이미 사용중인 아이디입니다.' });
+        else {
+          setAlert({open: true, text: '서버가 응답하지 않습니다. 잠시 후 다시 시도해 주세요.'})
+          setTexts({ ...texts, ID: '' });
+        }
       })
   }
 

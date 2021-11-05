@@ -23,7 +23,7 @@ const BorderLinearProgress = styled(LinearProgress)(_ => ({
   },
 }));
 
-export function Mypage() {
+export function Mypage(props) {
   return (
     <div className={styles.container}>
       <div style={{ textAlign: 'start', position:'absolute' }}>
@@ -32,6 +32,7 @@ export function Mypage() {
           color="inherit"
           size="medium"
           sx={{backgroundColor: '#FFFFFF', border: '5px solid #A3C653', mt: 5, ml: 5}}
+          onClick={() => {console.log(props); props.history.push('/home');}}
         >
           <HomeRoundedIcon
             fontSize="inherit"

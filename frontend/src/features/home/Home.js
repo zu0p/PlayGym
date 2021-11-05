@@ -9,18 +9,24 @@ import word from '../../images/games/game_word.png'
 import { AddButton } from '../profile/customProfileStyle'
 import Logout from '../logout/Logout'
 
+
 export function Home(props) {
+  const dummyAudio = new Audio()
+
   const onMugunghwaClick = () => {
     console.log('무궁화꽃이 피었습니다')
+    dummyAudio.play()
   }
 
   const onFollowMeClick = () => {
     console.log('날 따라해봐요')
+    dummyAudio.play()
     props.history.push('/followme')
   }
 
   const onWordClick = () => {
     console.log('단어맞추기')
+    dummyAudio.play()
   }
   return (
     <div className={styles.home_container}>
@@ -30,8 +36,8 @@ export function Home(props) {
         alignItems="center"
       >
         <Logout />
-        <CircleButton >
-          <AccountCircleOutlinedIcon fontSize="large"/>
+        <CircleButton onClick={() => {props.history.push('/mypage')}}>
+          <AccountCircleOutlinedIcon fontSize="large" />
         </CircleButton>
 
         <Grid item md={1} mt={'5%'}></Grid>

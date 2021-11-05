@@ -77,8 +77,14 @@ export const requestSignupUser = createAction('SIGNUP_USER', function prepare(us
 }) 
 
 export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prepare(userInfo) {
-  console.log(userInfo)
   const returnData = request('get', `/check?id=${userInfo.id}`)
+
+  return { payload: returnData }
+})
+
+export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepare(gameInfo) {
+  const { ageStep, count } = gameInfo
+  const returnData = request('get', `/game/exc?step=${ageStep}&random=${count}`)
 
   return { payload: returnData }
 })
