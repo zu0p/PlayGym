@@ -9,6 +9,7 @@ import GameStartCount from '../gameStartCount'
 import { useDispatch, useSelector } from 'react-redux';
 import { requestRandomGameByAge } from '../../../app/actions/userActions'
 import mimicBGM from '../../../images/나처럼해봐요.mp3'
+import f_text from '../../../images/followMe/f_text.png'
 
 export function FollowMe(props) {
   const BGM = new Audio(mimicBGM)
@@ -75,23 +76,26 @@ export function FollowMe(props) {
 
   return(
     <div className={styles.container}>
-      {seconds}
-      <button onClick={() => {setSeconds(3); setOpenStartCount(true);}}>set 3sec timer</button>
-      <Grid container direction="column" 
-        sx={{width: '100%', height: '100%'}}
+      {/* {seconds} */}
+
+      <Header progress={dummyProgressData} onEndgameClick={endGame} />
+      {/* <button onClick={() => {setSeconds(3); setOpenStartCount(true);}}>set 3sec timer</button> */}
+      <Grid 
+        container 
+        // direction="column" 
+        justifyContent="center" 
+        alignItems="center"
+        // sx={{width: '100%', height: '100%'}}
       >
-        <Header progress={dummyProgressData} onEndgameClick={endGame} />
-        <Grid container item justifyContent="center" alignItems="center"
-          xs
-        >
-          <Grid container item justifyContent="center" columnSpacing={15}>
-            <Grid item xs={4}>
-              <LeftGameScreen />
-            </Grid>
-            <Grid item xs={4}>
-              <RightGameScreen />
-            </Grid>
-          </Grid>
+        <Grid item md={12} mt={'50px'}>
+          <img src={f_text} width={'250px'}/>
+        </Grid>
+        <Grid item md={4} mt={'5%'}>
+          <LeftGameScreen />
+        </Grid>
+        <Grid item md={1} mt={'5%'}></Grid>
+        <Grid item md={4} mt={'5%'}>
+          <RightGameScreen />
         </Grid>
       </Grid>
       {/* send progress data as props to Header */}

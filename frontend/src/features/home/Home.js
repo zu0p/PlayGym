@@ -60,7 +60,7 @@ export function Home(props) {
             style={{
               backgroundImage: `url(${follow_me})`
             }}>
-            <AddButton onClick={onFollowMeClick} className={styles.game_start_button}>날 따라 해봐요</AddButton>
+            <AddButton onClick={onFollowMeClick} className={styles.game_start_button}>나 처럼 해봐요</AddButton>
           </div>
         </Grid>
         <Grid item md={1} mt={'5%'}></Grid>
