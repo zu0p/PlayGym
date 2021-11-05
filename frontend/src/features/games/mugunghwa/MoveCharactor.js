@@ -18,7 +18,10 @@ export function MoveCharactor(props){
     let cnt = 0
     player(1)
     // 게임 시작
-    setTimeout(function(){backSound.play()}, 5000)
+    setTimeout(function(){
+      props.showMotion()
+      backSound.play()
+    }, 5000)
     setTimeout(playSequence, 7000+5000)
     
 
@@ -28,12 +31,12 @@ export function MoveCharactor(props){
 
       var timer = setInterval(function (){
         if(cnt == GAME_CNT) {
-          console.log(cnt+" end")
+          // console.log(cnt+" end")
           clearInterval(timer)
           props.getEndGame()
         }
         if(imgNum == 5) {
-          console.log("cnt: " + cnt)
+          // console.log("cnt: " + cnt)
           imgNum--
           isstop = true
           props.getCheckMotion()
@@ -47,9 +50,10 @@ export function MoveCharactor(props){
           cnt++
           imgNum++
           isstop = true
-  
-          if(cnt != GAME_CNT)
+          if(cnt != GAME_CNT){
+            props.showMotion()
             backSound.play()
+          }
           setTimeout(function(){
             isup = true
             isstop = false
@@ -66,7 +70,7 @@ export function MoveCharactor(props){
       img.src = require(`../../../images/mugunghwa/stop${num}.png`).default
       img.id = 'stop'
       img.width = 500
-      console.log(num)
+      // console.log(num)
     }
 
     img.onload = function(){
