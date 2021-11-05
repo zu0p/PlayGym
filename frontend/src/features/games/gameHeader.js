@@ -22,23 +22,23 @@ const BorderLinearProgress = styled(LinearProgress)(_ => ({
 }));
 
 export default function GameHeader(props) {
-
   return(
     <div className={styles.header}>
       <Grid container justifyContent="start" alignItems="center">
         <Grid item xs={1}>
           <IconButton 
             onClick={props.onEndgameClick} 
-            style={{
-              color: '#AC3943',
-              backgroundColor: 'white',
-              position: 'fixed',
-              top: '10px',
-              left: '10px',
-              zIndex: '100',
-              width: '40px',
-              height: '40px'
-            }}
+            className={styles.exit_btn}
+            // style={{
+            //   color: '#AC3943',
+            //   backgroundColor: 'white',
+            //   position: 'fixed',
+            //   top: '10px',
+            //   left: '10px',
+            //   zIndex: '100',
+            //   width: '40px',
+            //   height: '40px'
+            // }}
             >
             <ClearRoundedIcon fontSize="large"/>
           </IconButton>
