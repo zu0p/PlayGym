@@ -5,8 +5,9 @@ import { BeforeStart } from './BeforeStart'
 import styles from './Mugunghwa.module.css'
 import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
+import GameHeader from '../gameHeader'
 
-export function Mugunghwa(){
+export function Mugunghwa(props){
   // const [move, setMove] = useState(0)
   const [imgOpen, setImgOpen] = useState(false)
   const [motionImg, setMotionImg] = useState('')
@@ -49,8 +50,14 @@ export function Mugunghwa(){
     setImgOpen(false)
   }
 
+  const endGame = () => {
+    // props.history.push('/home')
+    window.location = '/home'
+  }
+
   return(
     <div className={styles.mugunghwa_container}>
+      <GameHeader progress={move} onEndgameClick={endGame}/>
       <BeforeStart />
       <Grid 
         container
@@ -58,13 +65,7 @@ export function Mugunghwa(){
         justifyContent="center"
         alignItems="center"
       >
-        {/* <Grid item id='img-sequence'>
-          <canvas width='500' height='500' id='screen'></canvas>
-        </Grid>
-        <Grid>
-          <audio id='back_sound' controls src={mugunghwa}> Your user agent does not support the HTML5 Audio element. </audio>
-        </Grid> */}
-        <Grid item md={12} mt={'3%'}>
+        <Grid item md={12} mt={'50px'}>
           <img src={m_text} width={400}/>
         </Grid>
         <Grid item md={2} className={styles.goalLine}>

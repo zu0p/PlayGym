@@ -13,8 +13,9 @@ export function MoveCharactor(props){
     const GAME_CNT = 5
 
     const backSound = document.getElementById('back_sound')
-    // backSound.style.display = 'none'
-    // backSound.muted = false
+    backSound.style.display = 'none'
+    backSound.muted = false
+    backSound.pause()
     let cnt = 0
     player(1)
     // 게임 시작
@@ -83,7 +84,7 @@ export function MoveCharactor(props){
   return(
     <div>
       <canvas width='450' height='500' id='screen'></canvas>
-      <audio id='back_sound' autoplay muted controls src={mugunghwa}> Your user agent does not support the HTML5 Audio element. </audio>
+      <audio id='back_sound' autoPlay muted controls src={mugunghwa}> Your user agent does not support the HTML5 Audio element. </audio>
     </div>
   )
 }

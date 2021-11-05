@@ -6,6 +6,8 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import Grid from '@mui/material/Grid';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded';
+import AssistantPhotoRoundedIcon from '@mui/icons-material/AssistantPhotoRounded';
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
   height: 20,
@@ -30,11 +32,12 @@ export default function GameHeader(props) {
             style={{
               color: '#AC3943',
               backgroundColor: 'white',
-              // top: '10px',
-              // left: '10px',
-              // zIndex: '100',
-              // width: '40px',
-              // height: '40px'
+              position: 'fixed',
+              top: '10px',
+              left: '10px',
+              zIndex: '100',
+              width: '40px',
+              height: '40px'
             }}
             >
             <ClearRoundedIcon fontSize="large"/>
@@ -43,14 +46,14 @@ export default function GameHeader(props) {
         <Grid item xs={5}>
           <div className={styles.progressbar__container}>
                   {/* note: negative ml value === width or fontSize / 2 */}
-            <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
+            {/* <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
             </Typography>
             <Typography sx={{width: '40px', zIndex: 40, fontSize: '15 px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
               Goal
-            </Typography>
-            <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
-            <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
-            <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={props.progress} />
+            </Typography> */}
+            <DirectionsRunRoundedIcon sx={{fontSize: '50px', color: '#22220B', zIndex: 30, gridArea: '1/2/2/3', ml: '-25px'}} />
+            <AssistantPhotoRoundedIcon sx={{fontSize: '50px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-25px'}} />
+            <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20, height: '15px'}} variant="determinate" value={props.progress} />
           </div>
         </Grid>
       </Grid>
