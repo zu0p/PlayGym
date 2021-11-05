@@ -8,20 +8,23 @@ import flower_l from '../../../images/mugunghwa/flower_l.png'
 import flower_r from '../../../images/mugunghwa/flower_r.png'
 
 export default function MotionDialog(props) {
+  // const [cnt, setCnt] = useState(3)
   useEffect(()=>{
-    let cnt = 3
-    let timer = setInterval(function(){
-      const dom = document.getElementById('text')
-      console.log('props: '+props.img)
-      // console.log(cnt)
-      if(cnt == 0){
-        clearInterval(timer)
-        props.getClose(true)
-      }
-      cnt--
-    }, 1000)
-    
-  })
+    let cnt = 5
+    if(props.open){
+    console.log('props: '+props.img)
+      let timer = setInterval(function(){
+        const dom = document.getElementById('text')
+        // console.log(cnt)
+        if(cnt == 0){
+          clearInterval(timer)
+          props.getClose(true)
+        }
+        cnt--
+      }, 1000)
+    }
+  }, [props.open])
+  
   return (
     <div>
       <Dialog open={props.open} className={styles.img_popup}>
