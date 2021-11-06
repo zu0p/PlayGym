@@ -11,7 +11,7 @@ pipeline {
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t frontend ./'
+				sh 'docker build -t frontend ./frontend/'
 			}
 		}
 		stage('Docker run') {
