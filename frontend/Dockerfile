@@ -9,6 +9,5 @@ FROM nginx:stable-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/homepage.conf /etc/nginx/conf.d/homepage.comf
 COPY --from=build-stage usr/src/app/build /usr/share/nginx/html/homepage
-COPY ./ssl ./ssl
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
