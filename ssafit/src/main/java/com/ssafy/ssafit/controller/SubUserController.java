@@ -1,7 +1,9 @@
 package com.ssafy.ssafit.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
+import com.ssafy.ssafit.domain.Score;
+import com.ssafy.ssafit.dto.SubGameStatusDTO;
+import com.ssafy.ssafit.dto.logGameDTO;
+import com.ssafy.ssafit.service.GameScoreService;
 import com.ssafy.ssafit.service.SubUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +35,7 @@ public class SubUserController {
  
 //	@Autowired
 	private final SubUserService subUserService;
-	
+	private final GameScoreService gameScoreService;
 	// 서브 계정 추가
 	@PostMapping("/sub/add")
 	public ResponseEntity<ApiResMessage> addSubUser(@RequestBody Map<String, String> subUser){
@@ -147,4 +154,45 @@ public class SubUserController {
 		
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
+	@PostMapping("/sub/log")
+	public ResponseEntity<ApiResMessage> saveGamelog(@RequestBody Map<String,Long> map){
+		try {
+			gameScoreService.gameScoreSave(map.get("user"), map.get("gameid"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+		
+	}
+	@GetMapping("/sub/log")
+	public ResponseEntity<ApiResMessage> getGamelog(@RequestParam long user){
+		Map<String,Object> map = new HashMap<String, Object>();
+		List<Score> list=null;
+		List<logGameDTO> dto=null;
+		try {
+			list =gameScoreService.getGameLog(user);
+			dto=list.stream().map(logGameDTO::new).collect(Collectors.toList());
+		}catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		map.put("log",dto);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"OK"),HttpStatus.OK);
+	}
+	
+	@GetMapping("/sub/status")
+	public ResponseEntity<ApiResMessage> getSubUserGame(@RequestParam long user){
+		Map<String,Object> map = new HashMap<String, Object>();
+		List<SubGameStatusDTO> list=null;
+		try {
+			list = gameScoreService.subUserGame(user);
+		}catch(Exception e) {
+			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		map.put("subusers",list);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"OK"),HttpStatus.OK);
+	}
+	
 }

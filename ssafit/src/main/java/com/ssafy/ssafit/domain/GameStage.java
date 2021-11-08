@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,4 +30,9 @@ public class GameStage {
 	@JoinColumn(name="gid")
 	@NotNull
 	private Game gid;
+	
+	private float met;
+	
+	private int time;
+	
 }

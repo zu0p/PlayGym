@@ -52,6 +52,7 @@ public class SubUser {
 	@NotNull
 	private int weight;
 	
+	private int exp;
 	@JoinColumn(name = "cid")
 	@OneToOne
 	private GetCt cid;
