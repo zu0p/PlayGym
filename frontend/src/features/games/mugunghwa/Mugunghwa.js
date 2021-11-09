@@ -39,7 +39,7 @@ export function Mugunghwa(props){
 
   const startWebcam = async() => {
     try {
-      webcamRef.current = new window.tmPose.Webcam(width, height, flip);
+      webcamRef.current = new window.tmPose.Webcam(size, size, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
     } catch {
@@ -48,43 +48,42 @@ export function Mugunghwa(props){
     // webcamRef.current.update();
   }
 
-  const requestGameData = async() => {
-    const params = {
-      level: 1,
-    }
-    dispatch(requestMugunghwaGame(params))
-      .then(res => {
-        console.log(res)
-        exerciseList.current = res.payload.data.asset
-        setMeta(res.payload.data.metaLink)
-        setModel(res.payload.data.modelLink)
-      })
-      .catch((e) => {
-        console.log(e)
-        // throw new Error('server connection issue')
-      })
-  }
+  // const requestGameData = async() => {
+  //   const params = {
+  //     level: 1,
+  //   }
+  //   dispatch(requestMugunghwaGame(params))
+  //     .then(res => {
+  //       console.log(res)
+  //       exerciseList.current = res.payload.data.asset
+  //       setMeta(res.payload.data.metaLink)
+  //       setModel(res.payload.data.modelLink)
+  //     })
+  //     .catch((e) => {
+  //       console.log(e)
+  //       // throw new Error('server connection issue')
+  //     })
+  // }
 
   // init()
-  const init = () => {
-    // getCanvas
-    canvasRef.current.width = width;
-    canvasRef.current.height = height;
-    contextRef.current = canvasRef.current.getContext('2d');
-    // getWebcam, requestGameData
-    Promise.all([startWebcam(), requestGameData()])
-      .then(() => {
-        iterExercise()
-      })  // start iterating
-      .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
-  }
+  // const init = () => {
+  //   // getCanvas
+  //   canvasRef.current.width = width;
+  //   canvasRef.current.height = height;
+  //   contextRef.current = canvasRef.current.getContext('2d');
+  //   // getWebcam, requestGameData
+  //   Promise.all([startWebcam(), requestGameData()])
+  //     .then(() => {
+  //       iterExercise()
+  //     })  // start iterating
+  //     .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
+  // }
 
-  useEffect(async()=>{
-
-    console.log(meta+" "+model)
-    modelRef.current = await window.tmPose.load(model, meta)
-    requestRef.current = requestAnimationFrame(loop)
-  }, [meta, model])
+  // useEffect(async()=>{
+  //   console.log(meta+" "+model)
+  //   modelRef.current = await window.tmPose.load(model, meta)
+  //   requestRef.current = requestAnimationFrame(loop)
+  // }, [meta, model])
 
   const iterExercise = async() => {
     // console.log(exerciseList.current.length)
@@ -167,6 +166,7 @@ export function Mugunghwa(props){
 
 
   const predict = async() => {
+    // console.log(`predict ${canvasRef.current}`)
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
     const prediction = await modelRef.current.predict(posenetOutput)
 
@@ -222,7 +222,31 @@ export function Mugunghwa(props){
 
 
   useEffect(() => {
-    init()
+    canvasRef.current.width = width
+    canvasRef.current.height = height
+    contextRef.current = canvasRef.current.getContext('2d')
+    console.log(canvasRef)
+
+    const params = {
+      level: 1,
+    }
+    dispatch(requestMugunghwaGame(params))
+      .then(async res => {
+        console.log(res)
+        exerciseList.current = res.payload.data.asset
+
+        modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
+        startWebcam().then(()=>{
+          console.log(modelRef)
+          requestRef.current = requestAnimationFrame(loop)
+        })
+      })
+      .catch((e) => {
+        console.log(e)
+        // throw new Error('server connection issue')
+      })
+
+    // init()
     return () => cancelAnimationFrame(requestRef.current)
   }, [])
 
@@ -259,12 +283,25 @@ export function Mugunghwa(props){
       const user = document.createElement('div')
       user.id = 'webcam'
       user.className = styles.userBox
+      console.log('canvas: '+canvasRef)
       user.innerHTML = `<canvas ref=${canvasRef}/>`
       after.appendChild(user)
+      // const before = document.getElementById(`webcam${move}`)
+      // const after = document.getElementById(`webcam${move+1}`)
+
+      // before.style.display = 'none'
+      // after.style.display = 'block'
 
       // init()
 
-      requestRef.current = requestAnimationFrame(loop)
+      canvasRef.current.width = width
+      canvasRef.current.height = height
+      contextRef.current = canvasRef.current.getContext('2d')
+      startWebcam().then(()=>{
+        // console.log(modelRef)
+        requestRef.current = requestAnimationFrame(loop)
+      })
+      // requestRef.current = requestAnimationFrame(loop)
     }
   }, [move])
 
@@ -314,19 +351,31 @@ export function Mugunghwa(props){
         </Grid>
 
         <Grid item md={2} className={styles.nomalLine} id='box4'>
+          {/* <div id='webcam4' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box3'>
+          {/* <div id='webcam3' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box2'> 
+          {/* <div id='webcam2' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box1'>
+          {/* <div id='webcam1' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box0'>
-          <div id='webcam' className={styles.userBox}>
+          <div id='webcam0' className={styles.userBox}>
             <canvas ref={canvasRef}/>
           </div>
         </Grid>
