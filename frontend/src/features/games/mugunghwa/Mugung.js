@@ -17,11 +17,25 @@ const faceImg = new Image();
 faceImg.src = "http://k5d205.p.ssafy.io:8080/img/bear.png";
 let modelURL, metaURL;
 let model, maxPredictions, webcam, ctx, labelContainer;
+let count = 0;
+const stylecss = { height: "500px", background: "orange" };
+const stylecss2 = { height: "500px", background: "blue" };
 export function Mugung(props) {
-  const log = (msg) => {
-    console.log(msg)
-  }
-  const init = async() => {
+  const init = async () => {
+    count++;
+    console.log(count);
+    console.log(metaURL, " ", modelURL);
+    let box = document.getElementById(`box${count}`);
+    if (count > 1 && count < 5) {
+      let box2 = document.getElementById(`box${count - 1}`);
+      box2.innerHTML = "";
+    }
+
+    box.innerHTML = `<canvas id="canvas"></canvas>`;
+
+    await webcam.setup();
+    await webcam.play();
+
     const canvas = document.getElementById("canvas");
     canvas.width = size;
     canvas.height = size;
@@ -31,7 +45,7 @@ export function Mugung(props) {
       // and class labels
       labelContainer.appendChild(document.createElement("div"));
     }
-    
+    requestAnimationFrame(loop);
   };
 
   const loop = async () => {
@@ -74,8 +88,6 @@ export function Mugung(props) {
     model = await window.tmPose.load(modelURL, metaURL);
     webcam = new window.tmPose.Webcam(size, size, flip);
     maxPredictions = model.getTotalClasses();
-    await webcam.setup();
-    await webcam.play();
   }, []);
 
   return (
@@ -84,9 +96,14 @@ export function Mugung(props) {
       <button type="button" onClick={init}>
         Start
       </button>
-      <div>
-        <canvas id="canvas"></canvas>
-      </div>
+      <button type="button" onclick={init}>
+        test
+      </button>
+      <div id="box1" style={stylecss}></div>
+      <div id="box2" style={stylecss2}></div>
+      <div id="box3" style={stylecss2}></div>
+      <div id="box4" style={stylecss2}></div>
+      <div id="box5" style={stylecss2}></div>
       <div id="label-container"></div>
     </div>
   );
