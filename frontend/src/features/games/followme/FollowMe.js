@@ -45,11 +45,11 @@ export function FollowMe(props) {
   const successThreshold = useRef(0)
   const isDrawing = useRef(false)
 
+  
+
   const msAppeared = useRef(0)
-  const flagAppeared = useRef(false)
   const [isAppeared, setIsAppeared] = useState(false)
   const msFullbody = useRef(0)
-  const flagFullbody = useRef(false)
   const [isFullbody, setIsFullbody] = useState(false)
 
   const dispatch = useDispatch()
@@ -92,7 +92,6 @@ export function FollowMe(props) {
     // getWebcam, requestGameData
     Promise.all([startWebcam(), requestGameData()])
       .then(async() => {
-        console.log(exerciseList.current)
         const modelURL = exerciseList.current.modelLink
         const metaURL = exerciseList.current.metaLink
         modelRef.current = await window.tmPose.load(modelURL, metaURL)
@@ -109,45 +108,31 @@ export function FollowMe(props) {
   }
 
   const loopIdentity = async(timestamp) => {
-    console.log('@@@@')
-
     webcamRef.current.update()
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
 
     // 아예 사람이 없음
     if (pose === undefined) {
       if (timestamp - msAppeared.current > 1000) {
-        console.log('사람없다')
-        if (!flagAppeared.current)
-          flagAppeared.current = true
-          setIsAppeared(false)
+        setIsAppeared(false)
       }
       contextRef.current.drawImage(webcamRef.current.canvas, 0, 0)
       isDrawing.current = false
       return
     }
     msAppeared.current = timestamp
-    if (flagAppeared.current === true) {
-      setIsAppeared(true)
-    }
-    flagAppeared.current = false
+    setIsAppeared(true)
     
 
     await checkPose(pose.pose)
       .then(() => {  // 전신 O
         msFullbody.current = timestamp
-        if (flagFullbody.current === true) {
-          setIsFullbody(true)
-        }
-        flagFullbody.current = false
+        setIsFullbody(true)
       })
       .catch(() => {  // 사람은 있으나 전신 X
         if (timestamp - msFullbody.current > 1000) {
-          console.log('전신안나옴')
-          if (!flagFullbody.current) {
-            flagAppeared.current = true
-            setIsFullbody(false)
-          }
+          // console.log('전신안나옴')
+          setIsFullbody(false)
         }
       })
 
@@ -163,7 +148,7 @@ export function FollowMe(props) {
       case true:
         await predict(posenetOutput)
           .then(res => {
-            console.log(res)
+            // console.log(res)
             if (res === true) {
               successThreshold.current += 1
               isDrawing.current = false
@@ -188,9 +173,9 @@ export function FollowMe(props) {
 
   const predict = async(posenetOutput) => {
     const prediction = await modelRef.current.predict(posenetOutput)
-    const exerciseName = exerciseList.current.asset[idx.current].name
-    const current = prediction.filter(p => p.className === exerciseName)
-    if (current[0].probability.toFixed(2) > 0.8) 
+    const exerciseIdx = exerciseList.current.asset[idx.current].aid
+    const current = prediction[exerciseIdx]
+    if (current.probability.toFixed(2) > 0.8) 
       return true
     else 
       return false
@@ -281,6 +266,10 @@ export function FollowMe(props) {
   const endGame = () => {
     props.history.push('/home')
   }
+
+  useEffect(() => {
+    console.log(testFlag)
+  }, [testFlag])
 
   return(
     <div className={styles.container}>
