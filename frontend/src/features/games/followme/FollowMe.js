@@ -45,7 +45,7 @@ export function FollowMe(props) {
   const successThreshold = useRef(0)
   const isDrawing = useRef(false)
 
-  
+  const eyeSizeArr = useRef([-1, -1, -1, -1])
 
   const msAppeared = useRef(0)
   const [isAppeared, setIsAppeared] = useState(false)
@@ -205,6 +205,18 @@ export function FollowMe(props) {
         Math.pow(pose.keypoints[1].position.x - pose.keypoints[2].position.x, 2) +
         Math.pow(pose.keypoints[1].position.y - pose.keypoints[2].position.y, 2)
       )
+
+      let count = eyeSizeArr.current.length + 1
+      let average = 0
+      eyeSizeArr.current.forEach(es => {
+        if (es === -1)
+          count -= 1;
+        else
+          average += es
+      })
+      eyeSize = (eyeSize + average) / count
+      eyeSizeArr.current.push(eyeSize)
+      eyeSizeArr.current.shift()
   
       const minPartConfidence = 0.5
       window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
