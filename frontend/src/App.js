@@ -10,6 +10,7 @@ import { Profile } from './features/profile/Profile';
 import { Mypage } from './features/mypage/Mypage'
 import { FollowMe } from './features/games/followme/FollowMe'
 import { Mugunghwa } from './features/games/mugunghwa/Mugunghwa'
+import Test from './features/test/test'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/mypage" component={Mypage} />
         <Route path="/followme" component={FollowMe} />
         <Route path="/mugunghwa" component={Mugunghwa} />
+        <Route path="/test" component={Test} />
       </BrowserRouter>
     </div>
   );

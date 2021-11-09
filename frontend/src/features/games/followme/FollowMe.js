@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react'
 import styles from '../Games.module.css'
 import Header from '../gameHeader'
 import LeftGameScreen from './LeftGameScreen'
@@ -8,7 +8,7 @@ import { Route, Link, NavLink } from 'react-router-dom';
 import GameStartCount from '../gameStartCount'
 import { useDispatch, useSelector } from 'react-redux';
 import { requestRandomGameByAge } from '../../../app/actions/userActions'
-import mimicBGM from '../../../images/나처럼해봐요.mp3'
+// import intro from '../../../sounds/follow_intro.mp3'
 import f_text from '../../../images/followMe/f_text.png'
 import baseMonkey from '../../../images/games/base_monkey.gif'
 import { request } from '../../../utils/axios'
@@ -31,17 +31,26 @@ faceImg.src = "http://k5d205.p.ssafy.io:8080/img/cat.png";
 
 export function FollowMe(props) {
   const [image, setImage] = useState(baseMonkey)
-  const BGM = new Audio(mimicBGM)
+  // const introBGM = new Audio(intro)
 
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
   const webcamRef = useRef(null)
   const requestRef = useRef(null)
   const modelRef = useRef(null)
-  const successThreshold = useRef(0)
 
-  const checkbody = useRef(0)
-  const checkperf = useRef(0)
+  const idx = useRef(0)
+  const isStarted = useRef(false)
+  const isEngaged = useRef(false)
+  const successThreshold = useRef(0)
+  const isDrawing = useRef(false)
+
+  const msAppeared = useRef(0)
+  const flagAppeared = useRef(false)
+  const [isAppeared, setIsAppeared] = useState(false)
+  const msFullbody = useRef(0)
+  const flagFullbody = useRef(false)
+  const [isFullbody, setIsFullbody] = useState(false)
 
   const dispatch = useDispatch()
   const [dummyProgressData, setDummyProgressData] = useState(30)
@@ -62,13 +71,11 @@ export function FollowMe(props) {
   }
 
   const requestGameData = async() => {
-    const params = {
-      ageStep: 1,
-      count: 2,
-    }
+    const params = { level: 1 }
     dispatch(requestRandomGameByAge(params))
       .then(res => {
-        exerciseList.current = res.payload.data.result.Game
+        console.log(res)
+        exerciseList.current = res.payload.data
       })
       .catch(() => {
         throw new Error('server connection issue')
@@ -78,149 +85,180 @@ export function FollowMe(props) {
   // init()
   const init = () => {
     // getCanvas
+    // introBGM.play()
     canvasRef.current.width = size;
     canvasRef.current.height = size;
     contextRef.current = canvasRef.current.getContext('2d');
     // getWebcam, requestGameData
     Promise.all([startWebcam(), requestGameData()])
-      .then(() => {
-        iterExercise()
-      })  // start iterating
+      .then(async() => {
+        console.log(exerciseList.current)
+        const modelURL = exerciseList.current.modelLink
+        const metaURL = exerciseList.current.metaLink
+        modelRef.current = await window.tmPose.load(modelURL, metaURL)
+        requestRef.current = requestAnimationFrame(loop)
+      })
       .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
   }
 
-  const iterExercise = async() => {
-    for (let i = 0; i < exerciseList.current.length; i++) {
-      let exercise = exerciseList.current[i].execSub;
-      for (let j = 0; j < exercise.length; j++) {
-        if (exercise[j].modelLink === null) {
-          console.log('@@ null modelLink continue @@')
-          continue
-        }
-        console.log('iteration started')
-        let modelURL = exercise[j].modelLink;
-        let metadataURL = exercise[j].metaLink;
-        setImage(`${exercise[j].imgLink}`)
-        modelRef.current = await window.tmPose.load(modelURL, metadataURL)
-        // let maxPredictions = modelRef.current.getTotalClasses()
-        
-        // code here to handle start
-        requestRef.current = requestAnimationFrame(loop)
-      }
+  const loop = (timestamp) => {
+    if (!isDrawing.current) {
+      loopIdentity(timestamp)
     }
+    requestRef.current = requestAnimationFrame(loop)
   }
 
-  const loop = async(timestamp) => {
-    console.log('loop')
+  const loopIdentity = async(timestamp) => {
+    console.log('@@@@')
+
     webcamRef.current.update()
-    const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
+
+    // 아예 사람이 없음
+    if (pose === undefined) {
+      if (timestamp - msAppeared.current > 1000) {
+        console.log('사람없다')
+        if (!flagAppeared.current)
+          flagAppeared.current = true
+          setIsAppeared(false)
+      }
+      contextRef.current.drawImage(webcamRef.current.canvas, 0, 0)
+      isDrawing.current = false
+      return
+    }
+    msAppeared.current = timestamp
+    if (flagAppeared.current === true) {
+      setIsAppeared(true)
+    }
+    flagAppeared.current = false
+    
 
     await checkPose(pose.pose)
-      .then(res => {
-        if (res) {
-          checkbody.current = 0
-          checkperf.current += 1
-          if (checkperf.current > 30) 
-            checkperf.current = 0;
-        } else {
-          checkperf.current = 0
-          checkbody.current += 1
-          if (checkbody.current > 40)
-            checkbody.current = 0;
+      .then(() => {  // 전신 O
+        msFullbody.current = timestamp
+        if (flagFullbody.current === true) {
+          setIsFullbody(true)
         }
-          
-        if (checkperf.current > 20)
-          console.log('몸이 다 나왔어요');
-        if (checkbody.current > 30)
-          console.log('몸 전체가 나오지 않아요')
+        flagFullbody.current = false
       })
-      .catch(err => {
-        console.log(err.message)
-      })
-    
-    await predict()
-      .then(res => {
-        if (res === true) {
-          successThreshold.current += 1
-          if (successThreshold.current > 10)
-            console.log('success');
-          else
-            requestRef.current = requestAnimationFrame(loop);
-        } else {
-          if (successThreshold.current > 0)
-            successThreshold.current -= 2
-          requestRef.current = requestAnimationFrame(loop)
+      .catch(() => {  // 사람은 있으나 전신 X
+        if (timestamp - msFullbody.current > 1000) {
+          console.log('전신안나옴')
+          if (!flagFullbody.current) {
+            flagAppeared.current = true
+            setIsFullbody(false)
+          }
         }
       })
 
-        // .then(success())
-        // .catch(
-        //   requestRef.current = requestAnimationFrame(loop()))
+    drawPose(pose)
     
-  }
-
-
-
-  const predict = async() => {
-    const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
-    const prediction = await modelRef.current.predict(posenetOutput)
-
-    if (prediction[0].probability.toFixed(2) > 0.8) 
-      return true
-    else {
-      drawPose(pose)
-      return false
-      // throw new Error('wrong pose')
+    switch (isStarted.current) {
+      case false:
+        if (!isEngaged.current) 
+          handleStart()
+        console.log('not started')
+        isDrawing.current = false
+        break
+      case true:
+        await predict(posenetOutput)
+          .then(res => {
+            console.log(res)
+            if (res === true) {
+              successThreshold.current += 1
+              isDrawing.current = false
+              if (successThreshold.current > 50) {
+                handleSuccess()
+              }
+              else
+              isDrawing.current = false
+            } else {
+              if (successThreshold.current > 0)
+                successThreshold.current -= 2
+                isDrawing.current = false
+            }
+          })
+        break
+      default:
+        isDrawing.current = false
     }
   }
 
-  const checkPose = async(pose) => {
+
+
+  const predict = async(posenetOutput) => {
+    const prediction = await modelRef.current.predict(posenetOutput)
+    const exerciseName = exerciseList.current.asset[idx.current].name
+    const current = prediction.filter(p => p.className === exerciseName)
+    if (current[0].probability.toFixed(2) > 0.8) 
+      return true
+    else 
+      return false
+      // throw new Error('wrong pose')
+  }
+
+  const checkPose = async(pose=null) => {
     // catch
     if (pose === null)
       throw new Error('Nullpose')
     
-    if (pose.keypoints.length < 16)
-      throw new Error('Unrecognizable')
-
     // then => true || false
-    const keypoints = pose.keypoints.slice(5, 15)
+    const keypoints = pose.keypoints.slice(5, 16)
     return keypoints.every(p => p > 0.5)
   }
 
-  const drawPose = pose => {
+  const drawPose = (pose=undefined) => {
     if (pose === null || undefined)
       return
     
     if (!webcamRef.current.canvas)
       return
     
-    contextRef.current.drawImage(webcamRef.current.canvas, 0, 0)
-    let eyeSize = Math.sqrt(
-      Math.pow(pose.keypoints[1].position.x - pose.keypoints[2].position.x, 2) +
-      Math.pow(pose.keypoints[1].position.y - pose.keypoints[2].position.y, 2)
-    )
-
-    const minPartConfidence = 0.5
-    window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
-    window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
-
-    if (pose.keypoints[0].score > 0.8) {
-      contextRef.current.drawImage(
-        faceImg,
-        pose.keypoints[0].position.x - eyeSize * 2,
-        pose.keypoints[0].position.y - eyeSize * 3,
-        eyeSize * 5,
-        eyeSize * 5,
-      ) 
+    try {
+      contextRef.current.drawImage(webcamRef.current.canvas, 0, 0)
+      let eyeSize = Math.sqrt(
+        Math.pow(pose.keypoints[1].position.x - pose.keypoints[2].position.x, 2) +
+        Math.pow(pose.keypoints[1].position.y - pose.keypoints[2].position.y, 2)
+      )
+  
+      const minPartConfidence = 0.5
+      window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
+      window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
+  
+      if (pose.keypoints[0].score > 0.8) {
+        contextRef.current.drawImage(
+          faceImg,
+          pose.keypoints[0].position.x - eyeSize * 2,
+          pose.keypoints[0].position.y - eyeSize * 3,
+          eyeSize * 5,
+          eyeSize * 5,
+        ) 
+      }
+    } catch {
+      console.log(pose)
+      return
     }
   }
 
+  const handleStart = async() => {
+    isEngaged.current = true
+    console.log('manipulate DOM here')
+    
+    // 
 
-  useEffect(() => {
+    isStarted.current = true
+    isEngaged.current = false
+  }
+
+  const handleSuccess = () => {
+
+  }
+
+
+  useLayoutEffect(() => {
     init()
     return () => cancelAnimationFrame(requestRef.current)
   }, [])
-
 
   // useEffect(() => {
   //   console.log('second changed')
