@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { requestMugunghwaGame } from '../../../app/actions/userActions'
 import Grid from '@mui/material/Grid'
 import { MoveCharactor } from './MoveCharactor'
 import { BeforeStart } from '../BeforeStart'
@@ -7,7 +9,224 @@ import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
 
+const size = 800;
+const width = 200;
+const height = 500;
+const flip = true;
+const faceImg = new Image()
+faceImg.src = "http://k5d205.p.ssafy.io:8080/img/bear.png";
+
 export function Mugunghwa(props){
+
+  const canvasRef = useRef(null)
+  const contextRef = useRef(null)
+  const webcamRef = useRef(null)
+  const requestRef = useRef(null)
+  const modelRef = useRef(null)
+  const successThreshold = useRef(0)
+
+  const checkbody = useRef(0)
+  const checkperf = useRef(0)
+
+  const dispatch = useDispatch()
+  const [dummyProgressData, setDummyProgressData] = useState(30)
+  const [seconds, setSeconds] = useState(0)
+  const [openStartCount, setOpenStartCount] = useState(false)
+  // const [exerciseList, setExerciseList] = useState([])
+  const exerciseList = useRef([])
+  const [meta, setMeta] = useState('')
+  const [model, setModel] = useState('')
+
+  const startWebcam = async() => {
+    try {
+      webcamRef.current = new window.tmPose.Webcam(width, height, flip);
+      await webcamRef.current.setup()
+      await webcamRef.current.play();
+    } catch {
+      throw new Error('camera issue')
+    }
+    // webcamRef.current.update();
+  }
+
+  const requestGameData = async() => {
+    const params = {
+      level: 1,
+    }
+    dispatch(requestMugunghwaGame(params))
+      .then(res => {
+        console.log(res)
+        exerciseList.current = res.payload.data.asset
+        setMeta(res.payload.data.metaLink)
+        setModel(res.payload.data.modelLink)
+      })
+      .catch((e) => {
+        console.log(e)
+        // throw new Error('server connection issue')
+      })
+  }
+
+  // init()
+  const init = () => {
+    // getCanvas
+    canvasRef.current.width = width;
+    canvasRef.current.height = height;
+    contextRef.current = canvasRef.current.getContext('2d');
+    // getWebcam, requestGameData
+    Promise.all([startWebcam(), requestGameData()])
+      .then(() => {
+        iterExercise()
+      })  // start iterating
+      .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
+  }
+
+  useEffect(async()=>{
+
+    console.log(meta+" "+model)
+    modelRef.current = await window.tmPose.load(model, meta)
+    requestRef.current = requestAnimationFrame(loop)
+  }, [meta, model])
+
+  const iterExercise = async() => {
+    // console.log(exerciseList.current.length)
+    // for (let i = 0; i < exerciseList.current.length; i++) {
+    //   console.log(exerciseList.current[i])
+      // let exercise = exerciseList.current[i].execSub;
+      // for (let j = 0; j < exercise.length; j++) {
+      //   if (exercise[j].modelLink === null) {
+      //     console.log('@@ null modelLink continue @@')
+      //     continue
+      //   }
+      //   console.log('iteration started')
+      //   let modelURL = exercise[j].modelLink;
+      //   let metadataURL = exercise[j].metaLink;
+      //   setMotionImg(`${exercise[j].imgLink}`)
+      //   modelRef.current = await window.tmPose.load(modelURL, metadataURL)
+      //   // let maxPredictions = modelRef.current.getTotalClasses()
+        
+      //   // code here to handle start
+      //   requestRef.current = requestAnimationFrame(loop)
+      // }
+    // }
+    // console.log(model + " " + meta)
+    // let modelURL = model
+    // let metadataURL = meta
+    // setMotionImg(`${exercise[j].imgLink}`)
+    // modelRef.current = await window.tmPose.load(modelURL, metadataURL)
+    // requestRef.current = requestAnimationFrame(loop)
+  }
+
+  const loop = async(timestamp) => {
+    console.log('loop')
+    webcamRef.current.update()
+    const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
+
+    // await checkPose(pose.pose)
+    //   .then(res => {
+    //     if (res) {
+    //       checkbody.current = 0
+    //       checkperf.current += 1
+    //       if (checkperf.current > 30) 
+    //         checkperf.current = 0;
+    //     } else {
+    //       checkperf.current = 0
+    //       checkbody.current += 1
+    //       if (checkbody.current > 40)
+    //         checkbody.current = 0;
+    //     }
+          
+    //     if (checkperf.current > 20)
+    //       console.log('몸이 다 나왔어요');
+    //     if (checkbody.current > 30)
+    //       console.log('몸 전체가 나오지 않아요')
+    //   })
+    //   .catch(err => {
+    //     console.log(err.message)
+    //   })
+    
+    await predict()
+      .then(res => {
+        if (res === true) {
+          successThreshold.current += 1
+          if (successThreshold.current > 10)
+            console.log('success');
+          else
+            requestRef.current = requestAnimationFrame(loop);
+        } else {
+          if (successThreshold.current > 0)
+            successThreshold.current -= 2
+          requestRef.current = requestAnimationFrame(loop)
+        }
+      })
+
+        // .then(success())
+        // .catch(
+        //   requestRef.current = requestAnimationFrame(loop()))
+    
+  }
+
+
+
+  const predict = async() => {
+    const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    const prediction = await modelRef.current.predict(posenetOutput)
+
+    if (prediction[0].probability.toFixed(2) > 0.8) 
+      return true
+    else {
+      drawPose(pose)
+      return false
+      // throw new Error('wrong pose')
+    }
+  }
+
+  const checkPose = async(pose) => {
+    // catch
+    if (pose === null)
+      throw new Error('Nullpose')
+    
+    if (pose.keypoints.length < 16)
+      throw new Error('Unrecognizable')
+
+    // then => true || false
+    const keypoints = pose.keypoints.slice(5, 15)
+    return keypoints.every(p => p > 0.5)
+  }
+
+  const drawPose = pose => {
+    if (pose === null || undefined)
+      return
+    
+    if (!webcamRef.current.canvas)
+      return
+    
+    contextRef.current.drawImage(webcamRef.current.canvas, 0, 0)
+    let eyeSize = Math.sqrt(
+      Math.pow(pose.keypoints[1].position.x - pose.keypoints[2].position.x, 2) +
+      Math.pow(pose.keypoints[1].position.y - pose.keypoints[2].position.y, 2)
+    )
+
+    const minPartConfidence = 0.5
+    window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
+    window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
+
+    if (pose.keypoints[0].score > 0.8) {
+      contextRef.current.drawImage(
+        faceImg,
+        pose.keypoints[0].position.x - eyeSize * 2,
+        pose.keypoints[0].position.y - eyeSize * 3,
+        eyeSize * 5,
+        eyeSize * 5,
+      ) 
+    }
+  }
+
+
+  useEffect(() => {
+    init()
+    return () => cancelAnimationFrame(requestRef.current)
+  }, [])
+
+
   // 현재 위치 나타내기 위한 변수
   const [move, setMove] = useState(-1)
 
@@ -29,6 +248,10 @@ export function Mugunghwa(props){
     console.log(move)
 
     if(move>=0 && move<4){
+      // console.log(webcamRef)
+      cancelAnimationFrame(requestRef.current)
+      console.log('stop!!!!!loop')
+
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
 
@@ -36,7 +259,12 @@ export function Mugunghwa(props){
       const user = document.createElement('div')
       user.id = 'webcam'
       user.className = styles.userBox
+      user.innerHTML = `<canvas ref=${canvasRef}/>`
       after.appendChild(user)
+
+      // init()
+
+      requestRef.current = requestAnimationFrame(loop)
     }
   }, [move])
 
@@ -84,20 +312,22 @@ export function Mugunghwa(props){
         <Grid item md={2} className={styles.goalLine}>
           <MoveCharactor getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
         </Grid>
+
         <Grid item md={2} className={styles.nomalLine} id='box4'>
-          
         </Grid>
+
         <Grid item md={2} className={styles.stepLine} id='box3'>
-          
         </Grid>
-        <Grid item md={2} className={styles.stepLine} id='box2'>
-          
+
+        <Grid item md={2} className={styles.stepLine} id='box2'> 
         </Grid>
+
         <Grid item md={2} className={styles.stepLine} id='box1'>
-          
         </Grid>
+
         <Grid item md={2} className={styles.stepLine} id='box0'>
           <div id='webcam' className={styles.userBox}>
+            <canvas ref={canvasRef}/>
           </div>
         </Grid>
       </Grid>
