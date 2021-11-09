@@ -18,7 +18,10 @@ faceImg.src = "http://k5d205.p.ssafy.io:8080/img/bear.png";
 let modelURL, metaURL;
 let model, maxPredictions, webcam, ctx, labelContainer;
 export function Mugung(props) {
-  const init = async () => {
+  const log = (msg) => {
+    console.log(msg)
+  }
+  const init = async() => {
     const canvas = document.getElementById("canvas");
     canvas.width = size;
     canvas.height = size;
@@ -28,6 +31,7 @@ export function Mugung(props) {
       // and class labels
       labelContainer.appendChild(document.createElement("div"));
     }
+    
   };
 
   const loop = async () => {
@@ -73,10 +77,11 @@ export function Mugung(props) {
     await webcam.setup();
     await webcam.play();
   }, []);
+
   return (
     <div>
       <div>Teachable Machine Pose Model</div>
-      <button type="button" onclick="init()">
+      <button type="button" onClick={init}>
         Start
       </button>
       <div>
