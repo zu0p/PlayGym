@@ -267,10 +267,6 @@ export function FollowMe(props) {
     props.history.push('/home')
   }
 
-  useEffect(() => {
-    console.log(testFlag)
-  }, [testFlag])
-
   return(
     <div className={styles.container}>
       {/* {seconds} */}
