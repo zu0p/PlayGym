@@ -10,7 +10,7 @@ import { Profile } from './features/profile/Profile';
 import { Mypage } from './features/mypage/Mypage'
 import { FollowMe } from './features/games/followme/FollowMe'
 import { Mugunghwa } from './features/games/mugunghwa/Mugunghwa'
-import Test from './features/test/test'
+import Test from './features/test/followme/test'
 
 function App() {
   return (
