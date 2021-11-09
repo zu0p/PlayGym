@@ -26,7 +26,7 @@ export function Mugung(props) {
     console.log(count);
     console.log(metaURL, " ", modelURL);
     let box = document.getElementById(`box${count}`);
-    if (count > 1 && count < 5) {
+    if (count > 1) {
       let box2 = document.getElementById(`box${count - 1}`);
       box2.innerHTML = "";
     }
@@ -51,7 +51,7 @@ export function Mugung(props) {
   const loop = async () => {
     webcam.update(); // update the webcam frame
     await predict();
-    window.requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
   };
 
   const predict = async () => {
@@ -101,9 +101,6 @@ export function Mugung(props) {
       </button>
       <div id="box1" style={stylecss}></div>
       <div id="box2" style={stylecss2}></div>
-      <div id="box3" style={stylecss2}></div>
-      <div id="box4" style={stylecss2}></div>
-      <div id="box5" style={stylecss2}></div>
       <div id="label-container"></div>
     </div>
   );

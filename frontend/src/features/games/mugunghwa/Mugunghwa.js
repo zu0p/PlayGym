@@ -35,10 +35,10 @@ export function Mugunghwa(props) {
   const exerciseList = useRef([]);
   const [meta, setMeta] = useState("");
   const [model, setModel] = useState("");
-  const maxPredictions = 0;
+
   const startWebcam = async () => {
     try {
-      webcamRef.current = new window.tmPose.Webcam(width, height, flip);
+      webcamRef.current = new window.tmPose.Webcam(size, size, flip);
       await webcamRef.current.setup();
       await webcamRef.current.play();
     } catch {
@@ -47,61 +47,42 @@ export function Mugunghwa(props) {
     // webcamRef.current.update();
   };
 
-  const requestGameData = async () => {
-    const params = {
-      level: 1,
-    };
-    dispatch(requestMugunghwaGame(params))
-      .then((res) => {
-        console.log(res);
-        exerciseList.current = res.payload.data.asset;
-        setMeta(res.payload.data.metaLink);
-        setModel(res.payload.data.modelLink);
-      })
-      .catch((e) => {
-        console.log(e);
-        // throw new Error('server connection issue')
-      });
-  };
+  // const requestGameData = async() => {
+  //   const params = {
+  //     level: 1,
+  //   }
+  //   dispatch(requestMugunghwaGame(params))
+  //     .then(res => {
+  //       console.log(res)
+  //       exerciseList.current = res.payload.data.asset
+  //       setMeta(res.payload.data.metaLink)
+  //       setModel(res.payload.data.modelLink)
+  //     })
+  //     .catch((e) => {
+  //       console.log(e)
+  //       // throw new Error('server connection issue')
+  //     })
+  // }
 
   // init()
-  const init = async () => {
-    // getCanvas
+  // const init = () => {
+  //   // getCanvas
+  //   canvasRef.current.width = width;
+  //   canvasRef.current.height = height;
+  //   contextRef.current = canvasRef.current.getContext('2d');
+  //   // getWebcam, requestGameData
+  //   Promise.all([startWebcam(), requestGameData()])
+  //     .then(() => {
+  //       iterExercise()
+  //     })  // start iterating
+  //     .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
+  // }
 
-    webcamRef.current = new window.tmPose.Webcam(width, height, flip);
-    await webcamRef.current.setup();
-    await webcamRef.current.play();
-    webcamRef.current.update();
-    const before = document.getElementById(`box${move}`);
-    const after = document.getElementById(`box${move + 1}`);
-    if (before != null) {
-      before.innerHTML = "";
-    }
-    const user = document.createElement("div");
-    user.id = "webcam";
-    user.className = styles.userBox;
-    user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`;
-    after.appendChild(user);
-    canvasRef.current = document.getElementById("canvas");
-    canvasRef.current.width = width;
-    canvasRef.current.height = height;
-    contextRef.current = canvasRef.current.getContext("2d");
-    // getWebcam, requestGameData
-    await requestGameData();
-    Promise.all([startWebcam()])
-      .then(() => {
-        // iterExercise()
-        loop();
-      }) // start iterating
-      .catch((err) => console.log(err.message)); // do sth! e.g.) redirection / alert / re-request
-  };
-
-  useEffect(async () => {
-    console.log(meta + " " + model);
-    modelRef.current = await window.tmPose.load(model, meta);
-    maxPredictions = modelRef.current.getTotalClasses();
-    // requestRef.current = requestAnimationFrame(loop);
-  }, [meta, model]);
+  // useEffect(async()=>{
+  //   console.log(meta+" "+model)
+  //   modelRef.current = await window.tmPose.load(model, meta)
+  //   requestRef.current = requestAnimationFrame(loop)
+  // }, [meta, model])
 
   const iterExercise = async () => {
     // console.log(exerciseList.current.length)
@@ -134,60 +115,27 @@ export function Mugunghwa(props) {
   const loop = async (timestamp) => {
     console.log("loop");
     webcamRef.current.update();
-    // const pose = await modelRef.current.estimatePose(webcamRef.current.canvas);
-
-    // await checkPose(pose.pose)
-    //   .then(res => {
-    //     if (res) {
-    //       checkbody.current = 0
-    //       checkperf.current += 1
-    //       if (checkperf.current > 30)
-    //         checkperf.current = 0;
-    //     } else {
-    //       checkperf.current = 0
-    //       checkbody.current += 1
-    //       if (checkbody.current > 40)
-    //         checkbody.current = 0;
-    //     }
-
-    //     if (checkperf.current > 20)
-    //       console.log('몸이 다 나왔어요');
-    //     if (checkbody.current > 30)
-    //       console.log('몸 전체가 나오지 않아요')
-    //   })
-    //   .catch(err => {
-    //     console.log(err.message)
-    //   })
-
     await predict().then((res) => {
       if (res === true) {
         successThreshold.current += 1;
-        if (successThreshold.current > 10) {
-          console.log("success");
-        } else requestRef.current = requestAnimationFrame(loop);
+        if (successThreshold.current > 10) console.log("success");
+        else requestRef.current = requestAnimationFrame(loop);
       } else {
         if (successThreshold.current > 0) successThreshold.current -= 2;
         requestRef.current = requestAnimationFrame(loop);
       }
     });
-
-    // .then(success())
-    // .catch(
-    //   requestRef.current = requestAnimationFrame(loop()))
   };
 
   const predict = async () => {
+    // console.log(`predict ${canvasRef.current}`)
     const { pose, posenetOutput } = await modelRef.current.estimatePose(
       webcamRef.current.canvas
     );
     const prediction = await modelRef.current.predict(posenetOutput);
-    for (let x = 0; x < maxPredictions; x++) {
-      console.log(prediction[x].probability.toFixed(2));
-    }
-    if (prediction[0].probability.toFixed(2) > 0.8) {
-      console.log(prediction[0].probability.toFixed(2));
-      return true;
-    } else {
+
+    if (prediction[0].probability.toFixed(2) > 0.8) return true;
+    else {
       drawPose(pose);
       return false;
       // throw new Error('wrong pose')
@@ -240,7 +188,34 @@ export function Mugunghwa(props) {
   };
 
   useEffect(() => {
-    init();
+    canvasRef.current.width = width;
+    canvasRef.current.height = height;
+    contextRef.current = canvasRef.current.getContext("2d");
+    console.log(canvasRef);
+
+    const params = {
+      level: 1,
+    };
+    dispatch(requestMugunghwaGame(params))
+      .then(async (res) => {
+        console.log(res);
+        exerciseList.current = res.payload.data.asset;
+
+        modelRef.current = await window.tmPose.load(
+          res.payload.data.modelLink,
+          res.payload.data.metaLink
+        );
+        startWebcam().then(() => {
+          console.log(modelRef);
+          requestRef.current = requestAnimationFrame(loop);
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        // throw new Error('server connection issue')
+      });
+
+    // init()
     return () => cancelAnimationFrame(requestRef.current);
   }, []);
 
@@ -276,12 +251,28 @@ export function Mugunghwa(props) {
       const user = document.createElement("div");
       user.id = "webcam";
       user.className = styles.userBox;
+      console.log("canvas: " + canvasRef);
       user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`;
       after.appendChild(user);
+      // const before = document.getElementById(`webcam${move}`)
+      // const after = document.getElementById(`webcam${move+1}`)
 
-      init();
+      // before.style.display = 'none'
+      // after.style.display = 'block'
 
-      // requestRef.current = requestAnimationFrame(loop);
+      // init()
+      const canvas = document.getElementById("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      contextRef.current = canvas.getContext("2d");
+      // canvasRef.current.width = width;
+      // canvasRef.current.height = height;
+      contextRef.current = canvasRef.current.getContext("2d");
+      startWebcam().then(() => {
+        // console.log(modelRef)
+        requestRef.current = requestAnimationFrame(loop);
+      });
+      // requestRef.current = requestAnimationFrame(loop)
     }
   }, [move]);
 
@@ -335,16 +326,32 @@ export function Mugunghwa(props) {
           />
         </Grid>
 
-        <Grid item md={2} className={styles.nomalLine} id="box4"></Grid>
+        <Grid item md={2} className={styles.nomalLine} id="box4">
+          {/* <div id='webcam4' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
+        </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id="box3"></Grid>
+        <Grid item md={2} className={styles.stepLine} id="box3">
+          {/* <div id='webcam3' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
+        </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id="box2"></Grid>
+        <Grid item md={2} className={styles.stepLine} id="box2">
+          {/* <div id='webcam2' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
+        </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id="box1"></Grid>
+        <Grid item md={2} className={styles.stepLine} id="box1">
+          {/* <div id='webcam1' className={styles.userBox} >
+            <canvas ref={canvasRef}/>
+          </div> */}
+        </Grid>
 
         <Grid item md={2} className={styles.stepLine} id="box0">
-          <div id="webcam" className={styles.userBox}>
+          <div id="webcam0" className={styles.userBox}>
             <canvas id="canvas" ref={canvasRef} />
           </div>
         </Grid>
