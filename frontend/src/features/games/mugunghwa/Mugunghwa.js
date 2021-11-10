@@ -32,41 +32,51 @@ export function Mugunghwa(props){
   const [dummyProgressData, setDummyProgressData] = useState(30)
   const [seconds, setSeconds] = useState(0)
   const [openStartCount, setOpenStartCount] = useState(false)
-  // const [exerciseList, setExerciseList] = useState([])
   const exerciseList = useRef([])
-  // const [meta, setMeta] = useState('')
-  // const [model, setModel] = useState('')
+  let loopFlag = false
 
   const startWebcam = async() => {
     try {
       webcamRef.current = new window.tmPose.Webcam(500, 500, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
-
-      // console.log(webcamRef)
     } catch {
       throw new Error('camera issue')
     }
     // webcamRef.current.update();
   }
-  // init()
-  // const init = () => {
-  //   // getCanvas
-  //   canvasRef.current.width = width;
-  //   canvasRef.current.height = height;
-  //   contextRef.current = canvasRef.current.getContext('2d');
-  //   // getWebcam, requestGameData
-  //   Promise.all([startWebcam(), requestGameData()])
-  //     .then(() => {
-  //       iterExercise()
-  //     })  // start iterating
-  //     .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
-  // }
 
   const loop = async(timestamp) => {
-    console.log('loop')
+    console.log(loopFlag)
     webcamRef.current.update()
-    const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    if(!loopFlag){
+      // console.log('loop')
+      await predict()
+        .then(res => {
+          if (res === true) {
+            successThreshold.current += 1
+            if (successThreshold.current > 10)
+              console.log('success!!!!!!!!!!!');
+            else
+              requestRef.current = requestAnimationFrame(loop)
+          } else {
+            if (successThreshold.current > 0)
+              successThreshold.current -= 2
+            requestRef.current = requestAnimationFrame(loop)
+          }
+          // if(res == true)console.log("true")
+          // else console.log("false")
+        }) 
+      
+        return
+    }
+    // console.log('!loop')
+    requestRef.current = requestAnimationFrame(loop)
+    // const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    // .catch(err=>{
+    //   console.log(err)
+    //   requestRef.current = requestAnimationFrame(loop)
+    // })
 
     // await checkPose(pose.pose)
     //   .then(res => {
@@ -91,32 +101,32 @@ export function Mugunghwa(props){
     //     console.log(err.message)
     //   })
     
-    await predict()
-      .then(res => {
-        if (res === true) {
-          successThreshold.current += 1
-          if (successThreshold.current > 10)
-            console.log('success');
-          else
-            requestRef.current = requestAnimationFrame(loop);
-        } else {
-          if (successThreshold.current > 0)
-            successThreshold.current -= 2
-          requestRef.current = requestAnimationFrame(loop)
-        }
-      })
-
-        // .then(success())
-        // .catch(
-        //   requestRef.current = requestAnimationFrame(loop()))
-    
   }
 
   const predict = async() => {
-    // console.log(`predict ${canvasRef.current}`)
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    // .catch(e=>{
+    //   console.log(e)
+    //   predict()
+    // })
     const prediction = await modelRef.current.predict(posenetOutput)
 
+    // console.log(prediction[0].probability)
+    // console.log(prediction[0].probability.toFixed(2))
+    // let cnt = 0
+    // let trueCnt = 0
+    // let timer = setInterval(function(){
+    //   console.log('interval'+cnt)
+    //   if(cnt==3){
+    //     console.log('clear')
+    //     clearInterval(timer)
+    //   }
+    //   cnt++
+    //   if (prediction[0].probability.toFixed(2) > 0.8) {
+    //     trueCnt++
+    //   }      
+    // }, 1000)
+    // return trueCnt>=2?true:false
     if (prediction[0].probability.toFixed(2) > 0.8) 
       return true
     else {
@@ -171,19 +181,17 @@ export function Mugunghwa(props){
     canvasRef.current.width = width
     canvasRef.current.height = height
     contextRef.current = canvasRef.current.getContext('2d')
-    // console.log(canvasRef)
 
     const params = {
       level: 1,
     }
     dispatch(requestMugunghwaGame(params))
       .then(async res => {
-        // console.log(res)
         exerciseList.current = res.payload.data.asset
 
         modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
         startWebcam().then(()=>{
-          // console.log(modelRef)
+          console.log("first")
           requestRef.current = requestAnimationFrame(loop)
         })
       })
@@ -207,6 +215,7 @@ export function Mugunghwa(props){
 
   // 총 게임 카운트(설정해둔 전체 루프)가 끝나면 MoveCharactor.js에서 호출하는 함수
   const onEndGame = () => {
+    loopFlag = true
     console.log('game end')
   }
 
@@ -219,7 +228,7 @@ export function Mugunghwa(props){
     if(move>=0 && move<4){
       // console.log(webcamRef)
       cancelAnimationFrame(requestRef.current)
-      console.log('stop!!!!!loop')
+      // console.log('stop!!!!!loop')
 
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
@@ -245,14 +254,47 @@ export function Mugunghwa(props){
     }
   }, [move])
 
-  const onChcekMotion = () =>{
-    let check = true // 추후 모선이 성공했는지 여부를 함수로 return 받기
+  const onChcekMotion = async() =>{
+    loopFlag = false // == predict를 하겠다
+    console.log("check motion")
+    // const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    // const prediction = await modelRef.current.predict(posenetOutput)
 
-    if(check){ // 자세 통과
-      setTimeout(function(){
-        setMove(move=>move+ 1)
-      },4000)
-    }
+    // console.log(prediction[0].probability)
+    // console.log(prediction[0].probability.toFixed(2))
+    let cnt = 0
+    let trueCnt = 0
+    let timer = setInterval(function(){
+      console.log('interval'+cnt)
+      console.log(loopFlag)
+      if(cnt==2){
+        console.log('clear trueCnt: '+trueCnt)
+        loopFlag = true
+        console.log(loopFlag)
+        clearInterval(timer)
+      }
+      cnt++
+      // if (prediction[0].probability.toFixed(2) > 0.8) {
+      //   trueCnt++
+      // }      
+    }, 1000)
+    setTimeout(function(){
+      console.log('4초 뒤')
+      let check = trueCnt>=2?true:false
+      if(!check){
+        setMove(move=>move+1)
+      }
+      else{
+        requestRef.current = requestAnimationFrame(loop)
+      }
+    }, 3500)
+    // let check = true // 추후 모선이 성공했는지 여부를 함수로 return 받기
+
+    // if(check){ // 자세 통과
+    //   setTimeout(function(){
+    //     setMove(move=>move+ 1)
+    //   },4000)
+    // }
   }
 
   // MoveCharactor.js에서 한 턴이 시작됨을 알리면서 호출하는 함수
@@ -286,6 +328,7 @@ export function Mugunghwa(props){
       >
         <Grid item md={12} mt={'50px'}>
           <img src={m_text} width={400}/>
+          <h1>{successThreshold.current}</h1>
         </Grid>
         <Grid item md={2} className={styles.goalLine}>
           <MoveCharactor getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
