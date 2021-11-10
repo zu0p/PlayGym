@@ -33,7 +33,7 @@ export function Mugunghwa(props){
   const [seconds, setSeconds] = useState(0)
   const [openStartCount, setOpenStartCount] = useState(false)
   const exerciseList = useRef([])
-  let loopFlag = false
+  const loopFlag = useRef(false)
 
   const startWebcam = async() => {
     try {
@@ -47,9 +47,9 @@ export function Mugunghwa(props){
   }
 
   const loop = async(timestamp) => {
-    console.log(loopFlag)
+    console.log(loopFlag.current)
     webcamRef.current.update()
-    if(!loopFlag){
+    if(!loopFlag.current){
       // console.log('loop')
       await predict()
         .then(res => {
@@ -57,11 +57,14 @@ export function Mugunghwa(props){
             successThreshold.current += 1
             if (successThreshold.current > 10)
               console.log('success!!!!!!!!!!!');
-            else
+            else{
+              cancelAnimationFrame(requestRef.current)
               requestRef.current = requestAnimationFrame(loop)
+            }
           } else {
             if (successThreshold.current > 0)
               successThreshold.current -= 2
+            cancelAnimationFrame(requestRef.current)
             requestRef.current = requestAnimationFrame(loop)
           }
           // if(res == true)console.log("true")
@@ -71,6 +74,8 @@ export function Mugunghwa(props){
         return
     }
     // console.log('!loop')
+    const {pose, posenetOutput} = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    drawPose(pose)
     requestRef.current = requestAnimationFrame(loop)
     // const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
     // .catch(err=>{
@@ -215,7 +220,8 @@ export function Mugunghwa(props){
 
   // 총 게임 카운트(설정해둔 전체 루프)가 끝나면 MoveCharactor.js에서 호출하는 함수
   const onEndGame = () => {
-    loopFlag = true
+    loopFlag.current = true
+    cancelAnimationFrame(requestRef.current)
     console.log('game end')
   }
 
@@ -227,7 +233,6 @@ export function Mugunghwa(props){
 
     if(move>=0 && move<4){
       // console.log(webcamRef)
-      cancelAnimationFrame(requestRef.current)
       // console.log('stop!!!!!loop')
 
       const before = document.getElementById(`box${move}`)
@@ -249,13 +254,14 @@ export function Mugunghwa(props){
 
       startWebcam().then(()=>{
         // console.log(modelRef)
+        cancelAnimationFrame(requestRef.current)
         requestRef.current = requestAnimationFrame(loop)
       })
     }
   }, [move])
 
   const onChcekMotion = async() =>{
-    loopFlag = false // == predict를 하겠다
+    loopFlag.current = false // == predict를 하겠다
     console.log("check motion")
     // const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
     // const prediction = await modelRef.current.predict(posenetOutput)
@@ -266,11 +272,11 @@ export function Mugunghwa(props){
     let trueCnt = 0
     let timer = setInterval(function(){
       console.log('interval'+cnt)
-      console.log(loopFlag)
+      console.log(loopFlag.current)
       if(cnt==2){
         console.log('clear trueCnt: '+trueCnt)
-        loopFlag = true
-        console.log(loopFlag)
+        loopFlag.current = true
+        console.log(loopFlag.current)
         clearInterval(timer)
       }
       cnt++
@@ -285,6 +291,7 @@ export function Mugunghwa(props){
         setMove(move=>move+1)
       }
       else{
+        cancelAnimationFrame(requestRef.current)
         requestRef.current = requestAnimationFrame(loop)
       }
     }, 3500)
