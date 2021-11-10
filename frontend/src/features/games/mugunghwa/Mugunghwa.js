@@ -10,7 +10,7 @@ import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
 
 const size = 800;
-const width = 200;
+const width = 300;
 const height = 500;
 const flip = true;
 const faceImg = new Image()
@@ -34,37 +34,21 @@ export function Mugunghwa(props){
   const [openStartCount, setOpenStartCount] = useState(false)
   // const [exerciseList, setExerciseList] = useState([])
   const exerciseList = useRef([])
-  const [meta, setMeta] = useState('')
-  const [model, setModel] = useState('')
+  // const [meta, setMeta] = useState('')
+  // const [model, setModel] = useState('')
 
   const startWebcam = async() => {
     try {
-      webcamRef.current = new window.tmPose.Webcam(size, size, flip);
+      webcamRef.current = new window.tmPose.Webcam(500, 500, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
+
+      // console.log(webcamRef)
     } catch {
       throw new Error('camera issue')
     }
     // webcamRef.current.update();
   }
-
-  // const requestGameData = async() => {
-  //   const params = {
-  //     level: 1,
-  //   }
-  //   dispatch(requestMugunghwaGame(params))
-  //     .then(res => {
-  //       console.log(res)
-  //       exerciseList.current = res.payload.data.asset
-  //       setMeta(res.payload.data.metaLink)
-  //       setModel(res.payload.data.modelLink)
-  //     })
-  //     .catch((e) => {
-  //       console.log(e)
-  //       // throw new Error('server connection issue')
-  //     })
-  // }
-
   // init()
   // const init = () => {
   //   // getCanvas
@@ -78,41 +62,6 @@ export function Mugunghwa(props){
   //     })  // start iterating
   //     .catch(err => console.log(err.message))  // do sth! e.g.) redirection / alert / re-request
   // }
-
-  // useEffect(async()=>{
-  //   console.log(meta+" "+model)
-  //   modelRef.current = await window.tmPose.load(model, meta)
-  //   requestRef.current = requestAnimationFrame(loop)
-  // }, [meta, model])
-
-  const iterExercise = async() => {
-    // console.log(exerciseList.current.length)
-    // for (let i = 0; i < exerciseList.current.length; i++) {
-    //   console.log(exerciseList.current[i])
-      // let exercise = exerciseList.current[i].execSub;
-      // for (let j = 0; j < exercise.length; j++) {
-      //   if (exercise[j].modelLink === null) {
-      //     console.log('@@ null modelLink continue @@')
-      //     continue
-      //   }
-      //   console.log('iteration started')
-      //   let modelURL = exercise[j].modelLink;
-      //   let metadataURL = exercise[j].metaLink;
-      //   setMotionImg(`${exercise[j].imgLink}`)
-      //   modelRef.current = await window.tmPose.load(modelURL, metadataURL)
-      //   // let maxPredictions = modelRef.current.getTotalClasses()
-        
-      //   // code here to handle start
-      //   requestRef.current = requestAnimationFrame(loop)
-      // }
-    // }
-    // console.log(model + " " + meta)
-    // let modelURL = model
-    // let metadataURL = meta
-    // setMotionImg(`${exercise[j].imgLink}`)
-    // modelRef.current = await window.tmPose.load(modelURL, metadataURL)
-    // requestRef.current = requestAnimationFrame(loop)
-  }
 
   const loop = async(timestamp) => {
     console.log('loop')
@@ -163,8 +112,6 @@ export function Mugunghwa(props){
     
   }
 
-
-
   const predict = async() => {
     // console.log(`predict ${canvasRef.current}`)
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
@@ -193,7 +140,7 @@ export function Mugunghwa(props){
   }
 
   const drawPose = pose => {
-    if (pose === null || undefined)
+    if (pose === null || pose === undefined)
       return
     
     if (!webcamRef.current.canvas)
@@ -220,24 +167,23 @@ export function Mugunghwa(props){
     }
   }
 
-
   useEffect(() => {
     canvasRef.current.width = width
     canvasRef.current.height = height
     contextRef.current = canvasRef.current.getContext('2d')
-    console.log(canvasRef)
+    // console.log(canvasRef)
 
     const params = {
       level: 1,
     }
     dispatch(requestMugunghwaGame(params))
       .then(async res => {
-        console.log(res)
+        // console.log(res)
         exerciseList.current = res.payload.data.asset
 
         modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
         startWebcam().then(()=>{
-          console.log(modelRef)
+          // console.log(modelRef)
           requestRef.current = requestAnimationFrame(loop)
         })
       })
@@ -246,7 +192,6 @@ export function Mugunghwa(props){
         // throw new Error('server connection issue')
       })
 
-    // init()
     return () => cancelAnimationFrame(requestRef.current)
   }, [])
 
@@ -268,8 +213,8 @@ export function Mugunghwa(props){
   // MoveCharactor.js에서 한 턴이 끝나면 onCheckMotion()을 호출하고
   // onCheckMotion()에서 모션 성공 시 다음칸으로 넘어가기 위해 setMove 하면
   // 실제로 move 변경을 감지하고 webcam이동
-  useEffect(()=>{
-    console.log(move)
+  useEffect(async()=>{
+    // console.log(move)
 
     if(move>=0 && move<4){
       // console.log(webcamRef)
@@ -283,25 +228,20 @@ export function Mugunghwa(props){
       const user = document.createElement('div')
       user.id = 'webcam'
       user.className = styles.userBox
-      console.log('canvas: '+canvasRef)
-      user.innerHTML = `<canvas ref=${canvasRef}/>`
+      // console.log('canvas: '+canvasRef)
+      user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`
       after.appendChild(user)
-      // const before = document.getElementById(`webcam${move}`)
-      // const after = document.getElementById(`webcam${move+1}`)
 
-      // before.style.display = 'none'
-      // after.style.display = 'block'
+      const canvas = document.getElementById('canvas')
+      canvas.width = width;
+      canvas.height = height;
+      // const ctx = canvas.getContext('2d')
+      contextRef.current = canvas.getContext('2d')
 
-      // init()
-
-      canvasRef.current.width = width
-      canvasRef.current.height = height
-      contextRef.current = canvasRef.current.getContext('2d')
       startWebcam().then(()=>{
         // console.log(modelRef)
         requestRef.current = requestAnimationFrame(loop)
       })
-      // requestRef.current = requestAnimationFrame(loop)
     }
   }, [move])
 
@@ -318,8 +258,9 @@ export function Mugunghwa(props){
   // MoveCharactor.js에서 한 턴이 시작됨을 알리면서 호출하는 함수
   // 새로운 턴이 시작되면 수행해야할 동작 img를 api로 받아서 setMotionImg로 설정하고
   // setImgOpen을 true로 설정해 따라할 동작을 팝업으로 띄움
+  let imgCnt = 0
   const onShowMotion = () => {
-    setMotionImg(motionImg=>motionImg+'a')
+    setMotionImg(exerciseList.current[imgCnt++].image)
     setImgOpen(true)
   }
 
@@ -351,32 +292,20 @@ export function Mugunghwa(props){
         </Grid>
 
         <Grid item md={2} className={styles.nomalLine} id='box4'>
-          {/* <div id='webcam4' className={styles.userBox} >
-            <canvas ref={canvasRef}/>
-          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box3'>
-          {/* <div id='webcam3' className={styles.userBox} >
-            <canvas ref={canvasRef}/>
-          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box2'> 
-          {/* <div id='webcam2' className={styles.userBox} >
-            <canvas ref={canvasRef}/>
-          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box1'>
-          {/* <div id='webcam1' className={styles.userBox} >
-            <canvas ref={canvasRef}/>
-          </div> */}
         </Grid>
 
         <Grid item md={2} className={styles.stepLine} id='box0'>
-          <div id='webcam0' className={styles.userBox}>
-            <canvas ref={canvasRef}/>
+          <div id='webcam' className={styles.userBox}>
+            <canvas id='canvas' ref={canvasRef}/>
           </div>
         </Grid>
       </Grid>
