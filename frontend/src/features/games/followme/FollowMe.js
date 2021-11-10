@@ -19,41 +19,42 @@ import monkey1 from '../../../images/games/game_followMe_1.jpg'
 import monkey2 from '../../../images/games/game_followMe_2.jpg'
 import monkey3 from '../../../images/games/game_followMe_3.jpg'
 import useIsMount from '../../../utils/useIsMount'
-
+// import debounce from 'lodash/debounce'
 
 const size = 800;
 const flip = true;
 const faceImg = new Image()
 faceImg.src = "http://k5d205.p.ssafy.io:8080/img/cat.png";
 
-
-
 export function FollowMe(props) {
   const dispatch = useDispatch()
   const isMount = useIsMount()
   const [image, setImage] = useState(monkey1)
-
+  
+  const exerciseList = useRef({})
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
   const webcamRef = useRef(null)
   const requestRef = useRef(null)
   const modelRef = useRef(null)
-  const exerciseList = useRef({})
   const audioRef = useRef(null)
-
+  
   const idx = useRef(0)
   const isStarted = useRef(false)
   const isEngaged = useRef(false)
+  const successCount = useRef(0)
+  const successFlag = useRef(0)
   const successThreshold = useRef(0)
   const isDrawing = useRef(false)
 
+  const canvasSize = useRef({w: 0, h: 0})
   const eyeSizeArr = useRef([-1, -1, -1, -1])
   const msAppeared = useRef(0)
   const [isAppeared, setIsAppeared] = useState(false)
   const msFullbody = useRef(0)
   const [isFullbody, setIsFullbody] = useState(false)
 
-  const [dummyProgressData, setDummyProgressData] = useState(30)
+  const [progressData, setProgressData] = useState(0)
   const [seconds, setSeconds] = useState(0)
   const [openStartCount, setOpenStartCount] = useState(false)
 
@@ -62,7 +63,6 @@ export function FollowMe(props) {
       webcamRef.current = new window.tmPose.Webcam(size, size, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
-      console.log(webcamRef.current)
     } catch {
       throw new Error('camera issue')
     }
@@ -85,9 +85,32 @@ export function FollowMe(props) {
   const init = () => {
     // getCanvas
     playBGM(intro)
-    canvasRef.current.width = size;
-    canvasRef.current.height = size;
+    canvasRef.current.style.width = '100%';
+    canvasRef.current.style.height = '100%';
+
+    canvasRef.current.width = 800;
+    canvasRef.current.height = 800;
     contextRef.current = canvasRef.current.getContext('2d');
+    contextRef.current.scale(1, 1)
+
+    // canvasRef.current.width = canvasRef.current.offsetWidth;
+    // canvasRef.current.height = canvasRef.current.offsetHeight;
+
+    // canvasRef.current.style.width = '100%';
+    // canvasRef.current.style.height = '100%';
+    // canvasRef.current.width = canvasRef.current.offsetWidth;
+    // canvasRef.current.height = canvasRef.current.offsetHeight;
+
+    
+    // canvasRef.current.style.aspectRatio = 1/1;
+    
+    // canvasRef.current.width = 1600;
+    // canvasRef.current.height = 1600;
+    
+    // const ratio = canvasRef.current.clientWidth > canvasRef.current.clientHeight ?
+    //               canvasRef.current.clientWidth : canvasRef.current.clientHeight
+    // contextRef.current.scale(1,1); 
+    // contextRef.current.scale(800 / ratio, 800 / ratio)
     // getWebcam, requestGameData
     Promise.all([startWebcam(), requestGameData()])
       .then(async() => {
@@ -147,15 +170,27 @@ export function FollowMe(props) {
           handleStart()
         break
       case true:
+        if (audioRef.current.paused) {
+          console.log(successCount.current)
+          idx.current += 1
+          
+          if (idx.current === exerciseList.current.asset.length) {
+            // game ends
+            await delay(1000)
+            console.log('game end')
+          } else {
+            // 다음 운동 시작!
+            if (!isMount.current) return;
+            setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
+            isStarted.current = false
+          }
+        }
         await predict(posenetOutput)
           .then(res => {
-            // console.log(res)
+            console.log(res)
             if (res === true) {
               successThreshold.current += 1
-              if (successThreshold.current > 20) {
-                successThreshold.current = 0
-                handleSuccess()
-              }
+              handleSuccess()
             } else {
               if (successThreshold.current > 0)
                 successThreshold.current -= 2
@@ -262,7 +297,7 @@ export function FollowMe(props) {
       setImage(monkey1)
     })()
 
-    await delay(2900)
+    await delay(2600)
     if(!isMount.current)
       return
     setImage(`${exerciseList.current.asset[idx.current].image}`)
@@ -272,7 +307,14 @@ export function FollowMe(props) {
   }
 
   const handleSuccess = async() => {
+    if (successFlag.current)
+      return
 
+    successThreshold.current += 1
+    if (successThreshold.current > 20) {
+      successFlag.current = true
+      successCount.current += 1
+    }
   }
 
   const delay = (t) => new Promise(resolve => {
@@ -280,11 +322,13 @@ export function FollowMe(props) {
   })
 
   useEffect(() => {
+    // window.addEventListener('resize', handleResize)
+    // window.removeEventListener('resize', handleResize)
     init()
     return () => {
       cancelAnimationFrame(requestRef.current)
       webcamRef.current.stop()
-      audioRef.current.pause();
+      audioRef.current.pause()
     }
   }, [])
 
@@ -310,13 +354,16 @@ export function FollowMe(props) {
     props.history.push('/home')
   }
 
-  // BGM
+  // const handleResize = debounce(() => {
+  //   console.dir(canvasRef.current)
+  //   // canvasSize.current = {w: rightScreenRef.current}
+  // }, 1000)
 
   return(
     <div className={styles.container}>
       {/* {seconds} */}
 
-      <Header progress={dummyProgressData} onEndgameClick={endGame} />
+      <Header progress={progressData} onEndgameClick={endGame} />
       {/* <button onClick={() => {setSeconds(3); setOpenStartCount(true);}}>set 3sec timer</button> */}
       <Grid 
         container 
@@ -333,8 +380,9 @@ export function FollowMe(props) {
         </Grid>
         <Grid item md={1} mt={'5%'}></Grid>
         <Grid item md={4} mt={'5%'}>
-          <canvas ref={canvasRef} />
-          {/* <RightGameScreen /> */}
+          <RightGameScreen>
+            <canvas ref={canvasRef} />
+          </RightGameScreen>
         </Grid>
       </Grid>
       {/* send progress data as props to Header */}
