@@ -91,7 +91,7 @@ export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepa
 
 export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prepare(info){
   const level = info.level
-  const returnData = request('get', `/api/game/follow?level=${level}`)
+  const returnData = request('get', `/game/follow?level=${level}`)
   return { payload: returnData}
 })
 //mypage
