@@ -20,7 +20,7 @@ class SsafitApplicationTests {
 	
 	@Autowired
 	CompensationService compen;
-	@Test
+//	@Test
 	void whwh() {
 		
 //		gameScoreService.gameScoreSave(15,1);
