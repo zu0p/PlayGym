@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Slide from "./slide";
 import styled from '@emotion/styled'
 import { Backward, Forward } from './styledComponent'
 
@@ -22,8 +21,8 @@ const SliderContainer = styled.div`
 //   display: flex;
 // `;
 
-export function Slider() {
-  const TOTAL_SLIDES = 2;
+export function Slider(props) {
+  const TOTAL_SLIDES = props.total;
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef(null);
   const nextSlide = () => {
@@ -49,9 +48,7 @@ export function Slider() {
       <Backward sx={{fontSize: '40px', zIndex: '40', height: '100%', backgroundColor: '#FFF'}} onClick={prevSlide} />
       <SliderContainer ref={sliderRef}>
         {/* <SlideContainer ref={slideRef}> */}
-        <Slide text={'1111111'} />
-        <Slide text={'2222222'} />
-        <Slide text={'3333333'} />
+        { props.children }
         {/* </SlideContainer> */}
       </SliderContainer>
       <Forward sx={{fontSize: '40px', zIndex: '40', height: '100%', backgroundColor: '#FFF'}} onClick={nextSlide} />

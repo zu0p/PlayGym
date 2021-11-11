@@ -4,12 +4,15 @@ import styles from './Mypage.module.css'
 import IconButton from '@mui/material/IconButton';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Grid from '@mui/material/Grid';
+import Slide from "./slide";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { Slider } from './slider.js'
+import { useDispatch } from 'react-redux';
+import { requestExp, requestAllCharacters, requestProfileCharacters } from '../../app/actions/userActions';
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
   height: 20,
@@ -24,6 +27,56 @@ const BorderLinearProgress = styled(LinearProgress)(_ => ({
 }));
 
 export function Mypage(props) {
+  const userId = localStorage.getItem('main-user')
+  const profileId = localStorage.getItem('sub-user')
+  const dispatch = useDispatch()
+  
+  const [characters, setCharacters] = useState([])
+  const [exp, setExp] = useState(-1)
+
+  const getCharacters = async() => {
+    dispatch(requestAllCharacters())
+      .then(res => res.payload.data)
+      .catch(err => {throw new Error(err)})
+  }
+  const getProfileCharacters = async() => {
+    dispatch(requestProfileCharacters(profileId))
+    .then(res => res.payload.data)
+    .catch(err => {throw new Error(err)})
+  }
+  const getExp = async() => {
+    dispatch(requestExp(userId))
+    .then(res => res.payload.data)
+    .catch(err => {throw new Error(err)})
+  }
+
+  const update = () => {
+    Promise.all([getCharacters(), getProfileCharacters(), getExp()])
+      .then(res => {
+        console.log(res)
+
+        const ownedCharacters = []
+        res[1].forEach(c => ownedCharacters.push(c.id))
+
+        setCharacters(
+          res[0].map(c => {
+            return {...c, owned: ownedCharacters.includes(c.id)}
+          })
+        )
+        
+        setExp(res[2].res.payload.data.result.subusers[profileId])
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    // update()
+    getCharacters()
+  }, [])
+
+
   return (
     <div className={styles.container}>
       <div style={{ textAlign: 'start', position:'absolute' }}>
@@ -65,19 +118,21 @@ export function Mypage(props) {
             <div className={styles.progressbar__container}>
               {/* note: negative ml value === width or fontSize / 2 */}
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-                1
+                {parseInt(exp / 100)}
               </Typography>
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
-                1
+                asd
               </Typography>
               <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
               <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
-              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={50} />
+              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={exp % 100} />
             </div>
           </Paper>
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
-            <Slider />
+            <Slider total={2}>
+              <Slide  />
+            </Slider>
           </Paper>
         </Grid>
       </Grid>

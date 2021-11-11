@@ -1,7 +1,7 @@
 import axios from "axios";
 import {setInterceptors} from "./interceptor";
 
-const DOMAIN = 'http://k5d205.p.ssafy.io:8080'
+const DOMAIN = 'http://k5d205.p.ssafy.io:8080/api'
 // axios.defaults.withCredentials = true; // for cookie data
 
 export const request = (method, url, data) => {
@@ -26,4 +26,12 @@ export const requestWithAuth = (method, url, data) => {
   })
     .then((res) => res.data)
     .catch((err) => console.log(err));
+};
+
+export const requestAuth = (method, url, data) => {
+  return instanceWithAuth({
+    method,
+    url: DOMAIN + url,
+    data,
+  })
 };

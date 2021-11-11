@@ -8,13 +8,12 @@ const Div = styled.div`
   justify-content: space-between
 `;
 
-export default function Slide({text}) {
+export default function Slide(props) {
   return (
       <Div>
-        <span>{text}</span>
-        <span>{text}</span>
-        <span>{text}</span>
-        <span>{text}</span>
+        <span>{}</span>
+        <span>{}</span>
+        <span>{}</span>
       </Div>
   );
 }
