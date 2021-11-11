@@ -3,7 +3,7 @@ import { request, requestWithAuth } from '../../utils/axios'
 import { createAction } from '@reduxjs/toolkit'
 
 export function requestLoginUser(userInfo){  
-  const returnData = request('post', '/api/login', userInfo)
+  const returnData = request('post', '/login', userInfo)
     .catch(err=>{
       return err.response.status    
     })
@@ -77,7 +77,7 @@ export const requestSignupUser = createAction('SIGNUP_USER', function prepare(us
 }) 
 
 export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prepare(userInfo) {
-  const returnData = request('get', `/api/check?id=${userInfo.id}`)
+  const returnData = request('get', `/check?id=${userInfo.id}`)
 
   return { payload: returnData }
 })
