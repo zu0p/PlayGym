@@ -4,7 +4,6 @@ import Slide from "./slide";
 import { Backward, Forward } from './styledComponent'
 import Grid from '@mui/material/Grid';
 
-
 const Container = styled.div`
   width: 100%;
   height: 100%;

@@ -72,46 +72,45 @@ export function requestAddChild(childInfo){
 
 export const requestSignupUser = createAction('SIGNUP_USER', function prepare(userInfo) {
   const returnData = request('post', `/join`, userInfo)
-
   return { payload: returnData }
 }) 
 
 export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prepare(userInfo) {
   const returnData = request('get', `/check?id=${userInfo.id}`)
-
   return { payload: returnData }
 })
 
 export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepare(gameInfo) {
   const { level } = gameInfo
   const returnData = request('get', `/game/follow?level=${level}`)
-
   return { payload: returnData }
 })
 
 export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prepare(info){
   const level = info.level
   const returnData = request('get', `/game/follow?level=${level}`)
-  return { payload: returnData}
+  return { payload: returnData }
 })
+
 //mypage
 export const requestExp = createAction('EXP', function prepare(userId) {
   const returnData = requestAuth('get', `/user/sub/status?user=${userId}`)
+  return { payload: returnData }
+})
 
-  return {payload: returnData}
+export const requestRewardList = createAction('PROFILE_REWARD', function prepare(profileId) {
+  const returnData = requestAuth('get', `/user/sub/cpslist?sid=${profileId}`)
+  return { payload: returnData }
 })
 
 //allCharacters
 export const requestAllCharacters = createAction('ALL_CHARACTERS', function prepare() {
   const returnData = requestAuth('get', `/user/chars`)
-
-  return {payload: returnData}
+  return { payload: returnData }
 })
 
 //PROFILE Characters
 export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', function prepare(profileId) {
   const returnData = requestAuth('get', `/user/sub/mych/${profileId}`)
-
-  return {payload: returnData}
+  return { payload: returnData }
 })
-

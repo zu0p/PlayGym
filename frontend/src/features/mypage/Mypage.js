@@ -12,7 +12,8 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { Slider } from './slider.js'
 import { useDispatch } from 'react-redux';
-import { requestExp, requestAllCharacters, requestProfileCharacters } from '../../app/actions/userActions';
+import { requestExp, requestAllCharacters, requestProfileCharacters, requestRewardList } from '../../app/actions/userActions';
+import useIsMount from '../../utils/useIsMount';
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
   height: 20,
@@ -30,11 +31,13 @@ export function Mypage(props) {
   const userId = localStorage.getItem('main-user')
   const profileId = localStorage.getItem('sub-user')
   const dispatch = useDispatch()
+  const isMount = useIsMount()
   
   const [characters, setCharacters] = useState([])
+  const [rewards, setRewards] = useState([])
   const [exp, setExp] = useState(-1)
 
-  const getCharacters = async() => {
+  const getAllCharacters = async() => {
     return dispatch(requestAllCharacters())
       .then(res => res.payload.data)
   }
@@ -42,35 +45,53 @@ export function Mypage(props) {
     return dispatch(requestProfileCharacters(profileId))
       .then(res => res.payload.data)
   }
-  const getExp = async() => {
-    return dispatch(requestExp(userId))
+  // const getExp = async() => {
+  //   return dispatch(requestExp(userId))
+  //     .then(res => res.payload.data)
+  // }
+  // const 
+  const getRewardList = async() => {
+    return dispatch(requestRewardList(profileId))
       .then(res => res.payload.data)
+  }
+  const handleResponse = (res) => {
+    if (!isMount.current)
+      return
+
+    const ownedCharacters = []
+    res[1].forEach(c => ownedCharacters.push(c.id))
+
+    setCharacters(
+      res[0].map(c => {
+        return {...c, owned: ownedCharacters.includes(c.id)}
+      })
+    )
+    
+    // const currentProfile = res[2].result.subusers.filter(sub => sub.sid === profileId)
+    // setExp(currentProfile.exp)
+
+    setRewards(res[2].result.result)
   }
 
   const update = () => {
-    Promise.all([getCharacters(), getProfileCharacters(), getExp()])
+    Promise.all([
+      getAllCharacters(), 
+      getProfileCharacters(), 
+      // getExp(), 
+      getRewardList()
+    ])
       .then(res => {
         console.log(res)
-        // const ownedCharacters = []
-        // res[1].forEach(c => ownedCharacters.push(c.id))
-
-        // setCharacters(
-        //   res[0].map(c => {
-        //     return {...c, owned: ownedCharacters.includes(c.id)}
-        //   })
-        // )
-        
-        // setExp(res[2].res.payload.data.result.subusers[profileId])
+        handleResponse(res)
       })
       .catch(err => {
-        console.log(err)
+        console.log(err)  // distinguish => no token(push '/'), serverError
       })
   }
 
   useEffect(() => {
     update()
   }, [])
-
 
   return (
     <div className={styles.container}>
@@ -113,7 +134,7 @@ export function Mypage(props) {
             <div className={styles.progressbar__container}>
               {/* note: negative ml value === width or fontSize / 2 */}
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-                {parseInt(exp / 100)}
+                {}
               </Typography>
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
                 asd
@@ -126,7 +147,7 @@ export function Mypage(props) {
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
             <Slider total={1}>
-              <Slide sx={12} data={'1aaaaaaaaa1'} />
+              {<Slide sx={12} data={characters} />}
               <Slide sx={12} data={'2aaaa2222a2'} />
             </Slider>
           </Paper>
