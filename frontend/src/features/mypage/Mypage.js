@@ -76,7 +76,7 @@ export function Mypage(props) {
             </div>
           </Paper>
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
-            <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
+            <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
             <Slider />
           </Paper>
         </Grid>
