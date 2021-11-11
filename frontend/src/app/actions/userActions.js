@@ -3,7 +3,7 @@ import { request, requestWithAuth } from '../../utils/axios'
 import { createAction } from '@reduxjs/toolkit'
 
 export function requestLoginUser(userInfo){  
-  const returnData = request('post', '/login', userInfo)
+  const returnData = request('post', '/api/login', userInfo)
     .catch(err=>{
       return err.response.status    
     })
