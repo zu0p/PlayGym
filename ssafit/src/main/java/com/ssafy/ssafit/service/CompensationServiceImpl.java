@@ -94,8 +94,12 @@ public class CompensationServiceImpl implements CompensationService {
 			throw new NullPointerException();
 		}
 		SubUser su = gc.getSubid();
+		if(su.getExp()<su.getMax()) {
+			throw new IllegalStateException();
+		}
+		su.setExp(su.getExp()-su.getMax());
 		su.setMax(su.getMax()+50);
-		su.setExp(0);
+		
 		su.setLevel(su.getLevel()+1);
 		gc.changeStatus(RequestStatus.Request);
 	}
