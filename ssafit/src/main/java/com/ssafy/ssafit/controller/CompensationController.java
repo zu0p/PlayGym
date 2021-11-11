@@ -3,6 +3,7 @@ package com.ssafy.ssafit.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.Compensation;
-import com.ssafy.ssafit.dto.CompensationMapping;
+import com.ssafy.ssafit.domain.GetCps;
+import com.ssafy.ssafit.domain.RequestStatus;
+import com.ssafy.ssafit.dto.SubGetCpsListDTO;
 import com.ssafy.ssafit.service.CompensationService;
 import com.ssafy.ssafit.service.GetCpsService;
 
@@ -34,7 +37,7 @@ public class CompensationController {
 	@GetMapping("/cps")
 	public ResponseEntity<ApiResMessage> findPidCompensation(@RequestParam long id){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<CompensationMapping> list=null;
+		List<Compensation> list=null;
 		try {
 			list = compensationService.findPidCps(id);
 		}catch (Exception e) {
@@ -53,6 +56,7 @@ public class CompensationController {
 		try {
 			compensationService.saveCompensation(map);
 		}catch(Exception e){
+			e.printStackTrace();
 			return new ResponseEntity<ApiResMessage>(new ApiResMessage(500,null,"Failed"),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
@@ -92,12 +96,36 @@ public class CompensationController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);
 	}
 	
-	
-	public ResponseEntity<ApiResMessage> requestCps(){
+	@GetMapping("/sub/cpslist")
+	public ResponseEntity<ApiResMessage> subCpsList(@RequestParam long sid){
+		Map<String,Object> map = new HashMap<String, Object>();
+		List<GetCps> list=null;
+		List<SubGetCpsListDTO> res =null;
 		try {
-			
+			list = compensationService.subUserlist(sid);
+			res=list.stream().map(SubGetCpsListDTO::new).collect(Collectors.toList());
 		}catch (Exception e) {
 			
+		}
+		
+		map.put("result", res);
+		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Success"),HttpStatus.OK);
+	}
+	
+	@GetMapping("/sub/req")
+	public ResponseEntity<ApiResMessage> reqCps(@RequestParam long sid){
+		
+		try {
+			List<GetCps> list=compensationService.subUserlist(sid);
+			for(GetCps gc :list) {
+				if(gc.getStatus()==RequestStatus.Wait) {
+					compensationService.subUserReqCps(gc);
+					break;
+				}
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"Success"),HttpStatus.OK);

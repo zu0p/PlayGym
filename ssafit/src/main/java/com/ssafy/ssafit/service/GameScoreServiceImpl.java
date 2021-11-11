@@ -79,7 +79,7 @@ public class GameScoreServiceImpl implements GameScoreService{
 				total+=s.getExp();
 			}
 			
-			status.add(new SubGameStatusDTO(su.getExp(), total));
+			status.add(new SubGameStatusDTO(su.getExp(), total,su.getCid().getCtid().getImage_link(),su.getSid(),su.getNickName()));
 			
 		}
 		

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +28,7 @@ public class Compensation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long cid;
 	
-	private int exp;
+//	private int level;
 	
 	private String title;
 	
@@ -38,6 +40,7 @@ public class Compensation {
 	@JoinColumn(name="pid")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@NotNull
+	@JsonIgnore
 	private MainUser pid;
 	
 	@OneToMany(mappedBy = "cpsid", cascade = CascadeType.ALL)

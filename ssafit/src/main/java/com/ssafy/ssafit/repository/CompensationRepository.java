@@ -11,6 +11,6 @@ import com.ssafy.ssafit.dto.CompensationMapping;
 
 public interface CompensationRepository extends JpaRepository<Compensation, Long>{
 
-	Optional<List<CompensationMapping>> findByPid(MainUser pid);
-	Optional<List<CompensationMapping>> findByBasic(boolean b);
+	Optional<List<Compensation>> findByPid(MainUser pid);
+	Optional<List<Compensation>> findByBasic(boolean b);
 }

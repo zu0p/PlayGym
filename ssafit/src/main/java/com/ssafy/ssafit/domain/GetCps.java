@@ -1,6 +1,5 @@
 package com.ssafy.ssafit.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -9,7 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,16 +28,19 @@ public class GetCps {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@OrderBy
 	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name="subid")
+	@JsonIgnoreProperties({"subid"})
 	@NotNull
 	private SubUser subid;
 	
 	@ManyToOne
 	@JoinColumn(name="cpsid")
 	@NotNull
+	@JsonIgnoreProperties({"cpsid"})
 	private Compensation cpsid; 
 	
 	@Enumerated(EnumType.STRING)
@@ -47,4 +53,10 @@ public class GetCps {
 		this.cpsid=cpsid;
 		this.status=RequestStatus.Wait;
 	}
+	
+	public void changeStatus(RequestStatus status) {
+		this.status=status;
+	}
+	
+	
 }
