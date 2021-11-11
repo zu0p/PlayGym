@@ -14,7 +14,7 @@ const width = 300;
 const height = 500;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "http://k5d205.p.ssafy.io:8080/img/bear.png";
+faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/bear.png";
 
 export function Mugunghwa(props){
 
@@ -34,6 +34,8 @@ export function Mugunghwa(props){
   const [openStartCount, setOpenStartCount] = useState(false)
   const exerciseList = useRef([])
   const loopFlag = useRef(false)
+  const isSuccess = useRef(false)
+  const motionCnt = useRef(-1)
 
   const startWebcam = async() => {
     try {
@@ -47,7 +49,7 @@ export function Mugunghwa(props){
   }
 
   const loop = async(timestamp) => {
-    console.log(loopFlag.current)
+    // console.log(loopFlag.current)
     webcamRef.current.update()
     if(!loopFlag.current){
       // console.log('loop')
@@ -55,8 +57,11 @@ export function Mugunghwa(props){
         .then(res => {
           if (res === true) {
             successThreshold.current += 1
-            if (successThreshold.current > 10)
+            console.log(successThreshold.current)
+            if (successThreshold.current > 50){
+              isSuccess.current = true
               console.log('success!!!!!!!!!!!');
+            }
             else{
               cancelAnimationFrame(requestRef.current)
               requestRef.current = requestAnimationFrame(loop)
@@ -74,8 +79,19 @@ export function Mugunghwa(props){
         return
     }
     // console.log('!loop')
-    const {pose, posenetOutput} = await modelRef.current.estimatePose(webcamRef.current.canvas)
-    drawPose(pose)
+    // setTimeout(async function(){
+    //   const {pose, posenetOutput} = await modelRef.current.estimatePose(webcamRef.current.canvas)
+    
+    //   drawPose(pose)
+    //   requestRef.current = requestAnimationFrame(loop)
+    // }, 700)
+
+    try{
+      const {pose, posenetOutput} = await modelRef.current.estimatePose(webcamRef.current.canvas)
+      drawPose(pose)
+    }catch(e){
+      console.log(e)
+    }
     requestRef.current = requestAnimationFrame(loop)
     // const pose = await modelRef.current.estimatePose(webcamRef.current.canvas)
     // .catch(err=>{
@@ -110,29 +126,21 @@ export function Mugunghwa(props){
 
   const predict = async() => {
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
-    // .catch(e=>{
-    //   console.log(e)
-    //   predict()
-    // })
     const prediction = await modelRef.current.predict(posenetOutput)
 
-    // console.log(prediction[0].probability)
-    // console.log(prediction[0].probability.toFixed(2))
-    // let cnt = 0
-    // let trueCnt = 0
-    // let timer = setInterval(function(){
-    //   console.log('interval'+cnt)
-    //   if(cnt==3){
-    //     console.log('clear')
-    //     clearInterval(timer)
-    //   }
-    //   cnt++
-    //   if (prediction[0].probability.toFixed(2) > 0.8) {
-    //     trueCnt++
-    //   }      
-    // }, 1000)
-    // return trueCnt>=2?true:false
-    if (prediction[0].probability.toFixed(2) > 0.8) 
+    // console.log('==================')
+    // prediction.map(item=>{
+    //   console.log(item.probability.toFixed(2))
+    // })
+    // 현재 수행하는 motion의 aid
+    if(motionCnt.current<0){
+      // console.log(prediction)
+      drawPose(pose)
+      return false
+    } 
+    let idx = exerciseList.current[motionCnt.current].aid -1
+    console.log(idx+" "+exerciseList.current[motionCnt.current].name)
+    if (prediction[idx].probability.toFixed(2) > 0.8) 
       return true
     else {
       drawPose(pose)
@@ -193,10 +201,14 @@ export function Mugunghwa(props){
     dispatch(requestMugunghwaGame(params))
       .then(async res => {
         exerciseList.current = res.payload.data.asset
-
+        console.log(exerciseList.current)
+        console.log(res)
+        // const tmpModel = "http://k5d205.p.ssafy.io:8080/api/model/followme_level1/model.json"
+        // const tmpMeta = "http://k5d205.p.ssafy.io:8080/api/model/followme_level1/metadata.json"
+        // modelRef.current = await window.tmPose.load(tmpModel, tmpMeta)
         modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
         startWebcam().then(()=>{
-          console.log("first")
+          // console.log("first")
           requestRef.current = requestAnimationFrame(loop)
         })
       })
@@ -238,13 +250,15 @@ export function Mugunghwa(props){
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
 
+      // before.innerHTML = ''
+      // const user = document.createElement('div')
+      // user.id = 'webcam'
+      // user.className = styles.userBox
+      // user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`
+      // after.appendChild(user)
+      const webcam = document.getElementById('webcam')
       before.innerHTML = ''
-      const user = document.createElement('div')
-      user.id = 'webcam'
-      user.className = styles.userBox
-      // console.log('canvas: '+canvasRef)
-      user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`
-      after.appendChild(user)
+      after.appendChild(webcam)
 
       const canvas = document.getElementById('canvas')
       canvas.width = width;
@@ -263,6 +277,7 @@ export function Mugunghwa(props){
   const onChcekMotion = async() =>{
     loopFlag.current = false // == predict를 하겠다
     console.log("check motion")
+    motionCnt.current++
     // const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
     // const prediction = await modelRef.current.predict(posenetOutput)
 
@@ -271,12 +286,12 @@ export function Mugunghwa(props){
     let cnt = 0
     let trueCnt = 0
     let timer = setInterval(function(){
-      console.log('interval'+cnt)
-      console.log(loopFlag.current)
+      // console.log('interval'+cnt)
+      // console.log(loopFlag.current)
       if(cnt==2){
-        console.log('clear trueCnt: '+trueCnt)
+        // console.log('clear trueCnt: '+trueCnt)
         loopFlag.current = true
-        console.log(loopFlag.current)
+        // console.log(loopFlag.current)
         clearInterval(timer)
       }
       cnt++
@@ -285,10 +300,12 @@ export function Mugunghwa(props){
       // }      
     }, 1000)
     setTimeout(function(){
-      console.log('4초 뒤')
-      let check = trueCnt>=2?true:false
-      if(!check){
+      // console.log('4초 뒤')
+      // let check = trueCnt>=2?true:false
+      // if(!check){ //if(isSuccess.current)
+      if(isSuccess.current){
         setMove(move=>move+1)
+        isSuccess.current = false
       }
       else{
         cancelAnimationFrame(requestRef.current)
