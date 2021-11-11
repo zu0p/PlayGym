@@ -35,36 +35,32 @@ export function Mypage(props) {
   const [exp, setExp] = useState(-1)
 
   const getCharacters = async() => {
-    dispatch(requestAllCharacters())
+    return dispatch(requestAllCharacters())
       .then(res => res.payload.data)
-      .catch(err => {throw new Error(err)})
   }
   const getProfileCharacters = async() => {
-    dispatch(requestProfileCharacters(profileId))
-    .then(res => res.payload.data)
-    .catch(err => {throw new Error(err)})
+    return dispatch(requestProfileCharacters(profileId))
+      .then(res => res.payload.data)
   }
   const getExp = async() => {
-    dispatch(requestExp(userId))
-    .then(res => res.payload.data)
-    .catch(err => {throw new Error(err)})
+    return dispatch(requestExp(userId))
+      .then(res => res.payload.data)
   }
 
   const update = () => {
     Promise.all([getCharacters(), getProfileCharacters(), getExp()])
       .then(res => {
         console.log(res)
+        // const ownedCharacters = []
+        // res[1].forEach(c => ownedCharacters.push(c.id))
 
-        const ownedCharacters = []
-        res[1].forEach(c => ownedCharacters.push(c.id))
-
-        setCharacters(
-          res[0].map(c => {
-            return {...c, owned: ownedCharacters.includes(c.id)}
-          })
-        )
+        // setCharacters(
+        //   res[0].map(c => {
+        //     return {...c, owned: ownedCharacters.includes(c.id)}
+        //   })
+        // )
         
-        setExp(res[2].res.payload.data.result.subusers[profileId])
+        // setExp(res[2].res.payload.data.result.subusers[profileId])
       })
       .catch(err => {
         console.log(err)
@@ -72,8 +68,7 @@ export function Mypage(props) {
   }
 
   useEffect(() => {
-    // update()
-    getCharacters()
+    update()
   }, [])
 
 
@@ -130,8 +125,9 @@ export function Mypage(props) {
           </Paper>
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
-            <Slider total={2}>
-              <Slide  />
+            <Slider total={1}>
+              <Slide sx={12} data={'1aaaaaaaaa1'} />
+              <Slide sx={12} data={'2aaaa2222a2'} />
             </Slider>
           </Paper>
         </Grid>

@@ -71,15 +71,13 @@ export function FollowMe(props) {
 
   const requestGameData = async() => {
     const params = { level: 1 }
-    dispatch(requestRandomGameByAge(params))
+    return dispatch(requestRandomGameByAge(params))
       .then(res => {
         if (isMount.current)
           exerciseList.current = res.payload.data
       })
-      .catch(() => {
-        throw new Error('server connection issue')
-      })
-  }
+      .catch(() => {throw new Error('server connection issue')})
+}
 
   // init()
   const init = () => {

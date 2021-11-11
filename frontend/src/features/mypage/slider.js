@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from '@emotion/styled'
+import Slide from "./slide";
 import { Backward, Forward } from './styledComponent'
+import Grid from '@mui/material/Grid';
+
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
 `;
 
 const SliderContainer = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
 `
 
 // const SlideContainer = styled.div`
@@ -47,9 +49,9 @@ export function Slider(props) {
     <Container>
       <Backward sx={{fontSize: '40px', zIndex: '40', height: '100%', backgroundColor: '#FFF'}} onClick={prevSlide} />
       <SliderContainer ref={sliderRef}>
-        {/* <SlideContainer ref={slideRef}> */}
-        { props.children }
-        {/* </SlideContainer> */}
+        <Grid container direction="column">
+          {props.children}
+        </Grid>
       </SliderContainer>
       <Forward sx={{fontSize: '40px', zIndex: '40', height: '100%', backgroundColor: '#FFF'}} onClick={nextSlide} />
     </Container>

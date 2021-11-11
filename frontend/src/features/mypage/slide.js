@@ -5,15 +5,14 @@ const Div = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between
+  justify-content: center
 `;
 
 export default function Slide(props) {
   return (
-      <Div>
-        <span>{}</span>
-        <span>{}</span>
-        <span>{}</span>
-      </Div>
+    <Div>
+      <span>{props.data}</span>
+      <span>{props.data}</span>
+    </Div>
   );
 }
