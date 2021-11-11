@@ -96,6 +96,7 @@ public class CompensationServiceImpl implements CompensationService {
 		SubUser su = gc.getSubid();
 		su.setMax(su.getMax()+50);
 		su.setExp(0);
+		su.setLevel(su.getLevel()+1);
 		gc.changeStatus(RequestStatus.Request);
 	}
 	
