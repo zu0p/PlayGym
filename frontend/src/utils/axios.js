@@ -27,3 +27,11 @@ export const requestWithAuth = (method, url, data) => {
     .then((res) => res.data)
     .catch((err) => console.log(err));
 };
+
+export const requestAuth = (method, url, data) => {
+  return instanceWithAuth({
+    method,
+    url: DOMAIN + url,
+    data,
+  })
+};

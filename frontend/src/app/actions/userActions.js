@@ -1,5 +1,5 @@
 import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, GET_CHILDRED_USER, ADD_CHILD_USER } from './types'
-import { request, requestWithAuth } from '../../utils/axios'
+import { request, requestWithAuth, requestAuth } from '../../utils/axios'
 import { createAction } from '@reduxjs/toolkit'
 
 export function requestLoginUser(userInfo){  
@@ -83,8 +83,8 @@ export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prep
 })
 
 export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepare(gameInfo) {
-  const { ageStep, count } = gameInfo
-  const returnData = request('get', `/game/exc?step=${ageStep}&random=${count}`)
+  const { level } = gameInfo
+  const returnData = request('get', `/game/follow?level=${level}`)
 
   return { payload: returnData }
 })
@@ -94,3 +94,24 @@ export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prep
   const returnData = request('get', `/api/game/follow?level=${level}`)
   return { payload: returnData}
 })
+//mypage
+export const requestExp = createAction('EXP', function prepare(userId) {
+  const returnData = requestAuth('get', `/user/sub/status?user=${userId}`)
+
+  return {payload: returnData}
+})
+
+//allCharacters
+export const requestAllCharacters = createAction('ALL_CHARACTERS', function prepare() {
+  const returnData = requestAuth('get', `/user/chars`)
+
+  return {payload: returnData}
+})
+
+//PROFILE Characters
+export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', function prepare(profileId) {
+  const returnData = requestAuth('get', `/user/sub/mych/${profileId}`)
+
+  return {payload: returnData}
+})
+
