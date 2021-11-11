@@ -125,6 +125,9 @@ public class SubUserServiceImpl implements SubUserService {
 				obj.put("weight", subUser.getWeight());
 				obj.put("nickName", subUser.getNickName());
 				obj.put("id", subUser.getMainUser().getId());
+				obj.put("exp", subUser.getExp());
+				obj.put("level", subUser.getLevel());
+				obj.put("max", subUser.getMax());
 				if(subUser.getCid() != null) obj.put("image" , subUser.getCid().getCtid().getImage_link());
 				else obj.put("image", null);
 			}	
