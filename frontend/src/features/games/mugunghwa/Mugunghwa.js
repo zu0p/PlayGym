@@ -8,15 +8,17 @@ import styles from './Mugunghwa.module.css'
 import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
+import EndDialog from './EndDialog';
 
 const size = 800;
-const width = 300;
+const width = 260;
 const height = 500;
 const flip = true;
 const faceImg = new Image()
 faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/bear.png";
 
 export function Mugunghwa(props){
+  const [replay, setReplay] = useState(false)
 
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
@@ -139,8 +141,8 @@ export function Mugunghwa(props){
       return false
     } 
     let idx = exerciseList.current[motionCnt.current].aid -1
-    console.log(idx+" "+exerciseList.current[motionCnt.current].name)
-    if (prediction[idx].probability.toFixed(2) > 0.8) 
+    // console.log(idx+" "+exerciseList.current[motionCnt.current].name)
+    if (prediction[idx].probability.toFixed(2) > 0.7) 
       return true
     else {
       drawPose(pose)
@@ -191,6 +193,7 @@ export function Mugunghwa(props){
   }
 
   useEffect(() => {
+    console.log('play '+replay)
     canvasRef.current.width = width
     canvasRef.current.height = height
     contextRef.current = canvasRef.current.getContext('2d')
@@ -202,13 +205,9 @@ export function Mugunghwa(props){
       .then(async res => {
         exerciseList.current = res.payload.data.asset
         console.log(exerciseList.current)
-        console.log(res)
-        // const tmpModel = "http://k5d205.p.ssafy.io:8080/api/model/followme_level1/model.json"
-        // const tmpMeta = "http://k5d205.p.ssafy.io:8080/api/model/followme_level1/metadata.json"
-        // modelRef.current = await window.tmPose.load(tmpModel, tmpMeta)
+        // console.log(res)
         modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
         startWebcam().then(()=>{
-          // console.log("first")
           requestRef.current = requestAnimationFrame(loop)
         })
       })
@@ -218,7 +217,7 @@ export function Mugunghwa(props){
       })
 
     return () => cancelAnimationFrame(requestRef.current)
-  }, [])
+  }, [replay])
 
 
   // 현재 위치 나타내기 위한 변수
@@ -231,39 +230,92 @@ export function Mugunghwa(props){
   const [motionImg, setMotionImg] = useState('')
 
   // 총 게임 카운트(설정해둔 전체 루프)가 끝나면 MoveCharactor.js에서 호출하는 함수
+  const [isEnd, setIsEnd] = useState(false)
   const onEndGame = () => {
     loopFlag.current = true
     cancelAnimationFrame(requestRef.current)
     console.log('game end')
+    setIsEnd(true)
+  }
+
+  const [gameRes, setGameRes] = useState(0)
+  useEffect(()=>{
+    if(isEnd){ // 모든 턴이 다 끝나서 게임 종료 시점
+      if(move == 4){
+        // console.log('success')
+        // 게임 성공 후 api 호출
+        setGameRes(1)
+      }
+      else{
+        // console.log('fail')  
+        setGameRes(-1) 
+      }
+    }
+  },[move, motionCnt.current, isEnd])
+
+  const [endOpen, setEndOpen] = useState(false)
+  useEffect(()=>{
+    if(gameRes!=0)
+      setEndOpen(true)
+  }, [gameRes])
+
+  // 게임 종료 후 end dialog 에서 홈으로 돌아가기 버튼 클릭
+  // == 종료 후 게임 메인페이지로 이동
+  const onGetEndClose = () => {
+    console.log('close')
+    setEndOpen(false)
+    setIsEnd(false)
+    endGame()
+  }
+
+  // 게임 종료 후 end dialog 에서 다시하기 버튼 클릭
+  // 게임 리플레이
+  const onGetReplay = () => {
+    setEndOpen(false)
+    setIsEnd(false)
+    setMove(-1)
+    motionCnt.current = -1
+    imgCnt = 0
+    setGameRes(0)
+    isSuccess.current = false
+
+    // 새로 그리기
+    const webcam = document.getElementById('webcam')
+    for(let i = 0; i<5; i++){
+      document.getElementById(`box${i}`).innerHTML = ''
+    }
+    document.getElementById(`box0`).appendChild(webcam)
+
+    setReplay(prev=>!prev)
   }
 
   // MoveCharactor.js에서 한 턴이 끝나면 onCheckMotion()을 호출하고
   // onCheckMotion()에서 모션 성공 시 다음칸으로 넘어가기 위해 setMove 하면
   // 실제로 move 변경을 감지하고 webcam이동
   useEffect(async()=>{
-    // console.log(move)
-
     if(move>=0 && move<4){
-      // console.log(webcamRef)
-      // console.log('stop!!!!!loop')
-
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
 
-      // before.innerHTML = ''
-      // const user = document.createElement('div')
-      // user.id = 'webcam'
-      // user.className = styles.userBox
-      // user.innerHTML = `<canvas id="canvas" ref=${canvasRef}/>`
-      // after.appendChild(user)
       const webcam = document.getElementById('webcam')
       before.innerHTML = ''
       after.appendChild(webcam)
 
+      // 초록색 테두리 깜빡
+      webcam.style.border = '10px solid #A3C653'
+      webcam.style.boxSizing = 'border-box'
       const canvas = document.getElementById('canvas')
+      canvas.width = width-20;
+      canvas.height = height-20;
+      setTimeout(function(){
+        webcam.style.border = 'none'
+        canvas.width = width;
+        canvas.height = height;
+      }, 1000)
+
+      // const canvas = document.getElementById('canvas')
       canvas.width = width;
       canvas.height = height;
-      // const ctx = canvas.getContext('2d')
       contextRef.current = canvas.getContext('2d')
 
       startWebcam().then(()=>{
@@ -278,47 +330,40 @@ export function Mugunghwa(props){
     loopFlag.current = false // == predict를 하겠다
     console.log("check motion")
     motionCnt.current++
-    // const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
-    // const prediction = await modelRef.current.predict(posenetOutput)
 
-    // console.log(prediction[0].probability)
-    // console.log(prediction[0].probability.toFixed(2))
     let cnt = 0
-    let trueCnt = 0
     let timer = setInterval(function(){
-      // console.log('interval'+cnt)
-      // console.log(loopFlag.current)
       if(cnt==2){
-        // console.log('clear trueCnt: '+trueCnt)
         loopFlag.current = true
-        // console.log(loopFlag.current)
         clearInterval(timer)
       }
       cnt++
-      // if (prediction[0].probability.toFixed(2) > 0.8) {
-      //   trueCnt++
-      // }      
     }, 1000)
     setTimeout(function(){
-      // console.log('4초 뒤')
-      // let check = trueCnt>=2?true:false
-      // if(!check){ //if(isSuccess.current)
-      if(isSuccess.current){
+      console.log(isSuccess.current)
+      if(isSuccess.current){ // 자세 유지 성공 시 -> move
+        console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
       }
-      else{
+      else{ // 자세 유지 실패 시
+        console.log('자세유지실패ㅠㅠㅠ')
+        const webcam = document.getElementById('webcam')
+        webcam.style.border = '10px solid #AC3943'
+        webcam.style.boxSizing = 'border-box'
+
+        const canvas = document.getElementById('canvas')
+        canvas.width = width-20;
+        canvas.height = height-20;
+        setTimeout(function(){
+          webcam.style.border = 'none'
+          canvas.width = width;
+          canvas.height = height;
+        }, 1000)
         cancelAnimationFrame(requestRef.current)
         requestRef.current = requestAnimationFrame(loop)
       }
     }, 3500)
-    // let check = true // 추후 모선이 성공했는지 여부를 함수로 return 받기
-
-    // if(check){ // 자세 통과
-    //   setTimeout(function(){
-    //     setMove(move=>move+ 1)
-    //   },4000)
-    // }
   }
 
   // MoveCharactor.js에서 한 턴이 시작됨을 알리면서 호출하는 함수
@@ -341,8 +386,8 @@ export function Mugunghwa(props){
   }
 
   return(
-    <div className={styles.mugunghwa_container}>
-      <GameHeader progress={move} onEndgameClick={endGame}/>
+    <div className={styles.mugunghwa_container} id='mug'>
+      <GameHeader progress={(move+1)*20} onEndgameClick={endGame}/>
       <BeforeStart />
       <Grid 
         container
@@ -352,10 +397,10 @@ export function Mugunghwa(props){
       >
         <Grid item md={12} mt={'50px'}>
           <img src={m_text} width={400}/>
-          <h1>{successThreshold.current}</h1>
+          <h1>re:: {replay?'true':'false'}</h1>
         </Grid>
         <Grid item md={2} className={styles.goalLine}>
-          <MoveCharactor getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
+          <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
         </Grid>
 
         <Grid item md={2} className={styles.nomalLine} id='box4'>
@@ -378,6 +423,7 @@ export function Mugunghwa(props){
       </Grid>
 
       <MotionDialog open={imgOpen} img={motionImg} getClose={onGetClose}/>
+      <EndDialog open={endOpen} gameRes={gameRes} getEndClose={onGetEndClose} getReplay={onGetReplay}/>
     </div>
   )
 }
