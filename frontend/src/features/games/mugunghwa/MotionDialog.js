@@ -12,7 +12,6 @@ export default function MotionDialog(props) {
   useEffect(()=>{
     let cnt = 5
     if(props.open){
-    console.log('props: '+props.img)
       let timer = setInterval(function(){
         const dom = document.getElementById('text')
         // console.log(cnt)
@@ -39,8 +38,9 @@ export default function MotionDialog(props) {
           >
             <img src={flower_l} width={'100px'} style={{position: 'absolute', top: '10px', left:'340px'}}/>
             <img src={flower_r} width={'100px'} style={{position: 'absolute', top:'400px', left:'5px'}}/>
-            {/* <imp src={props.motionImg} /> */}
-            <Grid item style={{height:'400px'}}></Grid>
+            <Grid item style={{height:'400px'}}>
+              <img id='myImg' src={props.img} width={'380px'}/>
+            </Grid>
             <Grid item id='text'><h3>동작을 잘 보고 따라하세요</h3></Grid>
             
           </Grid>

@@ -4,6 +4,8 @@ import mugunghwa from '../../../sounds/mugunghwa.mp3'
 export function MoveCharactor(props){
   
   useEffect(()=>{
+    console.log(props)
+    console.log(props.replay+' replay~~~')
     var canvas = document.getElementById('screen')
     var ctx = canvas.getContext("2d")
 
@@ -79,7 +81,7 @@ export function MoveCharactor(props){
       ctx.drawImage(img, -50, 0, 450, 450)
     }
 
-  },[])
+  },[props.replay])
 
   return(
     <div>
