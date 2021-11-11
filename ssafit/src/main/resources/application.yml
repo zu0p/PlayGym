@@ -1,6 +1,8 @@
 server:
   port: 8080
-  
+  servlet:
+    context-path: /api
+   
 #  ssl:
 #    key-store: classpath:keystore.p12
 #    key-store-type: PKCS12
