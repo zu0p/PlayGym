@@ -8,7 +8,7 @@ import follow_me from '../../images/games/game_follow_me.png'
 import word from '../../images/games/game_word.png'
 import { AddButton } from '../profile/customProfileStyle'
 import Logout from '../logout/Logout'
-
+import ProfileButton from '../profile/ProfileButton'
 
 export function Home(props) {
   const dummyAudio = new Audio()
@@ -37,7 +37,8 @@ export function Home(props) {
         alignItems="center"
       >
         <Logout />
-        <CircleButton onClick={() => {props.history.push('/mypage')}}>
+        <ProfileButton />
+        <CircleButton onClick={() => {props.history.push('/mypage')}} style={{position:'fixed', top:'10px', left:'110px'}}>
           <AccountCircleOutlinedIcon fontSize="large" />
         </CircleButton>
 
