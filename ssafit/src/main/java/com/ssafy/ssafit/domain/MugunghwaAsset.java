@@ -38,4 +38,8 @@ public class MugunghwaAsset {
 	private String name;
 	
 	private String imgLink;
+	
+	private String description;
+	
+	private int classNumber;
 }

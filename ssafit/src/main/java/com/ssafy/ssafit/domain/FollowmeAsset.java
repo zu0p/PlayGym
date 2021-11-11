@@ -31,6 +31,10 @@ public class FollowmeAsset {
 	
 	private String imgLink;
 	
+	private int classNumber;
+	
+	private String description;
+	
 	@ManyToOne(fetch =FetchType.LAZY)
 	@JoinColumn(name = "level", referencedColumnName = "id")
 	private FollowmeModel followmeModel;

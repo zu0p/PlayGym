@@ -92,6 +92,7 @@ public class GameServiceImpl implements GameService {
 				map.put("aid", model.getFollowmeAsset().get(temp[i]).getId());
 				map.put("image", model.getFollowmeAsset().get(temp[i]).getImgLink());
 				map.put("name", model.getFollowmeAsset().get(temp[i]).getName());
+				map.put("classNumber", model.getFollowmeAsset().get(temp[i]).getClassNumber());
 				assets.add(map);
 			}
 			result.setAsset(assets);
@@ -124,6 +125,7 @@ public class GameServiceImpl implements GameService {
 				map.put("aid", model.getMugunghwaAsset().get(temp[i]).getId());
 				map.put("image", model.getMugunghwaAsset().get(temp[i]).getImgLink());
 				map.put("name", model.getMugunghwaAsset().get(temp[i]).getName());
+				map.put("classNumber", model.getMugunghwaAsset().get(temp[i]).getClassNumber());
 				assets.add(map);
 			}
 			result.setAsset(assets);
