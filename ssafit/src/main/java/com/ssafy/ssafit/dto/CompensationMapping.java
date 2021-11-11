@@ -5,6 +5,6 @@ public interface CompensationMapping {
 	long getCid();
 	String getTitle();
 	String getDetail();
-	int getExp();
+//	int getLevel();
 	boolean getBasic();
 }

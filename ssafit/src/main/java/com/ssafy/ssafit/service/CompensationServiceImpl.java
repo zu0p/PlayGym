@@ -1,6 +1,5 @@
 package com.ssafy.ssafit.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.ssafit.domain.Compensation;
 import com.ssafy.ssafit.domain.GetCps;
 import com.ssafy.ssafit.domain.MainUser;
+import com.ssafy.ssafit.domain.RequestStatus;
 import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.dto.CompensationMapping;
 import com.ssafy.ssafit.repository.CompensationRepository;
@@ -28,10 +28,12 @@ public class CompensationServiceImpl implements CompensationService {
 	private final CompensationRepository compensationRepository;
 	private final GetCpsRepository getCpsRepository;
 	private final SubUserRepository subUserRepository;
+	
+
 	@Override
-	public List<CompensationMapping> findPidCps(long id) {
+	public List<Compensation> findPidCps(long id) {
 		MainUser m =mainuserRepository.findById(id).orElse(null);
-		List<CompensationMapping> res = compensationRepository.findByPid(m).orElse(null);
+		List<Compensation> res = compensationRepository.findByPid(m).orElse(null);
 		res.addAll(compensationRepository.findByBasic(true).orElse(null));
 		return res;
 	}
@@ -42,23 +44,24 @@ public class CompensationServiceImpl implements CompensationService {
 		// TODO Auto-generated method stub
 		
 		Compensation c = new Compensation();
-		c.setExp(Integer.parseInt(String.valueOf(map.get("exp"))));
 		c.setTitle((String)map.get("title"));
 		c.setDetail((String)map.get("detail"));
 		c.setBasic(false);
 		MainUser m =mainuserRepository.findById(Long.parseLong(String.valueOf(map.get("pid")))).orElse(null);
 		c.setPid(m);
-		compensationRepository.save(c);
 		
-		if(map.containsKey("child")) {
-			List<Object> list = (List<Object>) map.get("child");
-			for(int i=0;i<list.size();i++) {
-				SubUser su = subUserRepository.findById(Long.valueOf(String.valueOf(list.get(i)))).orElse(null);
-				if(su!=null) {
-					getCpsRepository.save(new GetCps(su, c));
-				}
-			}
+		if(!map.containsKey("child")) {
+			throw new NullPointerException();
 		}
+		
+		long su = Long.parseLong(String.valueOf(map.get("child")));
+		SubUser sub = subUserRepository.findById(su).orElse(null);	
+		if(sub!=null) {
+			compensationRepository.save(c);
+			getCpsRepository.save(new GetCps(sub, c));
+		}else {
+			throw new NullPointerException();
+		}	
 		
 	}
 	@Override
@@ -72,6 +75,28 @@ public class CompensationServiceImpl implements CompensationService {
 		}
 		
 
+	}
+
+	@Override
+	public List<GetCps> subUserlist(long sid) {
+		SubUser su = subUserRepository.getById(sid);
+		List<GetCps> cps = getCpsRepository.findBySubid(su).orElse(null);
+		
+		return cps;
+	}
+
+	@Override
+	@Transactional
+	public void subUserReqCps(GetCps gc) {
+		// TODO Auto-generated method stub
+		
+		if(gc==null) {
+			throw new NullPointerException();
+		}
+		SubUser su = gc.getSubid();
+		su.setMax(su.getMax()+50);
+		su.setExp(0);
+		gc.changeStatus(RequestStatus.Request);
 	}
 	
 	
