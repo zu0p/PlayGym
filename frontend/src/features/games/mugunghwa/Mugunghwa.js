@@ -15,7 +15,7 @@ const width = 260;
 const height = 500;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/bear.png";
+faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
 
 export function Mugunghwa(props){
   const [replay, setReplay] = useState(false)

@@ -24,7 +24,7 @@ import useIsMount from '../../../utils/useIsMount'
 const size = 800;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/cat.png";
+faceImg.src = "https://k5d205.p.ssafy.io/api/img/cat.png";
 
 export function FollowMe(props) {
   const dispatch = useDispatch()
