@@ -112,9 +112,10 @@ public class CompensationController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"Success"),HttpStatus.OK);
 	}
 	
-	@GetMapping("/sub/req")
-	public ResponseEntity<ApiResMessage> reqCps(@RequestParam long sid){
+	@PostMapping("/sub/req")
+	public ResponseEntity<ApiResMessage> reqCps(@RequestBody Map<String,String> map ){
 		
+		long sid = Long.parseLong(map.get("sid"));
 		try {
 			List<GetCps> list=compensationService.subUserlist(sid);
 			for(GetCps gc :list) {

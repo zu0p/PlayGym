@@ -14,12 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssafit.domain.Characters;
 import com.ssafy.ssafit.domain.GetCt;
-import com.ssafy.ssafit.domain.Leveltb;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
 import com.ssafy.ssafit.repository.CharacterRepository;
 import com.ssafy.ssafit.repository.GetCtRepository;
-import com.ssafy.ssafit.repository.LeveltbRepository;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.repository.SubUserRepository;
 
