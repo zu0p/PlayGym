@@ -58,12 +58,7 @@ function Profile({profile}){
   const [rewards, setRewards] = useState(null)
 
   useEffect(()=>{
-    // console.log(profile)
-    dispatch(requestGetChildReward(profile.sid))
-      .then(res=>{
-        // console.log(res)
-        setRewards(res.payload.data.result.result)
-      })
+    refreshRewards()
 
   }, [profile])
 
@@ -75,18 +70,20 @@ function Profile({profile}){
       child: profile.sid
     }
     dispatch(requestAddChildReward(param))
-      .then(res=>{
-        // console.log(res)
-        
+      .then(res=>{        
         // add 하고 rewards를 갱신해줘야할듯 -> 바로바로 추가돼도 목록에 보이도록
-        dispatch(requestGetChildReward(profile.sid))
-        .then(res=>{
-          // console.log(res)
-          setRewards(res.payload.data.result.result)
-        })
+        refreshRewards()
       })
     setShowReward(false)
     setReward('')
+  }
+
+  const refreshRewards = () => {
+    dispatch(requestGetChildReward(profile.sid))
+      .then(res=>{
+        // console.log(res)
+        setRewards(res.payload.data.result.result)
+      })
   }
 
   const onClickReward = (e) => {
@@ -135,7 +132,7 @@ function Profile({profile}){
 
         {/* 보상 목록 리스트 */}
         <Grid item ml={'40px'}>
-          <RewardList rewards={rewards} />
+          <RewardList rewards={rewards} refresh={refreshRewards} />
           <div style={{textAlign:'right', marginRight:'10%'}}>
             <Button onClick={onClickReward}>{profile.name}님에게 보상 추가하기</Button>          
           </div>          

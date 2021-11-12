@@ -135,3 +135,10 @@ export const requestGetChildReward = createAction('GET_CHILD_REWARDS', function 
 
   return {payload: returnData}
 })
+
+// sub user당 보상 삭제
+export const requestDeleteChildReward = createAction('DELETE_CHILD_REWARDS', function prepare(rid){
+  const returnData = requestAuth('delete', `/user/cps?id=${rid}`)
+
+  return {payload: returnData}
+})

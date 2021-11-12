@@ -3,23 +3,19 @@ import Box from '@mui/material/Box';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import ArrowRight from '@mui/icons-material/ArrowRight';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Home from '@mui/icons-material/Home';
-import Settings from '@mui/icons-material/Settings';
 import People from '@mui/icons-material/People';
 import PermMedia from '@mui/icons-material/PermMedia';
 import Dns from '@mui/icons-material/Dns';
 import Public from '@mui/icons-material/Public';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { Button } from '@mui/material';
+import { requestDeleteChildReward } from '../../app/actions/userActions'
+import { useDispatch } from 'react-redux';
 
 const data = [
   { icon: <People />, label: 'Authentication' },
@@ -42,13 +38,22 @@ const MList = styled(List)({
   },
 });
 
-const onDeleteReward = (cid, e) => {
-  console.log(cid)
-  // cid를 지우면 됨
-}
 
-export default function RewardList({rewards}) {
+export default function RewardList(props) {
   const [open, setOpen] = React.useState(false);
+
+  const dispatch = useDispatch()
+  const onDeleteReward = (cid, e) => {
+    // console.log(cid)
+    // cid를 지우면 됨
+    dispatch(requestDeleteChildReward(cid))
+      .then(res=>{
+        // console.log(res)
+        // 보상 지우고 보상 목록 갱신하기 위해 부모 함수 호출
+        props.refresh()
+      })
+  }
+  
   return (
     <Box sx={{ display: 'flex' }}>
         <Paper elevation={0} sx={{ maxWidth: '90%' }}>
@@ -96,7 +101,7 @@ export default function RewardList({rewards}) {
                 />
               </ListItemButton>
               {open &&
-                rewards.map((item) => (
+                props.rewards.map((item) => (
                   <ListItemButton
                     key={item.cid}
                     sx={{ py: 0, minHeight: 32, color: 'rgba(255,255,255,.8)' }}
