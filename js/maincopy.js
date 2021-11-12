@@ -5,12 +5,9 @@ const canvasCtx5 = out5.getContext("2d");
 
 const fpsControl = new FPS();
 // ,{"img":null,"name":"스쿼트","count":"5","rightArm":0,"leftArm":0,"rightlag":100,"leftlag":100,"bodyandlag":0,"armpitD":0,"armpitU":170,"x1":null,"x2":null}
-const str =
-  '{"result":[{"img":null,"name":"v-자세","count":"5","rightArmD":0,"rightArmU":0,"leftArm":0,"rightlagD":0,"rightlagU":0,"leftlag":0,"bodyU":0,"bodyD":0,"bodyandlag":85,"armpitD":0,"armpitU":0,"x1":11,"x2":23,"y1":null,"y2":null},' +
-  '{"img":null,"name":"브릿지자세","count":"5","rightArmD":0,"rightArmU":0,"leftArm":0,"rightlagD":80,"rightlagU":70,"leftlag":0,"bodyandlag":0,"armpitD":30,"armpitU":20,"bodyU":179,"bodyD":180,"x1":12,"x2":24,"y1":12,"y2":24},' +
-  '{"img":null,"name":"프랭크","count":"5","rightArmD":80,"rightArmU":60,"leftArm":0,"rightlagD":180,"rightlagU":170,"leftlag":0,"bodyandlag":0,"armpitD":85,"armpitU":70,"bodyU":179,"bodyD":180,"x1":null,"x2":null,"y1":null,"y2":null}]}';
-const json = JSON.parse(str);
-const exc = json.result;
+
+const exc = JSON.parse(JSON.stringify(excresult));
+// console.log(exc);
 const spinner = document.querySelector(".loading");
 spinner.ontransitionend = () => {
   spinner.style.display = "none";
@@ -21,6 +18,30 @@ function zColor(data) {
   return `rgba(0, ${255 * z}, ${255 * (1 - z)}, 1)`;
 }
 
+function lagAngles(a, b, c, d) {
+  let first = a;
+  let midx = (b.x + c.x) / 2;
+  let midy = (b.y + c.y) / 2;
+  let end = d;
+
+  let radians =
+    Math.atan2(first.y - midy, first.x - midx) -
+    Math.atan2(end.y - midy, end.x - midx);
+  let angle = Math.abs(radians * (180 / Math.PI));
+
+  if (angle > 180.0) {
+    angle = 360 - 180;
+  }
+
+  return angle;
+}
+function DistancetwoPoint(a, b) {
+  if (a == null || b == null) {
+    return 1;
+  }
+  console.log(a.x, "/", b.x, "/", a.y, "/", b.y);
+  return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
 function pointAngles(a, b, c) {
   // if (a.visibility < 0.8 || b.visibility < 0.8 || c.visibility < 0.8) {
   //   return 180;
@@ -51,7 +72,10 @@ function pointAngles(a, b, c) {
   return angle;
 }
 
-function check(Landmarks, x) {
+async function check(Landmarks, x) {
+  if (Landmarks == null) {
+    return 180;
+  }
   let flag = 0;
   let angle;
   if (exc[x].bodyD != 0) {
@@ -71,6 +95,40 @@ function check(Landmarks, x) {
     }
   }
 
+  if (exc[x].LsideD != 0) {
+    angle = pointAngles(Landmarks[12], Landmarks[24], Landmarks[26]);
+    console.log("Lside: ", angle);
+    if (angle <= exc[x].LsideD && angle > exc[x].LsideU) {
+    } else {
+      flag = 1;
+    }
+  }
+
+  if (exc[x].RsideD != 0) {
+    angle = pointAngles(Landmarks[11], Landmarks[23], Landmarks[25]);
+    console.log("Rside: ", angle);
+    if (angle <= exc[x].RsideD && angle > exc[x].RsideU) {
+    } else {
+      flag = 1;
+    }
+  }
+  if (exc[x].RlagD != 0) {
+    angle = pointAngles(Landmarks[24], Landmarks[23], Landmarks[25]);
+    console.log("lag : ", angle);
+    if (angle <= exc[x].RlagD && angle > exc[x].RlagU) {
+    } else {
+      flag = 1;
+    }
+  }
+
+  if (exc[x].LlagD != 0) {
+    angle = pointAngles(Landmarks[23], Landmarks[24], Landmarks[26]);
+    console.log("lag : ", angle);
+    if (angle <= exc[x].LlagD && angle > exc[x].LlagU) {
+    } else {
+      flag = 1;
+    }
+  }
   if (exc[x].leftArm != 0) {
     angle = pointAngles(Landmarks[12], Landmarks[14], Landmarks[16]);
     console.log("leftArm: ", angle);
@@ -88,10 +146,10 @@ function check(Landmarks, x) {
     }
   }
 
-  if (exc[x].leftlag != 0) {
+  if (exc[x].leftlagD != 0) {
     angle = pointAngles(Landmarks[23], Landmarks[25], Landmarks[27]);
     console.log("leftlag: ", angle);
-    if (angle <= exc[x].leftlag && angle > 20) {
+    if (angle <= exc[x].leftlagD && angle > exc[x].leftlagU) {
     } else {
       flag = 1;
     }
@@ -116,20 +174,40 @@ function check(Landmarks, x) {
   }
 
   if (exc[x].x1 != null) {
-    if (exc[x].x1 < exc[x].x2) {
+    console.log(
+      exc[x].x1,
+      Landmarks[exc[x].x1].x,
+      " : ",
+      exc[x].x2,
+      Landmarks[exc[x].x2].x
+    );
+
+    if (Landmarks[exc[x].x1].x < Landmarks[exc[x].x2].x) {
     } else {
       flag = 1;
     }
   }
 
   if (exc[x].y1 != null) {
-    if (exc[x].y1 < exc[x].y2) {
+    console.log(
+      exc[x].y1,
+      Landmarks[exc[x].y1].y,
+      " : ",
+      exc[x].y2,
+      Landmarks[exc[x].y2].y
+    );
+    if (Landmarks[exc[x].y1].y < Landmarks[exc[x].y2].y) {
     } else {
       flag = 1;
     }
   }
-  if (exc[x].z1 != null) {
-    if (exc[x].z1 < exc[x].z2) {
+  if (exc[x].disD != 0) {
+    let distance = DistancetwoPoint(
+      Landmarks[exc[x].dp1],
+      Landmarks[exc[x].dp2]
+    );
+    console.log("dis: ", distance);
+    if (distance <= exc[x].disD && distance > exc[x].disU) {
     } else {
       flag = 1;
     }
@@ -147,7 +225,9 @@ let countfrog = 0;
 let order = 0;
 let ani = null;
 let countdown = 3;
-function onResultsPose(results) {
+let s;
+
+async function onResultsPose(results) {
   canvasCtx5.save();
   canvasCtx5.clearRect(0, 0, out5.width, out5.height);
   canvasCtx5.drawImage(results.image, 0, 0, out5.width, out5.height);
@@ -163,22 +243,41 @@ function onResultsPose(results) {
     exc[order].name
   );
 
-  if (statusExc == "down" && check(Landmarks, order)) {
-    statusExc = "up";
-  } else if (statusExc == "up" && !check(Landmarks, order)) {
-    count++;
+  // if (statusExc == "down" && check(Landmarks, order)) {
+  //   statusExc = "up";
+  // } else if (statusExc == "up" && !check(Landmarks, order)) {
+  //   _.debounce(() => {
+  //     count++;
+  //     statusExc = "down";
+  //     console.log("count : ", count);
+  //   }, 1000);
+  //   // count++;
+  // }
 
+  if (statusExc == "down" && (await check(Landmarks, order))) {
+    statusExc = "up";
+  } else if (statusExc == "up" && !(await check(Landmarks, order))) {
+    // _.debounce(() => {
+    //   count++;
+    //   statusExc = "down";
+    //   console.log("count : ", count);
+    // }, 500);
+    count++;
     statusExc = "down";
     console.log("count : ", count);
   }
 
   if (count >= exc[order].count) {
     if (exc.length == order + 1) {
-      cancelAnimationFrame(ani);
+      cancelAnimationFrame(s);
     } else {
-      order++;
+      // console.log(s);
+      console.log("한세트 3초쉬기");
       count = 0;
-      setTimeout(() => {}, 3000);
+      setTimeout(() => {
+        count = 0;
+        order++;
+      }, 3000);
     }
   }
 
@@ -205,6 +304,7 @@ pose.setOptions({
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5,
 });
+
 pose.onResults(onResultsPose);
 
 const camera = new Camera(video5, {
