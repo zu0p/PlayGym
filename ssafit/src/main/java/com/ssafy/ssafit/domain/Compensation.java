@@ -43,7 +43,9 @@ public class Compensation {
 	@JsonIgnore
 	private MainUser pid;
 	
+	
 	@OneToMany(mappedBy = "cpsid", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<GetCps> gets = new ArrayList<>(); 
 
 	
