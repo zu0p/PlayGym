@@ -13,8 +13,13 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { Slider } from './slider.js'
 import { useDispatch } from 'react-redux';
-import { requestAllCharacters, requestMypageInfo } from '../../app/actions/userActions';
 import useIsMount from '../../utils/useIsMount';
+import { 
+  requestAllCharacters, 
+  requestMypageInfo, 
+  requestNextReward, 
+  requestNextCharacter,
+} from '../../app/actions/userActions';
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
   height: 20,
@@ -29,7 +34,6 @@ const BorderLinearProgress = styled(LinearProgress)(_ => ({
 }));
 
 export function Mypage(props) {
-  const profileId = localStorage.getItem('sub-user')
   const dispatch = useDispatch()
   const isMount = useIsMount()
   
@@ -38,12 +42,12 @@ export function Mypage(props) {
     level: 0,
     nickname: '',
     exp: 0,
-    max: 0,
+    max: 100,
+    profileId: undefined,
   })
   const [total, setTotal] = useState(1)
   const [rewards, setRewards] = useState([])
   const [characters, setCharacters] = useState([])
-  const [dummyReward, setDummyReward] = useState([])
   
 
   const getAllCharacters = async() => {
@@ -51,7 +55,7 @@ export function Mypage(props) {
       .then(res => res.payload.data)
   }
   const getMypageInfo = async() => {
-    return dispatch(requestMypageInfo(profileId))
+    return dispatch(requestMypageInfo(localStorage.getItem('sub-user')))
       .then(res => res.payload.data)
   }
 
@@ -65,13 +69,19 @@ export function Mypage(props) {
       nickname: res[1].nickName,
       exp: res[1].exp,
       max: res[1].max,
+      profileId: res[1].sid
     })
-    setCharacters(
-      res[0].map(c => {
+    const tmp = res[0].map(c => {
         return { ...c, owned: res[1].characters.includes(c.id) }
       })
-    )
-    setRewards(res[2].result.result)
+    tmp.sort(function(a, b) {
+      if (a.owned === b.owned) 
+        return a.id - b.id
+      else
+        return b.owned - a.owned
+    })
+    setCharacters(tmp)
+    setRewards(res[1].goals)
   }
 
   const update = () => {
@@ -87,15 +97,39 @@ export function Mypage(props) {
       })
   }
 
+  const onClickLevelUp = () => {
+    if (info.exp !== info.max)
+      // 경험치 부족하면 do nothing
+      return
+    else {
+      if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
+        // getCharacter
+        const nextId = characters.find(character => character.owned === false).id
+        const body = {
+          sid: info.profileId,
+          cid: nextId
+        }
+        dispatch(requestNextCharacter(body))
+          .then()
+          .catch()
+      } else {
+        // getReward
+        const nextId = rewards.find(reward => reward.status === 'wait').cid
+        dispatch(requestNextReward(info.profileId))
+          .then()
+          .catch()
+      }
+    }
+  }
+
   useEffect(() => {
     update()
-    setDummyReward(['삼국지 읽어주기', '수호지 읽어주기', '감자탕 먹으러 가기', '점심에 비행기타고 일본에서 우동먹기', '저녁에 중국에서 마파두부 먹기'])
   }, [])
 
   useEffect(() => {
     // change total size ^^
-    setTotal(1 + parseInt((dummyReward.length - 1) / 2))
-  }, [dummyReward])
+    setTotal(1 + parseInt((rewards.length - 1) / 2))
+  }, [rewards])
 
   return (
     <div className={styles.container}>
@@ -117,28 +151,30 @@ export function Mypage(props) {
         textAlign="start" justifyContent="center" alignItems="center" 
         sx={{height: '100%'}}
       >  
-        <div>
-          <Grid container 
-            direction="column" alignItems="end"
-          >
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '50px'}}>
-              <img src={info.img} alt="" style={{objectFit: 'contain', width:'10%'}} />
-              {info.nickname}
-            </div>
-          </Grid>
-        </div>
-        
+        <Grid container item
+          direction="column" alignItems="end"
+          // sx={{width: '30%'}}
+          xs={3}
+        >
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', paddingRight: '100px'}}>
+            <img src={info.img} alt="" style={{objectFit: 'contain', width:'100%'}} />
+            <p>{info.nickname}</p>
+          </div>
+        </Grid>
         <Grid container item
           xs={5} direction="column" justifyContent="center" alignItems="start"
         >
-          <Paper elevation={0} sx={{width: '100%', height: '22vh',  mb: '10px'}}>
+          <Paper 
+            elevation={0} 
+            sx={{width: '100%', height: '22vh',  mb: '10px'}}
+            onClick={onClickLevelUp}
+          >
             <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
             <div className={styles.progressbar__container}>
               {/* note: negative ml value === width or fontSize / 2 */}
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
               </Typography>
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
-                asd
               </Typography>
               <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
               <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
@@ -149,15 +185,16 @@ export function Mypage(props) {
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
             <Slider total={total}>
               <CharacterSlide sx={12} data={characters} />
-              {Array.from({ length: parseInt((dummyReward.length - 1) / 2) + 1 }, (unused, idx) => {
+              {Array.from({ length: parseInt((rewards.length - 1) / 2) + 1 }, (unused, idx) => {
                 return (
                   <RewardSlide 
                     key={idx} 
                     data={
-                      idx < parseInt((dummyReward.length - 1) / 2) ?
-                      dummyReward.slice(idx * 2, idx * 2 + 2) :
-                      dummyReward.slice(idx * 2)
-                    } />
+                      idx < parseInt((rewards.length - 1) / 2) ?
+                      rewards.slice(idx * 2, idx * 2 + 2) :
+                      rewards.slice(idx * 2)
+                    } 
+                  />
                 )
               })}
             </Slider>

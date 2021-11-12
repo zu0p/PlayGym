@@ -15,10 +15,10 @@ export default function Slide(props) {
   
   return (
     <Div>
-      {Array.from(props.data).map(reward => {
+      {Array.from(props.data).map((reward, idx) => {
         return (
-          <div key={reward.id} className={styles.reward__container}>
-            <p className={styles.reward__tag}>{reward}</p>
+          <div key={idx} className={styles.reward__container}>
+            <p className={styles.reward__tag}>{reward.title}</p>
           </div>
         )
       })}

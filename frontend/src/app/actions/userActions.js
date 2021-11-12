@@ -120,7 +120,12 @@ export const requestMypageInfo = createAction('MYPAGE_INFO', function prepare(pr
   return { payload: returnData }
 })
 
-export const requestNextReward = createAction('NEXT_REWARD', function prepare(profileId) {
+export const requestNextReward = createAction('GET_REWARD', function prepare(profileId) {
   const returnData = requestAuth('post', `/user/sub/req?sid=${profileId}`)
+  return { payload: returnData }
+})
+
+export const requestNextCharacter = createAction('GET_CHARACTER', function prepare(payload) {
+  const returnData = requestAuth('post', `/user/sub/getch`, payload)
   return { payload: returnData }
 })

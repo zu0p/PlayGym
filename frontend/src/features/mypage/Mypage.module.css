@@ -25,13 +25,22 @@
   width: 25%;
 }
 
-.character__img {
+.character__img__owned {
   width: 60%;
   padding-top: 10%;
   grid-area: 2/1/5/2;
   object-fit: contain;
   /* flex-grow: 1; */
 }
+
+.character__img__not {
+  width: 60%;
+  padding-top: 10%;
+  grid-area: 2/1/5/2;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
 .character__tag {
   padding-bottom: 20px;
   grid-area: 5/1/7/2;
