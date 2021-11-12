@@ -33,7 +33,7 @@ const user = createReducer(userState, {
     console.log(action)
   },
   GET_USER: (state, action) => {
-    console.log(action)
+    // console.log(action)
   },
   GET_CHILDRED_USER: (state, action) => {
     // store에 sub user 저장해서 관리해야함
