@@ -13,11 +13,6 @@ const Div = styled.div`
 
 export default function Slide(props) {
   
-  useEffect(() => {
-    console.log(props.data)
-  }, [props])
-
-
   return (
     <Div>
       {Array.from(props.data).map(reward => {

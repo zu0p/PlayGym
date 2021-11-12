@@ -115,8 +115,8 @@ export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', funct
 })
 
 // mypage
-export const requestMypageInfo = createAction('MYPAGE_INFO', function prepare() {
-  const returnData = requestAuth('get', ``)
+export const requestMypageInfo = createAction('MYPAGE_INFO', function prepare(profileId) {
+  const returnData = requestAuth('get', `/user/sub/info?sid=${profileId}`)
   return { payload: returnData }
 })
 
