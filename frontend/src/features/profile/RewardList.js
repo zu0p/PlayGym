@@ -78,42 +78,38 @@ export default function RewardList(props) {
                   primary="보상 목록"
                   primaryTypographyProps={{
                     fontSize: 15,
-                    fontWeight: 'medium',
+                    fontWeight: 'bold',
                     lineHeight: '20px',
                     mb: '2px',
+                    color: '#22220B',
                   }}
-                  secondary="Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning"
-                  secondaryTypographyProps={{
-                    noWrap: true,
-                    fontSize: 12,
-                    lineHeight: '16px',
-                    color: open ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)',
-                  }}
+                  style={{width:'80vh'}}
                   sx={{ my: 0 }}
                 />
-                <KeyboardArrowDown
-                  sx={{
-                    mr: -1,
-                    opacity: 0,
-                    transform: open ? 'rotate(-180deg)' : 'rotate(0)',
-                    transition: '0.2s',
-                  }}
-                />
               </ListItemButton>
+              <Divider/>
               {open &&
                 props.rewards.map((item) => (
                   <ListItemButton
                     key={item.cid}
-                    sx={{ py: 0, minHeight: 32, color: 'rgba(255,255,255,.8)' }}
+                    sx={{ py: 1, minHeight: 32, color: '#22220B' }}
                   >
                     <ListItemIcon sx={{ color: 'inherit' }}>
-                      <FavoriteRoundedIcon />
+                      <FavoriteRoundedIcon style={{color: '#A3C653'}}/>
                     </ListItemIcon>
                     <ListItemText
                       primary={item.title}
                       primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
                     />
-                    <Button onClick={(e)=>{ onDeleteReward(item.cid, e) }}>완료</Button>
+                    <Button 
+                      style={{
+                        backgroundColor: '#A3C653',
+                        color: 'white'
+                      }}
+                      onClick={(e)=>{ onDeleteReward(item.cid, e) }}
+                    >
+                      수여완료
+                    </Button>
                   </ListItemButton>
                 ))}
             </Box>

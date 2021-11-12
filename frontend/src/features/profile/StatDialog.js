@@ -8,7 +8,7 @@ import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './Profile.module.css';
-import { AddTextField } from './customProfileStyle'
+import { AddTextField, AddButton } from './customProfileStyle'
 import { styled } from '@mui/material/styles';
 import { Button, Paper } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -63,7 +63,7 @@ function Profile({profile}){
   }, [profile])
 
   const registReward = (e) => {
-    const helperText = document.getElementById('helperText')
+    const helperText = document.getElementById(profile.sid)
     if(reward===''){
       helperText.style.margin = '10px 0 0 5px'
       helperText.style.color = '#AC3943'
@@ -143,7 +143,14 @@ function Profile({profile}){
         <Grid item ml={'40px'}>
           <RewardList rewards={rewards} refresh={refreshRewards} />
           <div style={{textAlign:'right', marginRight:'10%'}}>
-            <Button onClick={onClickReward}>{profile.name}님에게 보상 추가하기</Button>          
+            <Button 
+              style={{
+                color: '#22220B'
+              }}
+              onClick={onClickReward}
+            >
+              {profile.name}님에게 보상 추가하기
+            </Button>          
           </div>          
         </Grid>
 
@@ -151,13 +158,18 @@ function Profile({profile}){
         <Grid item ml={'40px'} style={{display: showReward?'block':'none'}} >
           <div>
             <AddTextField  
-              style={{width:'80%'}} 
+              style={{width:'70%'}} 
               value={reward}
               onChange={onRewardChange}
             />
-            <Button onClick={registReward}>추가</Button>
+            <AddButton 
+              style={{width:'15%', marginLeft:'5%'}}
+              onClick={registReward}
+            >
+              추가
+            </AddButton>
           </div>
-          <div id="helperText"></div>
+          <div id={profile.sid}></div>
         </Grid>
       </Grid>
       <Grid item md={2} justifyContent="space-around">
