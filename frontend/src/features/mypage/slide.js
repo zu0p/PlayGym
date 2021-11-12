@@ -23,9 +23,8 @@ export default function Slide(props) {
       {Array.from(props.data).map(character => {
         return (
           <div key={character.id} className={styles.character__container}>
-          {/* <img src={character.image} alt="" style={{width: '25%', objectFit: 'contain'}} /> */}
             <img src={character.image} alt="" className={styles.character__img} />
-            <p className={styles.character__tag}>grid_template 쓰고. object fit 이건 부모에 높낮이를 줘야 되려나</p>
+            <p className={styles.character__tag}>띠용</p>
           </div>
         )
       })}

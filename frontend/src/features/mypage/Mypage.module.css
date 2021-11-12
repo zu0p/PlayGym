@@ -16,20 +16,23 @@
 
 .character__container {
   display: grid;
-  grid-template-columns: 1fr repeat(3, auto) 1fr;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   grid-column-gap: 5px;
   justify-items: center;
-  height: 100%;
-  object-fit: contain;
+  align-items: center;
+  height: 260px;
+  width: 25%;
 }
 
 .character__img {
   width: 60%;
   padding-top: 10%;
-  grid-column: 3;
+  grid-area: 2/1/5/2;
+  object-fit: contain;
   /* flex-grow: 1; */
 }
 .character__tag {
   padding-bottom: 20px;
-  grid-column: 2
+  grid-area: 5/1/7/2;
 }

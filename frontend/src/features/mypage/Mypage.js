@@ -147,8 +147,8 @@ export function Mypage(props) {
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
             <Slider total={1}>
-              {<Slide sx={12} data={characters} />}
-              <Slide sx={12} data={'2aaaa2222a2'} />
+              <Slide sx={12} data={characters} />
+              <Slide sx={12} data={'2aaaa2'} />
             </Slider>
           </Paper>
         </Grid>
