@@ -115,3 +115,9 @@ export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', funct
   return {payload: returnData}
 })
 
+// 자녀 현황에서 sub user들의 소모칼로리, exp 현황 확인
+export const requestChildrenStatus = createAction('CHILDREN_STAT', function prepare(userId){
+  const returnData = requestAuth('get', `/user/sub/status?user=${userId}`)
+
+  return {payload: returnData}
+})

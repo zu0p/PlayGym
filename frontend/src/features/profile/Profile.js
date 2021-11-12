@@ -53,13 +53,13 @@ export function Profile(){
   const players = useSelector(state=>state.user.subUser)
   const dispatch = useDispatch()
   // const [players, setPlayers] = useState([])
-  useEffect(()=>{
-    dispatch(requestGetChildren(localStorage.getItem('main-user')))
-      // .then(res => {
-        // console.log(res)
-        // setPlayers(res.payload)
-      // })
-  },[])
+  // useEffect(()=>{
+  //   dispatch(requestGetChildren(localStorage.getItem('main-user')))
+  //     // .then(res => {
+  //       // console.log(res)
+  //       // setPlayers(res.payload)
+  //     // })
+  // },[])
 
   useEffect(()=>{
     console.log(players) 
