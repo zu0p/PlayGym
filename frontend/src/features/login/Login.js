@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestLoginUser } from '../../app/actions/userActions';
+import { requestLoginUser, requestGetChildren } from '../../app/actions/userActions';
 import logo from '../../images/play_gym_logo.png';
 import cloudImage from '../../images/background_cloud.png'
 import Grid from '@mui/material/Grid';
@@ -125,8 +125,12 @@ export function Login(props) {
           localStorage.setItem('main-user', res.payload.data.result.id)
           // console.log(localStorage.getItem('access-token'))
 
-          // 3. go to 'select player' page
-          props.history.push('/profile')
+          dispatch(requestGetChildren(localStorage.getItem('main-user')))
+            .then(()=>{
+              // 3. go to 'select player' page
+              props.history.push('/profile')
+
+            })
         }
       
     })

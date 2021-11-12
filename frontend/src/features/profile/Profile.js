@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Link, NavLink } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './Profile.module.css'
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
@@ -42,7 +42,7 @@ function Player({player}){
           <img src={player.image} width='100px'/>
         </div>
 
-        <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton>
+        {/* <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton> */}
         {player.nickName}
       </Grid>
     </div>
@@ -50,40 +50,23 @@ function Player({player}){
 }
 
 export function Profile(){
+  const players = useSelector(state=>state.user.subUser)
   const dispatch = useDispatch()
-  const [players, setPlayers] = useState([])
+  // const [players, setPlayers] = useState([])
   useEffect(()=>{
-    dispatch(requestGetChildren(localStorage.getItem('main-user')))
-      .then(res => {
-        console.log(res)
-        setPlayers(res.payload)
-      })
+    if(players.length === 0 || players === null || players === []){
+      dispatch(requestGetChildren(localStorage.getItem('main-user')))
+        .then(res => {
+          // console.log(res)
+          console.log(players)
+        })
+    }
   },[])
 
-  useEffect(()=>{console.log(players)},[players])
-  // const players = [ // sub user(children) list
-  //   {
-  //     id: 0,
-  //     name: '첫째',
-  //     image: bear
-  //   },
-  //   {
-  //     id: 1,
-  //     name: '둘째',
-  //     image: chick
-  //   },
-  //   {
-  //     id: 2,
-  //     name: '막둥',
-  //     image: cat
-  //   },
-  //   {
-  //     id:3,
-  //     name: '주영',
-  //     image: rabbit
-  //   }
-  // ]
-
+  useEffect(()=>{
+    // console.log(players) 
+  },[players])
+  
   // add profile click -> open dialog
   const [addOpen, setAddOpen] = useState(false);
   const onAddProfileClick = () => {

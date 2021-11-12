@@ -41,7 +41,7 @@ export default function EditMainUserInfoDialog(props) {
   useEffect(()=>{
     dispatch(requestGetUser(localStorage.getItem('main-user')))
       .then(res=>{
-        console.log(res)
+        // console.log(res)
         setUserId(res.payload.userid)
         setName(res.payload.name)
         setEmail(res.payload.email)

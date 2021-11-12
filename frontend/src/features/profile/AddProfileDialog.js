@@ -9,7 +9,7 @@ import styles from './Profile.module.css'
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { AddButton, CancelButton, AddTextField, SelectInput, SliderInput } from './customProfileStyle';
 import { Grid, Select } from '@mui/material';
-import { requestAddChild } from '../../app/actions/userActions'
+import { requestAddChild, requestGetChildren } from '../../app/actions/userActions'
 import { useDispatch } from 'react-redux';
 
 export default function AddProfileDialog(props) {
@@ -75,7 +75,9 @@ export default function AddProfileDialog(props) {
     }
     dispatch(requestAddChild(param))
       .then(res=>{
-        console.log(res)
+        if(res.payload.status){
+          dispatch(requestGetChildren(param.id))
+        }
       })
 
     onClose()

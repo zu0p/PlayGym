@@ -91,7 +91,7 @@ export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepa
 
 export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prepare(info){
   const level = info.level
-  const returnData = request('get', `/game/follow?level=${level}`)
+  const returnData = request('get', `/game/mug?level=${level}`)
   return { payload: returnData}
 })
 //mypage
@@ -115,3 +115,37 @@ export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', funct
   return {payload: returnData}
 })
 
+// 자녀 현황에서 sub user들의 소모칼로리, exp 현황 확인
+export const requestChildrenStatus = createAction('CHILDREN_STAT', function prepare(userId){
+  const returnData = requestAuth('get', `/user/sub/status?user=${userId}`)
+
+  return {payload: returnData}
+})
+
+// 부모가 sub user각각 보상 추가
+export const requestAddChildReward = createAction('ADD_CHILD_REWARD', function prepare(reward){
+  const returnData = requestAuth('post', `/user/cps`, reward)
+
+  return {payload: returnData}
+})
+
+// sub user당 보상 리스트 조회
+export const requestGetChildReward = createAction('GET_CHILD_REWARDS', function prepare(subId){
+  const returnData = requestAuth('get', `/user/sub/cpslist?sid=${subId}`)
+
+  return {payload: returnData}
+})
+
+// sub user당 보상 삭제
+export const requestDeleteChildReward = createAction('DELETE_CHILD_REWARDS', function prepare(rid){
+  const returnData = requestAuth('delete', `/user/cps?id=${rid}`)
+
+  return {payload: returnData}
+})
+
+// sub user 계정 삭제
+export const requestDeleteChild = createAction('DELETE_CHILD', function prepare(subId){
+  const returnData = requestAuth('delete', `/user/sub/${subId}`)
+
+  return {payload: returnData}
+})
