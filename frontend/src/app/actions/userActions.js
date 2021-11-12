@@ -92,7 +92,6 @@ export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prep
   return { payload: returnData }
 })
 
-//mypage
 export const requestExp = createAction('EXP', function prepare(userId) {
   const returnData = requestAuth('get', `/user/sub/status?user=${userId}`)
   return { payload: returnData }
@@ -112,5 +111,16 @@ export const requestAllCharacters = createAction('ALL_CHARACTERS', function prep
 //PROFILE Characters
 export const requestProfileCharacters = createAction('PROFILE_CHARACTERS', function prepare(profileId) {
   const returnData = requestAuth('get', `/user/sub/mych/${profileId}`)
+  return { payload: returnData }
+})
+
+// mypage
+export const requestMypageInfo = createAction('MYPAGE_INFO', function prepare() {
+  const returnData = requestAuth('get', ``)
+  return { payload: returnData }
+})
+
+export const requestNextReward = createAction('NEXT_REWARD', function prepare(profileId) {
+  const returnData = requestAuth('post', `/user/sub/req?sid=${profileId}`)
   return { payload: returnData }
 })

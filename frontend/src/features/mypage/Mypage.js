@@ -4,7 +4,8 @@ import styles from './Mypage.module.css'
 import IconButton from '@mui/material/IconButton';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Grid from '@mui/material/Grid';
-import Slide from "./slide";
+import CharacterSlide from "./characterSlide";
+import RewardSlide from "./rewardSlide";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -33,9 +34,11 @@ export function Mypage(props) {
   const dispatch = useDispatch()
   const isMount = useIsMount()
   
-  const [characters, setCharacters] = useState([])
-  const [rewards, setRewards] = useState([])
   const [exp, setExp] = useState(-1)
+  const [total, setTotal] = useState(1)
+  const [rewards, setRewards] = useState([])
+  const [characters, setCharacters] = useState([])
+  const [dummyReward, setDummyReward] = useState([])
 
   const getAllCharacters = async() => {
     return dispatch(requestAllCharacters())
@@ -45,11 +48,7 @@ export function Mypage(props) {
     return dispatch(requestProfileCharacters(profileId))
       .then(res => res.payload.data)
   }
-  // const getExp = async() => {
-  //   return dispatch(requestExp(userId))
-  //     .then(res => res.payload.data)
-  // }
-  // const 
+
   const getRewardList = async() => {
     return dispatch(requestRewardList(profileId))
       .then(res => res.payload.data)
@@ -77,7 +76,6 @@ export function Mypage(props) {
     Promise.all([
       getAllCharacters(), 
       getProfileCharacters(), 
-      // getExp(), 
       getRewardList()
     ])
       .then(res => {
@@ -91,7 +89,14 @@ export function Mypage(props) {
 
   useEffect(() => {
     update()
+    setDummyReward(['삼국지 읽어주기', '수호지 읽어주기', '감자탕 먹으러 가기', '점심에 비행기타고 일본에서 우동먹기', '저녁에 중국에서 마파두부 먹기'])
   }, [])
+
+  useEffect(() => {
+    // change total size ^^
+    // character slide + (reward -1 / 2) + compensation
+    setTotal(1 + parseInt((dummyReward.length - 1) / 2) + 1)
+  }, [dummyReward, characters])
 
   return (
     <div className={styles.container}>
@@ -134,7 +139,6 @@ export function Mypage(props) {
             <div className={styles.progressbar__container}>
               {/* note: negative ml value === width or fontSize / 2 */}
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-                {}
               </Typography>
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
                 asd
@@ -146,9 +150,19 @@ export function Mypage(props) {
           </Paper>
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
             <ShoppingBasketIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px', zIndex: '50'}} />
-            <Slider total={1}>
-              <Slide sx={12} data={characters} />
-              <Slide sx={12} data={'2aaaa2'} />
+            <Slider total={total}>
+              <CharacterSlide sx={12} data={characters} />
+              {Array.from({ length: parseInt((dummyReward.length - 1) / 2) + 1 }, (unused, idx) => {
+                return (
+                  <RewardSlide 
+                    key={idx} 
+                    data={
+                      idx < parseInt((dummyReward.length - 1) / 2) ?
+                      dummyReward.slice(idx * 2, idx * 2 + 2) :
+                      dummyReward.slice(idx * 2)
+                    } />
+                )
+              })}
             </Slider>
           </Paper>
         </Grid>

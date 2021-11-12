@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from '@emotion/styled'
-import Slide from "./slide";
 import { Backward, Forward } from './styledComponent'
 import Grid from '@mui/material/Grid';
 
