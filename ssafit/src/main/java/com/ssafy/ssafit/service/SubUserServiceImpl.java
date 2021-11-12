@@ -269,15 +269,13 @@ public class SubUserServiceImpl implements SubUserService {
 				result.setExp(subUser.getExp());
 				result.setLevel(subUser.getLevel());
 				result.setMax(subUser.getMax());
-				if(subUser.getCid() != null) 
-					result.setImage(subUser.getCid().getCtid().getImage_link());
-				else result.setImage(null);
+				result.setImage(subUser.getCid().getCtid().getImage_link());
 				
 				List<GetCt> list = getCtRepository.findBySid(subUserRepository.findById(sid).get());
 				if(list != null) {
 					List<Long> characters = new ArrayList<Long>();
 					for(GetCt gc : list) {
-						characters.add(gc.getId());
+						characters.add(gc.getCtid().getId());
 					}
 					result.setCharacters(characters);
 				}

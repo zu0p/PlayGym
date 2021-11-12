@@ -61,7 +61,6 @@ public class SubUser {
 	@OneToOne
 	private GetCt cid;
 	
-
 	@ColumnDefault("1") 
 	private int level;
 	
