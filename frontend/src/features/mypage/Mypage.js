@@ -101,25 +101,25 @@ export function Mypage(props) {
     if (info.exp !== info.max)
       // 경험치 부족하면 do nothing
       return
-    else {
-      if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
-        // getCharacter
-        const nextId = characters.find(character => character.owned === false).id
-        const body = {
-          sid: info.profileId,
-          cid: nextId
-        }
-        dispatch(requestNextCharacter(body))
-          .then()
-          .catch()
-      } else {
-        // getReward
-        const nextId = rewards.find(reward => reward.status === 'wait').cid
-        dispatch(requestNextReward(info.profileId))
-          .then()
-          .catch()
+
+    if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
+      // getCharacter
+      const nextId = characters.find(character => character.owned === false).id
+      const body = {
+        sid: info.profileId,
+        cid: nextId
       }
+      dispatch(requestNextCharacter(body))
+        .then()
+        .catch()
+    } else {
+      // getReward
+      const nextId = rewards.find(reward => reward.status === 'wait').cid
+      dispatch(requestNextReward(info.profileId))
+        .then()
+        .catch()
     }
+    
   }
 
   useEffect(() => {
