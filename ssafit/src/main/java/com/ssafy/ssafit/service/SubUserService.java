@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
+import com.ssafy.ssafit.dto.SubUserInfoDto;
 
 public interface SubUserService {
 	
@@ -34,4 +35,7 @@ public interface SubUserService {
 	
 	// 캐릭터 삭제 (테스트용)
 	public void deleteAllMyCharacter(Map<String, String> input);
+
+	//서브 유저 데이터 통합 요청
+	public SubUserInfoDto getSubUserData(long sid);
 }

@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.Score;
 import com.ssafy.ssafit.dto.SubGameStatusDTO;
+import com.ssafy.ssafit.dto.SubUserInfoDto;
 import com.ssafy.ssafit.dto.logGameDTO;
 import com.ssafy.ssafit.service.GameScoreService;
+import com.ssafy.ssafit.service.GetCpsService;
 import com.ssafy.ssafit.service.SubUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,8 @@ public class SubUserController {
 //	@Autowired
 	private final SubUserService subUserService;
 	private final GameScoreService gameScoreService;
+	private final GetCpsService getCpsService;
+	
 	// 서브 계정 추가
 	@PostMapping("/sub/add")
 	public ResponseEntity<ApiResMessage> addSubUser(@RequestBody Map<String, String> subUser){
@@ -193,6 +197,19 @@ public class SubUserController {
 		
 		map.put("subusers",list);
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"OK"),HttpStatus.OK);
+	}
+	
+	//
+	@GetMapping("/sub/info")
+	public ResponseEntity<SubUserInfoDto> getSubUserData(@RequestParam long sid){
+		SubUserInfoDto result = null;
+		try {
+			result = subUserService.getSubUserData(sid);
+		} catch (Exception e) {
+			return new ResponseEntity<SubUserInfoDto>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<SubUserInfoDto>(result, HttpStatus.OK);
 	}
 	
 }

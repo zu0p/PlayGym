@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
@@ -13,10 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.ssafit.domain.Characters;
+import com.ssafy.ssafit.domain.GetCps;
 import com.ssafy.ssafit.domain.GetCt;
 import com.ssafy.ssafit.domain.MainUser;
 import com.ssafy.ssafit.domain.SubUser;
+import com.ssafy.ssafit.dto.SubGetCpsListDTO;
+import com.ssafy.ssafit.dto.SubUserInfoDto;
 import com.ssafy.ssafit.repository.CharacterRepository;
+import com.ssafy.ssafit.repository.GetCpsRepository;
 import com.ssafy.ssafit.repository.GetCtRepository;
 import com.ssafy.ssafit.repository.MainuserRepository;
 import com.ssafy.ssafit.repository.SubUserRepository;
@@ -32,6 +37,7 @@ public class SubUserServiceImpl implements SubUserService {
 	private final GetCtRepository getCtRepository;
 	private final MainuserRepository mainuserRepository;
 	private final CharacterRepository characterRepository;
+	private final GetCpsRepository getCpsRepository;
 	
 	// 서브 계정 추가
 	@Override
@@ -244,5 +250,54 @@ public class SubUserServiceImpl implements SubUserService {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+
+	@Override
+	public SubUserInfoDto getSubUserData(long sid) {
+		SubUserInfoDto result = null;
+		try {
+			Optional<SubUser> s = subUserRepository.findBySid(sid);
+			if(s != null) {
+				result = new SubUserInfoDto();
+				SubUser subUser = s.get();
+				result.setSid(sid);
+				result.setAge(subUser.getAge());
+				result.setTall(subUser.getTall());
+				result.setWeight(subUser.getWeight());
+				result.setNickName(subUser.getNickName());
+				result.setId(subUser.getMainUser().getId());
+				result.setExp(subUser.getExp());
+				result.setLevel(subUser.getLevel());
+				result.setMax(subUser.getMax());
+				if(subUser.getCid() != null) 
+					result.setImage(subUser.getCid().getCtid().getImage_link());
+				else result.setImage(null);
+				
+				List<GetCt> list = getCtRepository.findBySid(subUserRepository.findById(sid).get());
+				if(list != null) {
+					List<Long> characters = new ArrayList<Long>();
+					for(GetCt gc : list) {
+						characters.add(gc.getId());
+					}
+					result.setCharacters(characters);
+				}
+				List<GetCps> cps = getCpsRepository.findBySubid(s.get()).orElse(null);
+				List<Map<String,Object>> goals = new ArrayList<Map<String,Object>>();
+				
+				for(GetCps now : cps) {
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("title", now.getCpsid().getTitle());
+					map.put("detail", now.getCpsid().getDetail());
+					map.put("cid", now.getCpsid().getCid());
+					map.put("status", now.getStatus());
+					goals.add(map);
+				}
+				result.setGoals(goals);
+			}	
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		return result;
 	}
 }
