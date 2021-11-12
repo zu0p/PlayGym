@@ -66,6 +66,8 @@ public class SubUserServiceImpl implements SubUserService {
 					.tall(Integer.parseInt(subUser.get("tall")))
 					.mainUser(m)
 					.build();
+			newSubUser.setMax(100);
+			newSubUser.setLevel(1); // defalut value 적용 안되어서 추가
 			subUserRepository.save(newSubUser);
 			Characters c = characterRepository.findById(cid).orElse(null);
 			if(getCtRepository.findBySidAndCtid(newSubUser, c) == null) {
