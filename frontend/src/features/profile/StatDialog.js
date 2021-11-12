@@ -3,19 +3,22 @@ import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import { FullDialogBar, FullDialogGrid } from './customProfileStyle'
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './Profile.module.css';
-import { AddTextField, AddButton } from './customProfileStyle'
+import { AddTextField, AddButton, CancelButton } from './customProfileStyle'
 import { styled } from '@mui/material/styles';
 import { Button, Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { useDispatch } from 'react-redux';
-import { requestChildrenStatus, requestAddChildReward, requestGetChildReward } from '../../app/actions/userActions'
+import { requestGetChildren, requestChildrenStatus, requestAddChildReward, requestGetChildReward, requestDeleteChild } from '../../app/actions/userActions'
 import RewardList from './RewardList'
 // import rabbit from '../../images/characters/rabbit.png'
 
@@ -51,11 +54,12 @@ function LinearProgressWithLabel(props) {
 }
 
 
-function Profile({profile}){
+function Profile({profile, handleClose}){
   const dispatch = useDispatch()
   const [showReward, setShowReward] = useState(false)
   const [reward, setReward] = useState('')
   const [rewards, setRewards] = useState(null)
+  const [open, setOpen] = useState(false)
 
   useEffect(()=>{
     refreshRewards()
@@ -104,6 +108,22 @@ function Profile({profile}){
     setReward(e.target.value)
   }
 
+  // 자녀 계정 삭제 버튼 클릭
+  const onDeleteChlid = () => {
+    dispatch(requestDeleteChild(profile.sid))
+      .then(res=>{
+        console.log(res)
+
+        // 자녀 계정 리프레시
+        dispatch(requestGetChildren(localStorage.getItem('main-user')))
+        .then(res => {
+          // console.log(res)
+          handleClose()
+        })
+      })
+    setOpen(false)
+  }
+
   return(
     <Grid 
       container direction="row" 
@@ -111,6 +131,40 @@ function Profile({profile}){
       alignItems="center"
       mt={'10%'}
     >
+      <Collapse 
+        style={{
+          position: 'fixed',
+          top: '30%',
+          left: '30%',
+          zIndex: 200,
+          width: '40%'
+        }}
+        in={open}
+      >
+        <Alert
+          severity="error"
+          style={{backgroundColor:'#22220B', color:'white'}}
+          action={
+            <div>
+              <IconButton
+                aria-label="close"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}              
+              >
+                <CloseIcon fontSize="inherit" color="info"/>
+              </IconButton>
+              <IconButton size="small" onClick={onDeleteChlid}>
+                <DeleteForeverRoundedIcon fontSize="inherit" color="error"/>
+              </IconButton>
+            </div>
+          }
+          sx={{ mb: 2 }}
+        >
+          삭제한 계정은 되돌릴 수 없습니다. 그래도 삭제하시겠습니까?
+        </Alert>
+      </Collapse>
       <Grid item md={2} alignItems="end">
         <div>
           <div className={styles.player_static}>
@@ -174,7 +228,10 @@ function Profile({profile}){
       </Grid>
       <Grid item md={2} justifyContent="space-around">
         {/* <Typography sx={{fontSize: '30px'}}></Typography> */}
-        <Typography sx={{fontSize: '30px'}}>레벨 2000</Typography>
+        <CancelButton onClick={()=>{setOpen(true)}}>
+          계정 삭제
+        </CancelButton>
+        {/* <Typography sx={{fontSize: '30px'}}>레벨 2000</Typography> */}
       </Grid>
     </Grid>
   )
@@ -230,7 +287,7 @@ export function StatDialog(props) {
         id='statContainer'
         style={{height: 'auto'}}
       >        
-        {profiles===null?'empty':profiles.map(profile => (<Profile key={profile.name} profile={profile}/>))}
+        {profiles===null?'empty':profiles.map(profile => (<Profile key={profile.name} profile={profile} handleClose={handleClose}/>))}
       </FullDialogGrid>
     </Dialog>
   )

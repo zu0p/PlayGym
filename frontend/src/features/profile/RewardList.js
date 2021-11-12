@@ -75,7 +75,7 @@ export default function RewardList(props) {
                 }}
               >
                 <ListItemText
-                  primary="보상 목록"
+                  primary="🎖 보상 목록"
                   primaryTypographyProps={{
                     fontSize: 15,
                     fontWeight: 'bold',

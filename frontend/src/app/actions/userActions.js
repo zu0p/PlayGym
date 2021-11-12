@@ -142,3 +142,10 @@ export const requestDeleteChildReward = createAction('DELETE_CHILD_REWARDS', fun
 
   return {payload: returnData}
 })
+
+// sub user 계정 삭제
+export const requestDeleteChild = createAction('DELETE_CHILD', function prepare(subId){
+  const returnData = requestAuth('delete', `/user/sub/${subId}`)
+
+  return {payload: returnData}
+})

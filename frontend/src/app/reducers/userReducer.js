@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, ADD_CHILD_USER } from '../actions/types'
+import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, DELETE_CHILD } from '../actions/types'
 
 const userState = {
   mainUser: {
@@ -40,8 +40,8 @@ const user = createReducer(userState, {
     state.subUser = action.payload
     // console.log(state.subUser)
   },
-  ADD_CHILD_USER: (state, action)=> {
-    // console.log(action)
+  DELETE_CHILD: (state, action)=> {
+    console.log(action)
   }
 })
 export default user
