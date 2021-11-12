@@ -63,19 +63,28 @@ function Profile({profile}){
   }, [profile])
 
   const registReward = (e) => {
-    const param = {
-      title : reward,
-      detail: "",
-      pid: localStorage.getItem('main-user'),
-      child: profile.sid
+    const helperText = document.getElementById('helperText')
+    if(reward===''){
+      helperText.style.margin = '10px 0 0 5px'
+      helperText.style.color = '#AC3943'
+      helperText.innerText = '보상을 입력하세요'
     }
-    dispatch(requestAddChildReward(param))
-      .then(res=>{        
-        // add 하고 rewards를 갱신해줘야할듯 -> 바로바로 추가돼도 목록에 보이도록
-        refreshRewards()
-      })
-    setShowReward(false)
-    setReward('')
+    else{
+      helperText.innerText = ''
+      const param = {
+        title : reward,
+        detail: "",
+        pid: localStorage.getItem('main-user'),
+        child: profile.sid
+      }
+      dispatch(requestAddChildReward(param))
+        .then(res=>{        
+          // add 하고 rewards를 갱신해줘야할듯 -> 바로바로 추가돼도 목록에 보이도록
+          refreshRewards()
+        })
+      setShowReward(false)
+      setReward('')
+    }
   }
 
   const refreshRewards = () => {
@@ -140,12 +149,15 @@ function Profile({profile}){
 
         {/* 보상 추가 시 텍스트필드 */}
         <Grid item ml={'40px'} style={{display: showReward?'block':'none'}} >
-          <AddTextField  
-            style={{width:'80%'}} 
-            value={reward}
-            onChange={onRewardChange}
-          />
-          <Button onClick={registReward}>추가</Button>
+          <div>
+            <AddTextField  
+              style={{width:'80%'}} 
+              value={reward}
+              onChange={onRewardChange}
+            />
+            <Button onClick={registReward}>추가</Button>
+          </div>
+          <div id="helperText"></div>
         </Grid>
       </Grid>
       <Grid item md={2} justifyContent="space-around">
