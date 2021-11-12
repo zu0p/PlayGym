@@ -38,7 +38,6 @@ public class SubUserController {
 //	@Autowired
 	private final SubUserService subUserService;
 	private final GameScoreService gameScoreService;
-	private final GetCpsService getCpsService;
 	
 	// 서브 계정 추가
 	@PostMapping("/sub/add")
@@ -146,18 +145,19 @@ public class SubUserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
 	
-	//서브유저 캐릭터 삭제
-	@DeleteMapping("/sub/delall")
-	public ResponseEntity<ApiResMessage> deleteAllMyCharacter(@RequestBody Map<String, String> input){
-		try {
-			subUserService.deleteAllMyCharacter(input);
-		} catch(Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
-	}
+//	//서브유저 캐릭터 삭제
+//	@DeleteMapping("/sub/delall")
+//	public ResponseEntity<ApiResMessage> deleteAllMyCharacter(@RequestBody Map<String, String> input){
+//		try {
+//			subUserService.deleteAllMyCharacter(input);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//		
+//		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+//	}
+	
 	@PostMapping("/sub/log")
 	public ResponseEntity<ApiResMessage> saveGamelog(@RequestBody Map<String,Long> map){
 		try {
