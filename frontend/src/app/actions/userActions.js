@@ -121,3 +121,17 @@ export const requestChildrenStatus = createAction('CHILDREN_STAT', function prep
 
   return {payload: returnData}
 })
+
+// 부모가 sub user각각 보상 추가
+export const requestAddChildReward = createAction('ADD_CHILD_REWARD', function prepare(reward){
+  const returnData = requestAuth('post', `/user/cps`, reward)
+
+  return {payload: returnData}
+})
+
+// sub user당 보상 리스트 조회
+export const requestGetChildReward = createAction('GET_CHILD_REWARDS', function prepare(subId){
+  const returnData = requestAuth('get', `/user/sub/cpslist?sid=${subId}`)
+
+  return {payload: returnData}
+})

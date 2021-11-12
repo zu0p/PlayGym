@@ -42,7 +42,7 @@ function Player({player}){
           <img src={player.image} width='100px'/>
         </div>
 
-        <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton>
+        {/* <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton> */}
         {player.nickName}
       </Grid>
     </div>
