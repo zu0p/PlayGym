@@ -15,7 +15,7 @@ const width = 260;
 const height = 500;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/bear.png";
+faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
 
 export function Mugunghwa(props){
   const [replay, setReplay] = useState(false)
@@ -140,7 +140,7 @@ export function Mugunghwa(props){
       drawPose(pose)
       return false
     } 
-    let idx = exerciseList.current[motionCnt.current].aid -1
+    let idx = exerciseList.current[motionCnt.current].classNumber -1
     // console.log(idx+" "+exerciseList.current[motionCnt.current].name)
     if (prediction[idx].probability.toFixed(2) > 0.7) 
       return true
@@ -193,7 +193,6 @@ export function Mugunghwa(props){
   }
 
   useEffect(() => {
-    console.log('play '+replay)
     canvasRef.current.width = width
     canvasRef.current.height = height
     contextRef.current = canvasRef.current.getContext('2d')
@@ -340,14 +339,14 @@ export function Mugunghwa(props){
       cnt++
     }, 1000)
     setTimeout(function(){
-      console.log(isSuccess.current)
+      // console.log(isSuccess.current)
       if(isSuccess.current){ // 자세 유지 성공 시 -> move
-        console.log('자세유지성공~~~~')
+        // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
       }
       else{ // 자세 유지 실패 시
-        console.log('자세유지실패ㅠㅠㅠ')
+        // console.log('자세유지실패ㅠㅠㅠ')
         const webcam = document.getElementById('webcam')
         webcam.style.border = '10px solid #AC3943'
         webcam.style.boxSizing = 'border-box'

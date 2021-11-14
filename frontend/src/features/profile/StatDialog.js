@@ -3,20 +3,23 @@ import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import { FullDialogBar, FullDialogGrid } from './customProfileStyle'
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './Profile.module.css';
-import bear from '../../images/characters/bear.png'
-import cat from '../../images/characters/cat.png'
-import chick from '../../images/characters/chick.png'
+import { AddTextField, AddButton, CancelButton } from './customProfileStyle'
 import { styled } from '@mui/material/styles';
-import { Paper } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import Box from '@mui/material/Box';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
+import { useDispatch } from 'react-redux';
+import { requestGetChildren, requestChildrenStatus, requestAddChildReward, requestGetChildReward, requestDeleteChild } from '../../app/actions/userActions'
+import RewardList from './RewardList'
 // import rabbit from '../../images/characters/rabbit.png'
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
@@ -50,24 +53,208 @@ function LinearProgressWithLabel(props) {
   );
 }
 
+
+function Profile({profile, handleClose}){
+  const dispatch = useDispatch()
+  const [showReward, setShowReward] = useState(false)
+  const [reward, setReward] = useState('')
+  const [rewards, setRewards] = useState(null)
+  const [open, setOpen] = useState(false)
+
+  useEffect(()=>{
+    refreshRewards()
+
+  }, [profile])
+
+  const registReward = (e) => {
+    const helperText = document.getElementById(profile.sid)
+    if(reward===''){
+      helperText.style.margin = '10px 0 0 5px'
+      helperText.style.color = '#AC3943'
+      helperText.innerText = '보상을 입력하세요'
+    }
+    else{
+      helperText.innerText = ''
+      const param = {
+        title : reward,
+        detail: "",
+        pid: localStorage.getItem('main-user'),
+        child: profile.sid
+      }
+      dispatch(requestAddChildReward(param))
+        .then(res=>{        
+          // add 하고 rewards를 갱신해줘야할듯 -> 바로바로 추가돼도 목록에 보이도록
+          refreshRewards()
+        })
+      setShowReward(false)
+      setReward('')
+    }
+  }
+
+  const refreshRewards = () => {
+    dispatch(requestGetChildReward(profile.sid))
+      .then(res=>{
+        // console.log(res)
+        setRewards(res.payload.data.result.result)
+      })
+  }
+
+  const onClickReward = (e) => {
+    // console.log(profile)
+    setShowReward(prev=>!prev)
+  }
+
+  const onRewardChange = (e) => {
+    setReward(e.target.value)
+  }
+
+  // 자녀 계정 삭제 버튼 클릭
+  const onDeleteChlid = () => {
+    dispatch(requestDeleteChild(profile.sid))
+      .then(res=>{
+        console.log(res)
+
+        // 자녀 계정 리프레시
+        dispatch(requestGetChildren(localStorage.getItem('main-user')))
+        .then(res => {
+          // console.log(res)
+          handleClose()
+        })
+      })
+    setOpen(false)
+  }
+
+  return(
+    <Grid 
+      container direction="row" 
+      justifyContent="center"
+      alignItems="center"
+      mt={'10%'}
+    >
+      <Collapse 
+        style={{
+          position: 'fixed',
+          top: '30%',
+          left: '30%',
+          zIndex: 200,
+          width: '40%'
+        }}
+        in={open}
+      >
+        <Alert
+          severity="error"
+          style={{backgroundColor:'#22220B', color:'white'}}
+          action={
+            <div>
+              <IconButton
+                aria-label="close"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}              
+              >
+                <CloseIcon fontSize="inherit" color="info"/>
+              </IconButton>
+              <IconButton size="small" onClick={onDeleteChlid}>
+                <DeleteForeverRoundedIcon fontSize="inherit" color="error"/>
+              </IconButton>
+            </div>
+          }
+          sx={{ mb: 2 }}
+        >
+          삭제한 계정은 되돌릴 수 없습니다. 그래도 삭제하시겠습니까?
+        </Alert>
+      </Collapse>
+      <Grid item md={2} alignItems="end">
+        <div>
+          <div className={styles.player_static}>
+            <img src={profile.img} width='100px'/>
+          </div>
+          <Typography sx={{ textAlign: 'center'}}>
+            {profile.name}
+          </Typography>
+        </div>
+      </Grid>
+      <Grid item md={6}>
+          <div>
+            <Typography sx={{fontSize: '30px', textAlign:"center"}}>소모한 칼로리 {profile.kcal}kcal</Typography>
+          </div>
+          <Grid item>
+            <div className={styles.progressbar__container}>
+              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
+                1
+              </Typography>
+              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
+                1
+              </Typography>
+              <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
+              <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
+              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={50} />
+            </div>
+        </Grid>
+
+        {/* 보상 목록 리스트 */}
+        <Grid item ml={'40px'}>
+          <RewardList rewards={rewards} refresh={refreshRewards} />
+          <div style={{textAlign:'right', marginRight:'10%'}}>
+            <Button 
+              style={{
+                color: '#22220B'
+              }}
+              onClick={onClickReward}
+            >
+              {profile.name}님에게 보상 추가하기
+            </Button>          
+          </div>          
+        </Grid>
+
+        {/* 보상 추가 시 텍스트필드 */}
+        <Grid item ml={'40px'} style={{display: showReward?'block':'none'}} >
+          <div>
+            <AddTextField  
+              style={{width:'70%'}} 
+              value={reward}
+              onChange={onRewardChange}
+            />
+            <AddButton 
+              style={{width:'15%', marginLeft:'5%'}}
+              onClick={registReward}
+            >
+              추가
+            </AddButton>
+          </div>
+          <div id={profile.sid}></div>
+        </Grid>
+      </Grid>
+      <Grid item md={2} justifyContent="space-around">
+        {/* <Typography sx={{fontSize: '30px'}}></Typography> */}
+        <CancelButton onClick={()=>{setOpen(true)}}>
+          계정 삭제
+        </CancelButton>
+        {/* <Typography sx={{fontSize: '30px'}}>레벨 2000</Typography> */}
+      </Grid>
+    </Grid>
+  )
+}
+
 export function StatDialog(props) {
   const [progress, setProgress] = React.useState(0);
   const handleClose = () => {
     props.getClose()
   }
 
-  // 아마도 profileList를 prop으로 받아오 지 않 을 까? 모르겠네
-  const [profiles, setProfiles] = useState({
-    n: 3,
-    // names: ['qwe', 'asd', 'zxc']
-    list: [
-      {name: 'qwe', kcal: '500', level: '500', pic: bear,},
-      {name: 'asd', kcal: '500', level: '500', pic: cat,},
-      {name: 'zxc', kcal: '500', level: '500', pic: chick,},
-      // {name: 'qaz', kcal: '500', level: '500', pic: chick,},
-    ]
-  })
+  const [profiles, setProfiles] = useState(null)
   
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    if(props.open){
+      dispatch(requestChildrenStatus(localStorage.getItem('main-user')))
+        .then(res=>{
+          // console.log(res.payload.data.result.subusers)
+          setProfiles(res.payload.data.result.subusers)
+        })
+    }
+  },[props.open])
 
   return (
     <Dialog
@@ -76,7 +263,7 @@ export function StatDialog(props) {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <FullDialogBar sx={{ position: 'relative' }}>
+      <FullDialogBar sx={{ position: 'fixed' }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -94,49 +281,13 @@ export function StatDialog(props) {
       <FullDialogGrid
         container
         direction="column"
-        // justifyContent="center"
+        justifyContent="center"
         alignItems="center"
         spacing={3}
-      >
-        {profiles.list.map(profile => (
-          <Grid container sx={{ mt: 10, ml:4, width: '75%' }} key={profile.name} >
-            <Grid direction="column" container item xs={4} alignItems="end">
-              <div>
-                <div className={styles.player_static}>
-                  <img src={profile.pic} width='100px'/>
-                </div>
-                <Typography sx={{ textAlign: 'center'}}>
-                  {profile.name}
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={8} container>
-              <Grid item container direction="column" xs={6} justifyContent="space-around">
-                <div>
-                  <Typography sx={{fontSize: '30px', textAlign:"center"}}>소모한 칼로리 20kcal</Typography>
-                </div>
-                <Grid item>
-                  <div className={styles.progressbar__container}>
-                    {/* note: negative ml value === width or fontSize / 2 */}
-                    <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-                      1
-                    </Typography>
-                    <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
-                      1
-                    </Typography>
-                    <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
-                    <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
-                    <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={50} />
-                  </div>
-                </Grid>
-              </Grid>
-              <Grid item container direction="column" xs={3} justifyContent="space-around">
-                <Typography sx={{fontSize: '30px'}}></Typography>
-                <Typography sx={{fontSize: '30px'}}>레벨 2000</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        ))}
+        id='statContainer'
+        style={{height: 'auto'}}
+      >        
+        {profiles===null?'empty':profiles.map(profile => (<Profile key={profile.name} profile={profile} handleClose={handleClose}/>))}
       </FullDialogGrid>
     </Dialog>
   )

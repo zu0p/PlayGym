@@ -84,6 +84,7 @@ h1, h5{
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   margin: 10px;
   border: solid 3px #A3C653;
 }

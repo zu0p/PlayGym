@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER } from '../actions/types'
+import { LOGIN_USER, UNSIGNUP_USER, UPDATE_USER, CHECK_PASSWORD, GET_USER, DELETE_CHILD } from '../actions/types'
 
 const userState = {
   mainUser: {
@@ -9,7 +9,8 @@ const userState = {
     email: '',
     phone: null,
     password: ''
-  }
+  },
+  subUser:[]
 }
 
 const user = createReducer(userState, {
@@ -32,9 +33,14 @@ const user = createReducer(userState, {
     console.log(action)
   },
   GET_USER: (state, action) => {
-    console.log(action)
+    // console.log(action)
   },
   GET_CHILDRED_USER: (state, action) => {
+    // store에 sub user 저장해서 관리해야함
+    state.subUser = action.payload
+    // console.log(state.subUser)
+  },
+  DELETE_CHILD: (state, action)=> {
     console.log(action)
   }
 })
