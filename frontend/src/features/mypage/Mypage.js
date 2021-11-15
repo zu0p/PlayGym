@@ -104,7 +104,7 @@ export function Mypage(props) {
       return
 
     if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
-      console.log('requestCharacter')
+      // console.log('requestCharacter')
       // getCharacter
       // const nextId = characters.find(character => character.owned === false).id
       // const body = {
@@ -115,7 +115,7 @@ export function Mypage(props) {
       //   .then()
       //   .catch()
     } else {
-      console.log('requestReward')
+      // console.log('requestReward')
       // getReward
       // const nextId = rewards.find(reward => reward.status === 'wait').cid
       // dispatch(requestNextReward(info.profileId))
@@ -141,7 +141,7 @@ export function Mypage(props) {
           color="inherit"
           size="medium"
           sx={{backgroundColor: '#FFFFFF', border: '5px solid #A3C653', mt: 5, ml: 5}}
-          onClick={() => {console.log(props); props.history.push('/home');}}
+          onClick={() => {props.history.push('/home');}}
         >
           <HomeRoundedIcon
             fontSize="inherit"

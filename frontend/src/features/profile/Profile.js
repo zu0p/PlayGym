@@ -58,7 +58,7 @@ export function Profile(){
       dispatch(requestGetChildren(localStorage.getItem('main-user')))
         .then(res => {
           // console.log(res)
-          console.log(players)
+          // console.log(players)
         })
     }
   },[])

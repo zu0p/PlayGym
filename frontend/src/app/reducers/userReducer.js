@@ -24,13 +24,13 @@ const user = createReducer(userState, {
     }
   },
   UNSIGNUP_USER: (state, action) => {
-    console.log(action)
+    // console.log(action)
   },
   UPDATE_USER: (state, action)=>{
-    console.log(action)
+    // console.log(action)
   },
   CHECK_PASSWORD: (state, action)=>{
-    console.log(action)
+    // console.log(action)
   },
   GET_USER: (state, action) => {
     // console.log(action)
@@ -41,7 +41,7 @@ const user = createReducer(userState, {
     // console.log(state.subUser)
   },
   DELETE_CHILD: (state, action)=> {
-    console.log(action)
+    // console.log(action)
   }
 })
 export default user

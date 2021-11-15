@@ -112,7 +112,7 @@ function Profile({profile, handleClose}){
   const onDeleteChlid = () => {
     dispatch(requestDeleteChild(profile.sid))
       .then(res=>{
-        console.log(res)
+        // console.log(res)
 
         // 자녀 계정 리프레시
         dispatch(requestGetChildren(localStorage.getItem('main-user')))

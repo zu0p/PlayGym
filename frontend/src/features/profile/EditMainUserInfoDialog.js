@@ -60,7 +60,7 @@ export default function EditMainUserInfoDialog(props) {
   const onEditClick = () => {
     if(inputDisable){
       // edit
-      console.log('before')
+      // console.log('before')
       setInputDisable(false)
       const eButton = document.getElementById('editButton')
       eButton.style.backgroundColor='#7DA3D4'
@@ -72,7 +72,7 @@ export default function EditMainUserInfoDialog(props) {
       oButton.style.marginRight = '10px'
 
       setPassword('')
-      console.log(password)
+      // console.log(password)
       const checkField = document.getElementById('check_password_field')
       checkField.classList.remove('fade_out')
       checkField.classList.add('fade_in')
@@ -105,7 +105,7 @@ export default function EditMainUserInfoDialog(props) {
         phone: phone,
         password: newPassword==''?password:newPassword
       }
-      console.log(userInfo)
+      // console.log(userInfo)
       dispatch(
         requestUpdateUser(userInfo)
       )
@@ -165,7 +165,7 @@ export default function EditMainUserInfoDialog(props) {
   }
 
   const onSignout = () => {
-    console.log('회원탈퇴')
+    // console.log('회원탈퇴')
     // action: unsign up
     // console.log(userState.mainUser.id)
     dispatch(

@@ -18,25 +18,25 @@ export function Home(props) {
   useEffect(()=>{
     dispatch(requestGetGameList())
     .then(res=>{
-      console.log(res)
+      // console.log(res)
     })
   }, [])
   const dummyAudio = new Audio()
 
   const onMugunghwaClick = () => {
-    console.log('무궁화꽃이 피었습니다')
+    // console.log('무궁화꽃이 피었습니다')
     props.history.push('/mugunghwa')
     dummyAudio.play()
   }
 
   const onFollowMeClick = () => {
-    console.log('날 따라해봐요')
+    // console.log('날 따라해봐요')
     dummyAudio.play()
     props.history.push('/followme')
   }
 
   const onWordClick = () => {
-    console.log('단어맞추기')
+    // console.log('단어맞추기')
     dummyAudio.play()
   }
   return (

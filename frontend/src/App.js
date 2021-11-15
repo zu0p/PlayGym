@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import logo from './logo.svg';
 import './App.css';
-import { Counter } from './features/counter/Counter';
 import { Home } from './features/home/Home';
 import { Login } from './features/login/Login'
 import { Signup } from './features/signup/Signup'

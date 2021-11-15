@@ -161,7 +161,7 @@ export function FollowMe(props) {
         break
       case true:
         if (audioRef.current.paused) {
-          console.log(successCount.current)
+          // console.log(successCount.current)
           
           if (!isMount.current) return;
           idx.current += 1
@@ -170,7 +170,7 @@ export function FollowMe(props) {
         }
         await predict(posenetOutput)
           .then(res => {
-            console.log(res)
+            // console.log(res)
             if (res === true) {
               successThreshold.current += 1
               handleSuccess()
@@ -256,7 +256,7 @@ export function FollowMe(props) {
         ) 
       }
     } catch {
-      console.log(pose)
+      // console.log(pose)
       return
     }
   }

@@ -45,7 +45,7 @@ export function Mugunghwa(props){
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      console.log('prevent go back!');
+      // console.log('prevent go back!');
     };
     
     window.history.pushState(null, '', window.location.href);
@@ -74,10 +74,10 @@ export function Mugunghwa(props){
         .then(res => {
           if (res === true) {
             successThreshold.current += 1
-            console.log(successThreshold.current)
+            // console.log(successThreshold.current)
             if (successThreshold.current > 50){
               isSuccess.current = true
-              console.log('success!!!!!!!!!!!');
+              // console.log('success!!!!!!!!!!!');
             }
             else{
               cancelAnimationFrame(requestRef.current)
@@ -218,7 +218,7 @@ export function Mugunghwa(props){
     dispatch(requestMugunghwaGame(params))
       .then(async res => {
         exerciseList.current = res.payload.asset
-        console.log(exerciseList.current)
+        // console.log(exerciseList.current)
         // console.log(res)
         modelRef.current = await window.tmPose.load(res.payload.modelLink, res.payload.metaLink)
         startWebcam().then(()=>{
@@ -247,7 +247,7 @@ export function Mugunghwa(props){
   const onEndGame = () => {
     loopFlag.current = true
     cancelAnimationFrame(requestRef.current)
-    console.log('game end')
+    // console.log('game end')
     setIsEnd(true)
   }
 
@@ -263,7 +263,7 @@ export function Mugunghwa(props){
         }
         dispatch(requestGameSuccessSave(param))
           .then(res=>{
-            console.log(res)
+            // console.log(res)
           })
         setGameRes(1)
       }
@@ -283,7 +283,7 @@ export function Mugunghwa(props){
   // 게임 종료 후 end dialog 에서 홈으로 돌아가기 버튼 클릭
   // == 종료 후 게임 메인페이지로 이동
   const onGetEndClose = () => {
-    console.log('close')
+    // console.log('close')
     setEndOpen(false)
     setIsEnd(false)
     endGame()
@@ -349,7 +349,7 @@ export function Mugunghwa(props){
 
   const onChcekMotion = async() =>{
     loopFlag.current = false // == predict를 하겠다
-    console.log("check motion")
+    // console.log("check motion")
     motionCnt.current++
 
     let cnt = 0
