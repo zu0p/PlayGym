@@ -39,6 +39,21 @@ export function Mugunghwa(props){
   const isSuccess = useRef(false)
   const motionCnt = useRef(-1)
 
+  // block pop history
+  useEffect(() => {
+    const preventGoBack = () => {
+      // change start
+      window.history.pushState(null, '', window.location.href);
+      // change end
+      console.log('prevent go back!');
+    };
+    
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', preventGoBack);
+    
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);   
+
   const startWebcam = async() => {
     try {
       webcamRef.current = new window.tmPose.Webcam(500, 500, flip);
@@ -347,7 +362,7 @@ export function Mugunghwa(props){
     }, 1000)
     setTimeout(function(){
       // console.log(isSuccess.current)
-      if(!isSuccess.current){ // 자세 유지 성공 시 -> move
+      if(isSuccess.current){ // 자세 유지 성공 시 -> move
         // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
@@ -403,7 +418,6 @@ export function Mugunghwa(props){
       >
         <Grid item md={12} mt={'50px'}>
           <img src={m_text} width={400}/>
-          <h1>re:: {replay?'true':'false'}</h1>
         </Grid>
         <Grid item md={2} className={styles.goalLine}>
           <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
