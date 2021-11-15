@@ -13,3 +13,45 @@
   align-items: center;
   text-align: center;
 }
+
+.character__container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-column-gap: 5px;
+  justify-items: center;
+  align-items: center;
+  height: 260px;
+  width: 25%;
+}
+
+.character__img__owned {
+  width: 60%;
+  padding-top: 10%;
+  grid-area: 2/1/5/2;
+  object-fit: contain;
+  /* flex-grow: 1; */
+}
+
+.character__img__not {
+  width: 60%;
+  padding-top: 10%;
+  grid-area: 2/1/5/2;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
+.character__tag {
+  padding-bottom: 20px;
+  grid-area: 5/1/7/2;
+}
+
+.reward__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reward__tag {
+  
+}

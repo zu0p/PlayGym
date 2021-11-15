@@ -202,10 +202,10 @@ export function Mugunghwa(props){
     }
     dispatch(requestMugunghwaGame(params))
       .then(async res => {
-        exerciseList.current = res.payload.data.asset
+        exerciseList.current = res.payload.asset
         console.log(exerciseList.current)
         // console.log(res)
-        modelRef.current = await window.tmPose.load(res.payload.data.modelLink, res.payload.data.metaLink)
+        modelRef.current = await window.tmPose.load(res.payload.modelLink, res.payload.metaLink)
         startWebcam().then(()=>{
           requestRef.current = requestAnimationFrame(loop)
         })

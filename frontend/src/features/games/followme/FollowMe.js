@@ -19,14 +19,16 @@ import monkey1 from '../../../images/games/game_followMe_1.jpg'
 import monkey2 from '../../../images/games/game_followMe_2.jpg'
 import monkey3 from '../../../images/games/game_followMe_3.jpg'
 import useIsMount from '../../../utils/useIsMount'
+import EndDialog from './EndDialog'
 // import debounce from 'lodash/debounce'
 
 const size = 800;
 const flip = true;
-const faceImg = new Image()
-faceImg.src = "https://k5d205.p.ssafy.io/api/img/cat.png";
 
 export function FollowMe(props) {
+  const faceImg = new Image()
+  faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/cat.png";
+  
   const dispatch = useDispatch()
   const isMount = useIsMount()
   const [image, setImage] = useState(monkey1)
@@ -54,6 +56,8 @@ export function FollowMe(props) {
   const msFullbody = useRef(0)
   const [isFullbody, setIsFullbody] = useState(false)
 
+  const [endOpen, setEndOpen] = useState(false)
+  const [gameRes, setGameRes] = useState(0)
   const [progressData, setProgressData] = useState(0)
   const [seconds, setSeconds] = useState(0)
   const [openStartCount, setOpenStartCount] = useState(false)
@@ -71,15 +75,13 @@ export function FollowMe(props) {
 
   const requestGameData = async() => {
     const params = { level: 1 }
-    dispatch(requestRandomGameByAge(params))
+    return dispatch(requestRandomGameByAge(params))
       .then(res => {
         if (isMount.current)
           exerciseList.current = res.payload.data
       })
-      .catch(() => {
-        throw new Error('server connection issue')
-      })
-  }
+      .catch(() => {throw new Error('server connection issue')})
+}
 
   // init()
   const init = () => {
@@ -93,24 +95,6 @@ export function FollowMe(props) {
     contextRef.current = canvasRef.current.getContext('2d');
     contextRef.current.scale(1, 1)
 
-    // canvasRef.current.width = canvasRef.current.offsetWidth;
-    // canvasRef.current.height = canvasRef.current.offsetHeight;
-
-    // canvasRef.current.style.width = '100%';
-    // canvasRef.current.style.height = '100%';
-    // canvasRef.current.width = canvasRef.current.offsetWidth;
-    // canvasRef.current.height = canvasRef.current.offsetHeight;
-
-    
-    // canvasRef.current.style.aspectRatio = 1/1;
-    
-    // canvasRef.current.width = 1600;
-    // canvasRef.current.height = 1600;
-    
-    // const ratio = canvasRef.current.clientWidth > canvasRef.current.clientHeight ?
-    //               canvasRef.current.clientWidth : canvasRef.current.clientHeight
-    // contextRef.current.scale(1,1); 
-    // contextRef.current.scale(800 / ratio, 800 / ratio)
     // getWebcam, requestGameData
     Promise.all([startWebcam(), requestGameData()])
       .then(async() => {
@@ -164,6 +148,12 @@ export function FollowMe(props) {
 
     drawPose(pose)
     
+    // if (idx.current === exerciseList.current.asset.length) {
+    if (idx.current === 1) {
+      handleEnd()
+      return
+    }
+
     switch (isStarted.current) {
       case false:
         if (!isEngaged.current) 
@@ -172,18 +162,11 @@ export function FollowMe(props) {
       case true:
         if (audioRef.current.paused) {
           console.log(successCount.current)
-          idx.current += 1
           
-          if (idx.current === exerciseList.current.asset.length) {
-            // game ends
-            await delay(1000)
-            console.log('game end')
-          } else {
-            // 다음 운동 시작!
-            if (!isMount.current) return;
-            setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
-            isStarted.current = false
-          }
+          if (!isMount.current) return;
+          idx.current += 1
+          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
+          isStarted.current = false
         }
         await predict(posenetOutput)
           .then(res => {
@@ -350,8 +333,31 @@ export function FollowMe(props) {
   //   return () => clearInterval(interval)
   // }, [seconds])
 
-  const endGame = () => {
+  const handleEnd = () => {
+    cancelAnimationFrame(requestRef.current)
+    if (successCount.current > 4)
+      setGameRes(1)
+    setEndOpen(true)    
+    // webcamRef.current.stop()
+  }
+
+  const onClickGameEnd = () => {
     props.history.push('/home')
+  }
+
+  const onClickReplay = () => {
+    if (!isMount.current)
+      return
+    idx.current = 0
+    isStarted.current = false
+    isEngaged.current = false
+    successCount.current = 0
+    successFlag.current = false
+    successThreshold.current = 0
+    isDrawing.current = false
+    setProgressData(0)
+    setEndOpen(false)
+    requestRef.current = requestAnimationFrame(loop)
   }
 
   // const handleResize = debounce(() => {
@@ -363,7 +369,7 @@ export function FollowMe(props) {
     <div className={styles.container}>
       {/* {seconds} */}
 
-      <Header progress={progressData} onEndgameClick={endGame} />
+      <Header progress={progressData} onEndgameClick={onClickGameEnd} />
       {/* <button onClick={() => {setSeconds(3); setOpenStartCount(true);}}>set 3sec timer</button> */}
       <Grid 
         container 
@@ -388,6 +394,7 @@ export function FollowMe(props) {
       {/* send progress data as props to Header */}
       {/* <img src={baseMonkey} loop={'infinte'} width={'600px'}/> */}
       <GameStartCount open={openStartCount} text={seconds ? seconds : '시작!'} />
+      <EndDialog open={endOpen} gameRes={gameRes} getEndClose={onClickGameEnd} getReplay={onClickReplay}/>
     </div>
   )
 }

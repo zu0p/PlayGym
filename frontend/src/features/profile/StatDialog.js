@@ -95,7 +95,7 @@ function Profile({profile, handleClose}){
     dispatch(requestGetChildReward(profile.sid))
       .then(res=>{
         // console.log(res)
-        setRewards(res.payload.data.result.result)
+        setRewards(res.payload.result.result)
       })
   }
 
@@ -251,7 +251,7 @@ export function StatDialog(props) {
       dispatch(requestChildrenStatus(localStorage.getItem('main-user')))
         .then(res=>{
           // console.log(res.payload.data.result.subusers)
-          setProfiles(res.payload.data.result.subusers)
+          setProfiles(res.payload.result.subusers)
         })
     }
   },[props.open])

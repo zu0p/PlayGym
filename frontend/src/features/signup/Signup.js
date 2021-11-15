@@ -69,9 +69,6 @@ export function Signup(props) {
     }
     dispatch(requestIdConfirmUser(params))
       .then(_ => {
-        console.log('header', _.payload.status)
-        console.log('body', _.payload.data.status)
-        console.log(_.payload)
         setFlags({ ...flags, ID: false })
         setTexts({ ...texts, ID: '사용 가능한 아이디입니다.' })
       })
