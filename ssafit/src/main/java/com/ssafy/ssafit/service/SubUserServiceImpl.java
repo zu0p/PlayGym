@@ -272,6 +272,7 @@ public class SubUserServiceImpl implements SubUserService {
 				result.setLevel(subUser.getLevel());
 				result.setMax(subUser.getMax());
 				result.setImage(subUser.getCid().getCtid().getImage_link());
+				result.setCharacterName(subUser.getCid().getCtid().getName());
 				
 				List<GetCt> list = getCtRepository.findBySid(subUserRepository.findById(sid).get());
 				if(list != null) {

@@ -14,6 +14,8 @@ public class SubUserInfoDto {
 	@JsonProperty
 	String image;
 	@JsonProperty
+	String characterName;
+	@JsonProperty
 	int level;
 	@JsonProperty
 	int max;
