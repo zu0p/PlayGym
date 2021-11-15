@@ -21,7 +21,7 @@ import com.ssafy.ssafit.service.GameService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/user")
+//@RequestMapping("/user")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*" )
 public class GameController {
