@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid'
 import { CircleButton } from './customHomeStyle'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -9,8 +9,18 @@ import word from '../../images/games/game_word.png'
 import { AddButton } from '../profile/customProfileStyle'
 import Logout from '../logout/Logout'
 import ProfileButton from '../profile/ProfileButton'
+import { requestGetGameList } from '../../app/actions/userActions'
+import { useDispatch } from 'react-redux';
 
 export function Home(props) {
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(requestGetGameList())
+    .then(res=>{
+      console.log(res)
+    })
+  }, [])
   const dummyAudio = new Audio()
 
   const onMugunghwaClick = () => {

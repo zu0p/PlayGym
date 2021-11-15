@@ -25,7 +25,12 @@ export const requestWithAuth = (method, url, data) => {
     data,
   })
     .then((res) => res.data)
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      if(err.response.status===403){
+        alert("로그인정보가 유효하지 않습니다. 다시 로그인 해주세요.")
+        window.location = '/'
+      }
+    });
 };
 
 export const requestAuth = (method, url, data) => {
@@ -34,4 +39,11 @@ export const requestAuth = (method, url, data) => {
     url: DOMAIN + url,
     data,
   })
+  .catch((err) => {
+    if(err.response.status===403){
+      console.log(err)
+      alert("로그인정보가 유효하지 않습니다. 다시 로그인 해주세요.")
+      window.location = '/'
+    }
+  });
 };
