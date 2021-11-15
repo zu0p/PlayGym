@@ -195,7 +195,7 @@ export function FollowMe(props) {
 
   const predict = async(posenetOutput) => {
     const prediction = await modelRef.current.predict(posenetOutput)
-    const exerciseIdx = exerciseList.current.asset[idx.current].aid
+    const exerciseIdx = exerciseList.current.asset[idx.current].classNumber
     const current = prediction[exerciseIdx]
     if (current === undefined)
       throw new Error('undefined prediction')
