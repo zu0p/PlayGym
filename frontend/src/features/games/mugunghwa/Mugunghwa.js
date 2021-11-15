@@ -9,7 +9,8 @@ import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
 import EndDialog from './EndDialog';
-
+import game_clear from '../../../sounds/game_clear.mp3'
+import game_fail from '../../../sounds/game_fail.mp3'
 const size = 800;
 const width = 260;
 const height = 500;
@@ -257,6 +258,7 @@ export function Mugunghwa(props){
       if(move == 4){
         // console.log('success')
         // 게임 성공 후 api 호출
+        document.getElementById('clear_sound').play()
         const param = {
           "user": localStorage.getItem('sub-user'),
           "gameid": 2 
@@ -268,6 +270,7 @@ export function Mugunghwa(props){
         setGameRes(1)
       }
       else{
+        document.getElementById('fail_sound').play()
         // console.log('fail')  
         setGameRes(-1) 
       }
@@ -434,6 +437,9 @@ export function Mugunghwa(props){
           </div>
         </Grid>
       </Grid>
+      <audio id='clear_sound' style={{display:'none'}} controls src={game_clear} > Your user agent does not support the HTML5 Audio element. </audio>
+      <audio id='fail_sound' style={{display:'none'}} controls src={game_fail} > Your user agent does not support the HTML5 Audio element. </audio>
+
 
       <MotionDialog open={imgOpen} img={motionImg} getClose={onGetClose}/>
       <EndDialog open={endOpen} gameRes={gameRes} getEndClose={onGetEndClose} getReplay={onGetReplay}/>
