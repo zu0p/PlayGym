@@ -323,15 +323,15 @@ export function Mugunghwa(props){
       after.appendChild(webcam)
 
       // 초록색 테두리 깜빡
-      webcam.style.border = '10px solid #A3C653'
-      webcam.style.boxSizing = 'border-box'
       const canvas = document.getElementById('canvas')
-      canvas.width = width-20;
-      canvas.height = height-20;
+      canvas.style.border = '10px solid #A3C653'
+      canvas.style.boxSizing = 'border-box'
+      // canvas.width = width-20;
+      // canvas.height = height-20;
       setTimeout(function(){
-        webcam.style.border = 'none'
-        canvas.width = width;
-        canvas.height = height;
+        canvas.style.border = 'none'
+        // canvas.width = width;
+        // canvas.height = height;
       }, 1000)
 
       // const canvas = document.getElementById('canvas')
@@ -369,17 +369,10 @@ export function Mugunghwa(props){
       }
       else{ // 자세 유지 실패 시
         // console.log('자세유지실패ㅠㅠㅠ')
-        const webcam = document.getElementById('webcam')
-        webcam.style.border = '10px solid #AC3943'
-        webcam.style.boxSizing = 'border-box'
-
         const canvas = document.getElementById('canvas')
-        canvas.width = width-20;
-        canvas.height = height-20;
+        canvas.style.border = '10px solid #AC3943'
         setTimeout(function(){
-          webcam.style.border = 'none'
-          canvas.width = width;
-          canvas.height = height;
+          canvas.style.border = 'none'
         }, 1000)
         cancelAnimationFrame(requestRef.current)
         requestRef.current = requestAnimationFrame(loop)

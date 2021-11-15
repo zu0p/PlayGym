@@ -3,9 +3,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { Grid } from '@mui/material'
-import styles from './Mugunghwa.module.css'
-import flower_l from '../../../images/mugunghwa/flower_l.png'
-import flower_r from '../../../images/mugunghwa/flower_r.png'
 import success from '../../../images/mugunghwa/success.png'
 import fail from '../../../images/mugunghwa/fail.png'
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded'
@@ -45,7 +42,6 @@ export default function EndDialog(props) {
           <IconButton onClick={onClose}>
             <SportsEsportsRoundedIcon fontSize="large" color="action" />
           </IconButton>
-          {/* <AddButton id={'add-button'} onClick={onAdd} disabled={add}>Add</AddButton> */}
         </DialogActions>
       </Dialog>
     </div>
