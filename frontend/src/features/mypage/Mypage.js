@@ -93,7 +93,8 @@ export function Mypage(props) {
         handleResponse(res)
       })
       .catch(err => {
-        console.dir(err)  // distinguish => no token(push '/'), serverError
+        alert('로그인 정보가 올바르지 않습니다')  // distinguish => no token(push '/'), serverError
+        props.history.push('/')
       })
   }
 
@@ -103,23 +104,24 @@ export function Mypage(props) {
       return
 
     if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
+      console.log('requestCharacter')
       // getCharacter
-      const nextId = characters.find(character => character.owned === false).id
-      const body = {
-        sid: info.profileId,
-        cid: nextId
-      }
-      dispatch(requestNextCharacter(body))
-        .then()
-        .catch()
+      // const nextId = characters.find(character => character.owned === false).id
+      // const body = {
+      //   sid: info.profileId,
+      //   cid: nextId
+      // }
+      // dispatch(requestNextCharacter(body))
+      //   .then()
+      //   .catch()
     } else {
+      console.log('requestReward')
       // getReward
-      const nextId = rewards.find(reward => reward.status === 'wait').cid
-      dispatch(requestNextReward(info.profileId))
-        .then()
-        .catch()
+      // const nextId = rewards.find(reward => reward.status === 'wait').cid
+      // dispatch(requestNextReward(info.profileId))
+      //   .then()
+      //   .catch()
     }
-    
   }
 
   useEffect(() => {
