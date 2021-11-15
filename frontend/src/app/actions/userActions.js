@@ -84,14 +84,14 @@ export const requestIdConfirmUser = createAction('IDCONFIRM_USER', function prep
 
 export const requestRandomGameByAge = createAction('RANDOM_GAME', function prepare(gameInfo) {
   const { level } = gameInfo
-  const returnData = request('get', `/game/follow?level=${level}`)
+  const returnData = requestAuth('get', `/user/game/follow?level=${level}`)
 
   return { payload: returnData }
 })
 
 export const requestMugunghwaGame = createAction('MUGUNGHWA_GAME', function prepare(info){
   const level = info.level
-  const returnData = request('get', `/game/mug?level=${level}`)
+  const returnData = requestAuth('get', `/user/game/mug?level=${level}`)
   return { payload: returnData}
 })
 //mypage
@@ -146,6 +146,20 @@ export const requestDeleteChildReward = createAction('DELETE_CHILD_REWARDS', fun
 // sub user 계정 삭제
 export const requestDeleteChild = createAction('DELETE_CHILD', function prepare(subId){
   const returnData = requestAuth('delete', `/user/sub/${subId}`)
+
+  return {payload: returnData}
+})
+
+// 게임 home 에서 게임 리스트 조회
+export const requestGetGameList = createAction('GET_GAME_LIST', function prepare(){
+  const returnData = requestAuth('get', `/user/game`)
+
+  return {payload: returnData}
+})
+
+// 게임 완료(성공 시) 후 저장 
+export const requestGameSuccessSave = createAction('SAVE_SUCCESS_GAME', function prepare(info){
+  const returnData = requestAuth('post', `/user/sub/log`, info)
 
   return {payload: returnData}
 })

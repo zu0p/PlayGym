@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { requestMugunghwaGame } from '../../../app/actions/userActions'
+import { requestMugunghwaGame, requestGameSuccessSave } from '../../../app/actions/userActions'
 import Grid from '@mui/material/Grid'
 import { MoveCharactor } from './MoveCharactor'
 import { BeforeStart } from '../BeforeStart'
@@ -212,7 +212,6 @@ export function Mugunghwa(props){
       })
       .catch((e) => {
         console.log(e)
-        // throw new Error('server connection issue')
       })
 
     return () => cancelAnimationFrame(requestRef.current)
@@ -243,6 +242,14 @@ export function Mugunghwa(props){
       if(move == 4){
         // console.log('success')
         // 게임 성공 후 api 호출
+        const param = {
+          "user": localStorage.getItem('sub-user'),
+          "gameid": 2 
+        }
+        dispatch(requestGameSuccessSave(param))
+          .then(res=>{
+            console.log(res)
+          })
         setGameRes(1)
       }
       else{
@@ -340,7 +347,7 @@ export function Mugunghwa(props){
     }, 1000)
     setTimeout(function(){
       // console.log(isSuccess.current)
-      if(isSuccess.current){ // 자세 유지 성공 시 -> move
+      if(!isSuccess.current){ // 자세 유지 성공 시 -> move
         // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
