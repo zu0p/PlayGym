@@ -49,13 +49,12 @@ export default function Slide(props) {
                   return
                 onClickCharacter(character)
               }}
-              style={character.name === props.current ? {borderBottom: '5px solid #A3C653', borderRadius: '2px'} : {}}
             />
             <p className={styles.character__tag}>
               {character.owned && 
               <CheckRoundedIcon 
                 style={character.name === props.current ? 
-                  {fontSize: '40px', color: 'green'} : 
+                  {fontSize: '40px', color: 'green', borderBottom: '5px solid #A3C653', borderRadius: '2px'} : 
                   {fontSize: '40px', color: 'grey', cursor: 'pointer'}} 
               />}
               {!character.owned && nameList[character.name]}

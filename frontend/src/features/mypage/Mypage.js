@@ -24,6 +24,7 @@ import {
 import bear from '../../images/characters/bear_full.png'
 import cat from '../../images/characters/cat_full.png'
 import rabbit from '../../images/characters/rabbit_full.png'
+import { motion } from 'framer-motion'
 import chick from '../../images/characters/chick_full.png'
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
@@ -183,6 +184,7 @@ export function Mypage(props) {
             elevation={0} 
             sx={{width: '100%', height: '22vh',  mb: '10px'}}
             onClick={onClickLevelUp}
+            style={info.exp >= info.max ? {cursor: 'pointer'} : {}}
           >
             <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
             <div className={styles.progressbar__container}>
