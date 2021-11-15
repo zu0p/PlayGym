@@ -39,10 +39,12 @@ export function Slider(props) {
       setCurrentSlide(currentSlide - 1);
     }
   };
-    useEffect(() => {
-      sliderRef.current.style.transition = "all 0.5s ease-in-out";
-      sliderRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
-    }, [currentSlide]);
+
+  useEffect(() => {
+    sliderRef.current.style.transition = "all 0.5s ease-in-out";
+    sliderRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 애니메이션을 만듭니다.
+  }, [currentSlide]);
+  
   return (
     <Container>
       <Backward sx={{fontSize: '40px', zIndex: '40', height: '100%', backgroundColor: '#FFF'}} onClick={prevSlide} />

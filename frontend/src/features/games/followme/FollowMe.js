@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import { Route, Link, NavLink } from 'react-router-dom';
 import GameStartCount from '../gameStartCount'
 import { useDispatch, useSelector } from 'react-redux';
-import { requestRandomGameByAge } from '../../../app/actions/userActions'
+import { requestRandomGameByAge, requestSubInfo } from '../../../app/actions/userActions'
 import f_text from '../../../images/followMe/f_text.png'
 import baseMonkey from '../../../images/games/base_monkey.gif'
 import { request } from '../../../utils/axios'
@@ -27,7 +27,6 @@ const flip = true;
 
 export function FollowMe(props) {
   const faceImg = new Image()
-  faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/cat.png";
   
   const dispatch = useDispatch()
   const isMount = useIsMount()
@@ -49,7 +48,6 @@ export function FollowMe(props) {
   const successThreshold = useRef(0)
   const isDrawing = useRef(false)
 
-  const canvasSize = useRef({w: 0, h: 0})
   const eyeSizeArr = useRef([-1, -1, -1, -1])
   const msAppeared = useRef(0)
   const [isAppeared, setIsAppeared] = useState(false)
@@ -70,7 +68,6 @@ export function FollowMe(props) {
     } catch {
       throw new Error('camera issue')
     }
-    // webcamRef.current.update();
   }
 
   const requestGameData = async() => {
@@ -82,6 +79,14 @@ export function FollowMe(props) {
       })
       .catch(() => {throw new Error('server connection issue')})
 }
+
+  const requestProfileImage = async() => {
+    return dispatch(requestSubInfo(localStorage.getItem('sub-user')))
+      .then(res => {
+        faceImg.src = res.payload.data.image
+      })
+      .catch(() => {throw new Error('server connection issue')})
+  }
 
   // init()
   const init = () => {
@@ -96,7 +101,7 @@ export function FollowMe(props) {
     contextRef.current.scale(1, 1)
 
     // getWebcam, requestGameData
-    Promise.all([startWebcam(), requestGameData()])
+    Promise.all([startWebcam(), requestGameData(), requestProfileImage()])
       .then(async() => {
         const modelURL = exerciseList.current.modelLink
         const metaURL = exerciseList.current.metaLink
@@ -148,8 +153,8 @@ export function FollowMe(props) {
 
     drawPose(pose)
     
-    // if (idx.current === exerciseList.current.asset.length) {
-    if (idx.current === 1) {
+    // if (idx.current === 1) {
+    if (idx.current === exerciseList.current.asset.length) {
       handleEnd()
       return
     }
