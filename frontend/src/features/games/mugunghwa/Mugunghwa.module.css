@@ -7,20 +7,20 @@
 
 .goalLine{
   border-right: solid 5px #AC3943;
-  height: 500px;
+  height: 600px;
   margin-top: 5% !important;
 }
 
 .stepLine{
   border-left: dotted 4px #22220B;
-  height: 500px;
+  height: 600px;
   margin-top: 5% !important;
   align-items: center;
   justify-content: center;
 }
 
 .nomalLine{
-  height: 500px;
+  height: 600px;
   margin-top: 5% !important;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,4 @@
   height: 100%;
   width: 100%;
   border-radius: 10px;
-}
-
-.img_popup{
 }

@@ -26,8 +26,8 @@ export default function MotionDialog(props) {
   
   return (
     <div>
-      <Dialog open={props.open} className={styles.img_popup}>
-        <DialogContent style={{height: '480px', width: '400px'}}>
+      <Dialog open={props.open} style={{width: '650px !important'}}>
+        <DialogContent style={{height: '700px', width: '600px', padding: '0'}}>
           <Grid 
             container 
             // spacing={4} 
@@ -36,11 +36,18 @@ export default function MotionDialog(props) {
             justifyContent="center"
             alignItems="center"
           >
-            <img src={flower_l} width={'100px'} style={{position: 'absolute', top: '10px', left:'340px'}}/>
-            <img src={flower_r} width={'100px'} style={{position: 'absolute', top:'400px', left:'5px'}}/>
-            <Grid item style={{height:'400px'}}>
-              <img id='myImg' src={props.img} width={'380px'}/>
+            <Grid item>
+              <img src={flower_l} width={'100px'} style={{position: 'absolute', top: '10px', left:'500px', zIndes:20}}/>
             </Grid>
+            <Grid item style={{width:'600px'}}>
+              <img src={props.img} width={'600px'}/>
+            </Grid>
+            <Grid item>
+              <img src={flower_r} width={'100px'} style={{position: 'absolute', top:'600px', left:'5px', zIndes:20}}/>
+            </Grid>
+            {/* <img src={flower_l} width={'100px'} style={{position: 'absolute', top: '10px', left:'500px', zIndes:20}}/>
+            <img src={flower_r} width={'100px'} style={{position: 'absolute', top:'600px', left:'5px', zIndes:20}}/> */}
+            
             <Grid item id='text'><h3>동작을 잘 보고 따라하세요</h3></Grid>
             
           </Grid>

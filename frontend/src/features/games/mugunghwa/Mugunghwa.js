@@ -12,8 +12,8 @@ import EndDialog from './EndDialog';
 import game_clear from '../../../sounds/game_clear.mp3'
 import game_fail from '../../../sounds/game_fail.mp3'
 const size = 800;
-const width = 260;
-const height = 500;
+const width = 500; //260
+const height = 600;
 const flip = true;
 const faceImg = new Image()
 faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
@@ -57,7 +57,7 @@ export function Mugunghwa(props){
 
   const startWebcam = async() => {
     try {
-      webcamRef.current = new window.tmPose.Webcam(500, 500, flip);
+      webcamRef.current = new window.tmPose.Webcam(600, 600, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
     } catch {
@@ -255,7 +255,7 @@ export function Mugunghwa(props){
   const [gameRes, setGameRes] = useState(0)
   useEffect(()=>{
     if(isEnd){ // 모든 턴이 다 끝나서 게임 종료 시점
-      if(move == 4){
+      if(move == 2){
         // console.log('success')
         // 게임 성공 후 api 호출
         document.getElementById('clear_sound').play()
@@ -305,7 +305,7 @@ export function Mugunghwa(props){
 
     // 새로 그리기
     const webcam = document.getElementById('webcam')
-    for(let i = 0; i<5; i++){
+    for(let i = 0; i<3; i++){
       document.getElementById(`box${i}`).innerHTML = ''
     }
     document.getElementById(`box0`).appendChild(webcam)
@@ -317,7 +317,7 @@ export function Mugunghwa(props){
   // onCheckMotion()에서 모션 성공 시 다음칸으로 넘어가기 위해 setMove 하면
   // 실제로 move 변경을 감지하고 webcam이동
   useEffect(async()=>{
-    if(move>=0 && move<4){
+    if(move>=0 && move<2){
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
 
@@ -419,19 +419,19 @@ export function Mugunghwa(props){
           <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
         </Grid>
 
-        <Grid item md={2} className={styles.nomalLine} id='box4'>
+        <Grid item md={3} className={styles.nomalLine} id='box2'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box3'>
+        {/* <Grid item md={3} className={styles.stepLine} id='box3'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box2'> 
+        <Grid item md={3} className={styles.stepLine} id='box2'> 
+        </Grid> */}
+
+        <Grid item md={3} className={styles.stepLine} id='box1'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box1'>
-        </Grid>
-
-        <Grid item md={2} className={styles.stepLine} id='box0'>
+        <Grid item md={3} className={styles.stepLine} id='box0'>
           <div id='webcam' className={styles.userBox}>
             <canvas id='canvas' ref={canvasRef}/>
           </div>

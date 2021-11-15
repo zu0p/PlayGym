@@ -10,7 +10,7 @@ export function MoveCharactor(props){
     var imgNum = 1
     var img = document.createElement('img') //new Image()
 
-    const GAME_CNT = 5
+    const GAME_CNT = 3
 
     const backSound = document.getElementById('back_sound')
     backSound.style.display = 'none'
