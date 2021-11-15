@@ -21,14 +21,14 @@ import com.ssafy.ssafit.service.GameService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*" )
 public class GameController {
 
 	private final GameService gameService;
 	
-	@GetMapping
+	@GetMapping("/game")
 	public ResponseEntity<ApiResMessage> gamelist(){
 		Map<String,Object> map = new HashMap<>();
 		List<Game> list=null;
@@ -42,7 +42,7 @@ public class GameController {
 	}
 	
 	//날 따라해봐요
-	@GetMapping("/follow")
+	@GetMapping("/game/follow")
 	public ResponseEntity<FollowmeDto> getFollowmeGameData(@RequestParam int level){
 		FollowmeDto result = null;
 		try {
@@ -56,7 +56,7 @@ public class GameController {
 	}
 	
 	//무궁화 꽃이 피었습니다
-	@GetMapping("/mug")
+	@GetMapping("/game/mug")
 	public ResponseEntity<MugunghwaDto> getMugunghwaDto(@RequestParam int level){
 		MugunghwaDto result = null;
 		try {
