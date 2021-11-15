@@ -76,16 +76,23 @@ export function Home(props) {
         </Grid>
         <Grid item md={1} mt={'5%'}></Grid>
 
-        
-        
         <Grid item md={4} mt={'5%'}></Grid>
         <Grid item md={4} mt={'5%'}>
           <div 
             className={styles.img_container} 
             style={{
-              backgroundImage: `url(${word})`
+              // '&:before': {
+              //   backgroundImage: `url(${word})`,
+              //   position: 'absolute',
+              //   top: '0px',
+              //   left: '0px',
+              //   opacity: '0.4'
+              // },
+              backgroundImage: `url(${word})`,
+              backgroundColor: 'gray',
+              opacity: 0.5
             }}>
-            <AddButton onClick={onWordClick} className={styles.game_start_button}>단어 맞추기</AddButton>
+            <AddButton disabled={true} onClick={onWordClick} className={styles.game_start_button}>단어 맞추기</AddButton>
           </div>
         </Grid>
         <Grid item md={4} mt={'5%'}></Grid>

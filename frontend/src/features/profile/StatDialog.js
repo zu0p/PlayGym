@@ -130,6 +130,7 @@ function Profile({profile, handleClose}){
       justifyContent="center"
       alignItems="center"
       mt={'10%'}
+      mb={'5%'}
     >
       <Collapse 
         style={{

@@ -303,9 +303,9 @@ export default function EditMainUserInfoDialog(props) {
           direction="column"
           // justifyContent="center"
           alignItems="center"
-          spacing={3}
+          // spacing={3}
         >
-          <Grid item mt={5}>
+          <Grid item mt={2}>
             <h5>Name</h5>
             <AddTextField 
               disabled={inputDisable} 
