@@ -132,10 +132,7 @@ export function Mypage(props) {
     } else {
       // console.log('requestReward')
       // getReward
-      const nextId = rewards.find(reward => reward.status === 'wait').cid
-      const payload = {
-        
-      }
+      // const nextId = rewards.find(reward => reward.status === 'wait').cid
       dispatch(requestNextReward(info.profileId))
         .then(() => update())
         .catch()
@@ -148,7 +145,10 @@ export function Mypage(props) {
 
   useEffect(() => {
     // change total size ^^
-    setTotal(1 + parseInt((rewards.length - 1) / 2) > 0 ? parseInt((rewards.length - 1) / 2) : -1)
+    if (rewards.length === 0)
+      setTotal(0);
+    else
+      setTotal(parseInt((rewards.length - 1) / 2) + 1);
   }, [rewards])
 
   return (
@@ -158,8 +158,8 @@ export function Mypage(props) {
           aria-label="home"
           color="inherit"
           size="medium"
-          sx={{backgroundColor: '#FFFFFF', border: '5px solid #A3C653', mt: 5, ml: 5}}
-          onClick={() => {props.history.push('/home');}}
+          sx={{backgroundColor: '#FFFFFF', border: '5px solid #A3C653', mt: 5, ml: 5, cursor: 'pointer', zIndex: '30'}}
+          onClick={() => {props.history.push('/home'); console.log('hi')}}
         >
           <HomeRoundedIcon
             fontSize="inherit"
@@ -201,20 +201,27 @@ export function Mypage(props) {
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
               </Typography>
               <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
+              {info.exp < info.max &&
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
+              }
+              {info.exp >= info.max &&
+              <>
               <motion.div 
-                animate={{scale: [1, 1.1, 1.2, 1.25, 1.3, 1.25, 1.2, 1.1, 1]}}
-                transition={{ repeat: Infinity, duration: 1.2, damping: 0, stiffness: 100 }} 
+                animate={{scale: [1, 1.4]}}
+                transition={{ repeat: Infinity, delay: 1, duration: 0.3, type: 'tween', ease: [0, 0, 0, 0.8], repeatType: 'reverse', repeatDelay: 0.4}} 
                 style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 30}}
               >
-                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30}} />
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
               </motion.div>
-              {/* <motion.div 
-                animate={{scale: [1, 3.5], opacity: [0.3, 0]}}
-                transition={{ duration: 0.4 }} 
+              <motion.div 
+                animate={{scale: [1, 2], opacity: [0.1, 0]}}
+                transition={{ repeat: Infinity, delay: 1.98, duration: 0.4, type: 'tween', repeatDelay: 1 }} 
                 style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 20}}
               >
-                <StarRoundedIcon sx={{fontSize: '100px', color: '#black', zIndex: 20}} />
-              </motion.div> */}
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#black', zIndex: 20, cursor: 'defalut'}} />
+              </motion.div>
+              </>
+              }
               <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={parseInt((info.exp / info.max) * 100) > 100 ? 100 : parseInt((info.exp / info.max) * 100)} />
             </div>
           </Paper>
