@@ -288,7 +288,7 @@ export default function EditMainUserInfoDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              My page
+              나의 정보
             </Typography>
             <Button color="inherit" onClick={onOutClick} id="outButton" style={{display:'none'}}>
               회원탈퇴

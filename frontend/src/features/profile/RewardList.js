@@ -103,12 +103,13 @@ export default function RewardList(props) {
                     />
                     <Button 
                       style={{
-                        backgroundColor: '#A3C653',
-                        color: 'white'
+                        backgroundColor: item.status==='Wait'?'gray':'#A3C653',
+                        color: 'white',
                       }}
                       onClick={(e)=>{ onDeleteReward(item.cid, e) }}
+                      disabled={item.status==='Wait'?true:false}
                     >
-                      수여완료
+                      {item.status==='Wait'?'수여불가':'수여하기'}
                     </Button>
                   </ListItemButton>
                 ))}

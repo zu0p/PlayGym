@@ -16,7 +16,8 @@ const width = 500; //260
 const height = 600;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
+// faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
+faceImg.src = require('../../../images/mugunghwa/mug_face.png').default
 
 export function Mugunghwa(props){
   const [replay, setReplay] = useState(false)
@@ -365,7 +366,7 @@ export function Mugunghwa(props){
     }, 1000)
     setTimeout(function(){
       // console.log(isSuccess.current)
-      if(isSuccess.current){ // 자세 유지 성공 시 -> move
+      if(!isSuccess.current){ // 자세 유지 성공 시 -> move
         // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
@@ -404,7 +405,7 @@ export function Mugunghwa(props){
 
   return(
     <div className={styles.mugunghwa_container} id='mug'>
-      <GameHeader progress={(move+1)*20} onEndgameClick={endGame}/>
+      <GameHeader progress={(move+1)*33} onEndgameClick={endGame}/>
       <BeforeStart />
       <Grid 
         container

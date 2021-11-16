@@ -82,8 +82,8 @@ export function Home(props) {
         <Grid item md={1}></Grid>
 
         <Grid item md={4} mt={'5%'}></Grid>
-        <Grid item md={4}>
-          <LockIcon style={{position: 'absolute', zIndex: 2}}/>
+        <Grid item md={4} style={{position: 'relative'}}>
+          <LockIcon fontSize="large" style={{position: 'absolute', zIndex: 2, top: '45%', left: '45%'}}/>
           <div 
             className={styles.img_container} 
             style={{
