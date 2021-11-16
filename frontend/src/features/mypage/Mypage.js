@@ -113,7 +113,7 @@ export function Mypage(props) {
       })
   }
 
-  const onClickLevelUp = () => {
+  const onClickLevelUp = (e) => {
     if (info.exp < info.max)
       // 경험치 부족하면 do nothing
       return
@@ -189,12 +189,12 @@ export function Mypage(props) {
         >
           <Paper 
             elevation={0} 
-            sx={{width: '100%', height: '22vh',  mb: '10px'}}
+            sx={{width: '100%', height: '22vh',  mb: '10px', overflow: 'hidden'}}
             onClick={onClickLevelUp}
             style={info.exp >= info.max ? {cursor: 'pointer'} : {}}
           >
+            <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
             <div style={{width: '100%', height: '100%', filter: 'drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3))'}}>
-              <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
               <div className={styles.progressbar__container}>
                 {/* note: negative ml value === width or fontSize / 2 */}
                 <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>

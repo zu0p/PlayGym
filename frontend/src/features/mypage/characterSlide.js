@@ -55,7 +55,7 @@ export default function Slide(props) {
               <CheckRoundedIcon 
                 style={character.name === props.current ? 
                   {fontSize: '40px', color: 'green', borderBottom: '5px solid #A3C653', borderRadius: '2px'} : 
-                  {fontSize: '40px', color: 'grey', cursor: 'pointer'}} 
+                  {fontSize: '40px', color: 'grey'}} 
               />}
               {!character.owned && nameList[character.name]}
             </p>
