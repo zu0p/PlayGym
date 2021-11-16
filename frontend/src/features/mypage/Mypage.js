@@ -21,6 +21,7 @@ import {
   requestNextCharacter,
 } from '../../app/actions/userActions';
 
+import Logo from '../Logo'
 import bear from '../../images/characters/bear_full.png'
 import cat from '../../images/characters/cat_full.png'
 import rabbit from '../../images/characters/rabbit_full.png'
@@ -132,6 +133,9 @@ export function Mypage(props) {
       // console.log('requestReward')
       // getReward
       const nextId = rewards.find(reward => reward.status === 'wait').cid
+      const payload = {
+        
+      }
       dispatch(requestNextReward(info.profileId))
         .then(() => update())
         .catch()
@@ -162,6 +166,9 @@ export function Mypage(props) {
             sx={{color: '#A3C653'}}
           />
         </IconButton>
+      </div>
+      <div style={{position: 'absolute', top: '24px', display: 'flex', justifyContent: 'center', width: '100%'}}>
+        <Logo />
       </div>
       <Grid container item 
         textAlign="start" justifyContent="center" alignItems="center" 
