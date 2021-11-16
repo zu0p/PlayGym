@@ -212,7 +212,9 @@ public class SubUserServiceImpl implements SubUserService {
 			long cid = Long.parseLong(input.get("cid"));
 			SubUser s = subUserRepository.findBySid(sid).orElse(null);
 			Characters c = characterRepository.findById(cid).orElse(null);
+			s.setExp(s.getExp() - s.getMax());
 			
+			subUserRepository.save(s);
 			if(getCtRepository.findBySidAndCtid(s, c) != null) return;
 			
 			GetCt gc = GetCt.builder().ctid(c).sid(s).build();
