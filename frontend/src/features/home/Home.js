@@ -11,8 +11,10 @@ import Logout from '../logout/Logout'
 import ProfileButton from '../profile/ProfileButton'
 import { requestGetGameList } from '../../app/actions/userActions'
 import { useDispatch } from 'react-redux';
-import Logo from '../Logo'
 import LockIcon from '@mui/icons-material/Lock'
+import { Background } from '../background/Background';
+import { BackChar } from '../background/BackChar';
+import { BackLogo } from '../background/BackLogo';
 
 export function Home(props) {
   const dispatch = useDispatch()
@@ -23,6 +25,7 @@ export function Home(props) {
       // console.log(res)
     })
   }, [])
+
   const dummyAudio = new Audio()
 
   const onMugunghwaClick = () => {
@@ -47,23 +50,23 @@ export function Home(props) {
         container
         justifyContent="center"
         alignItems="center"
+        style={{position:'relative', zIndex:300}}
       >
         <Logout />
         <ProfileButton />
-        <CircleButton onClick={() => {props.history.push('/mypage')}} style={{position:'fixed', top:'10px', left:'110px'}}>
+        <CircleButton onClick={() => {props.history.push('/mypage')}} style={{position:'fixed', top:'10px', left:'110px', zIndex: 2}}>
           <AccountCircleOutlinedIcon fontSize="large" />
         </CircleButton>
-        <Grid item md={12} mt={3}>
-          <Logo/>
-        </Grid>
+        <BackLogo />
+        <Grid item md={12} mt={'150px'}></Grid>
 
         <Grid item md={1}></Grid>
-        <Grid item md={4}>
+        <Grid item md={4} >
           <div 
             className={styles.img_container} 
             style={{
               backgroundImage: `url(${mugunghwa})`,
-              backgroundPosition: '50% -70%'
+              backgroundPosition: '50% -70%',
             }}>
             <AddButton onClick={onMugunghwaClick} className={styles.game_start_button}>무궁화 꽃이 피었습니다</AddButton>
           </div>
@@ -96,6 +99,8 @@ export function Home(props) {
         </Grid>
         <Grid item md={4} mt={'5%'}></Grid>
       </Grid>
+      <Background />
+      <BackChar />
     </div>
   );
 }
