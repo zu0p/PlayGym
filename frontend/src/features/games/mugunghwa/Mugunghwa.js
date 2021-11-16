@@ -366,7 +366,9 @@ export function Mugunghwa(props){
     }, 1000)
     setTimeout(function(){
       // console.log(isSuccess.current)
-      if(!isSuccess.current){ // 자세 유지 성공 시 -> move
+      // if(!isSuccess.current){ // 자세 유지 성공 시 -> move 
+      let test = true
+      if(test){ // 자세 유지 성공 시 -> move
         // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
