@@ -186,7 +186,7 @@ export function FollowMe(props) {
           
           if (!isMount.current) return;
           
-          successFlag.current ? stepHandler(true) : stepHandler(false)            
+          // successFlag.current ? stepHandler(true) : stepHandler(false)            
           idx.current += 1
           setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
           isStarted.current = false
@@ -372,21 +372,21 @@ export function FollowMe(props) {
     requestRef.current = requestAnimationFrame(loop)
   }
 
-  const stepHandler = async(res) => {
-    switch(res) {
-      case true:
-        setStepSuccess(true)
-        await delay(1000)
-        setStepSuccess(null)
-        break
-      case false:
-        setStepSuccess(false)
-        await delay(1000)
-        setStepSuccess(null)
-        break
-      default:
-    }
-  }
+  // const stepHandler = async(res) => {
+  //   switch(res) {
+  //     case true:
+  //       setStepSuccess(true)
+  //       await delay(1000)
+  //       setStepSuccess(null)
+  //       break
+  //     case false:
+  //       setStepSuccess(false)
+  //       await delay(1000)
+  //       setStepSuccess(null)
+  //       break
+  //     default:
+  //   }
+  // }
   // useEffect(() => {
   //   switch(stepSuccess) {
   //     case true:
@@ -406,7 +406,7 @@ export function FollowMe(props) {
   //     default:
   //   }
   // }, [stepSuccess])
-  // const [successCue, setSuccessCue] = {}
+  // const [successCue, setSuccessCue] = useState({})
   // const handleResize = debounce(() => {
   //   console.dir(canvasRef.current)
   //   // canvasSize.current = {w: rightScreenRef.current}
