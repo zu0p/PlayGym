@@ -63,6 +63,7 @@ function Profile({profile, handleClose}){
 
   useEffect(()=>{
     refreshRewards()
+    // console.log(profile)
 
   }, [profile])
 
@@ -130,6 +131,7 @@ function Profile({profile, handleClose}){
       justifyContent="center"
       alignItems="center"
       mt={'10%'}
+      mb={'5%'}
     >
       <Collapse 
         style={{
@@ -181,21 +183,21 @@ function Profile({profile, handleClose}){
           </div>
           <Grid item>
             <div className={styles.progressbar__container}>
-              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-                1
-              </Typography>
-              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
-                1
+              {/* <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
+                {parseInt((profile.exp/profile.max)*100>100?100:parseInt((profile.exp/profile.max)*100))}
+              </Typography> */}
+              <Typography sx={{width: '40px', zIndex: 40, fontSize: '15px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
+                목표
               </Typography>
               <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
               <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
-              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={50} />
+              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={parseInt((profile.exp/profile.max)*100>100?100:parseInt((profile.exp/profile.max)*100))} />
             </div>
         </Grid>
 
         {/* 보상 목록 리스트 */}
         <Grid item ml={'40px'}>
-          <RewardList rewards={rewards} refresh={refreshRewards} />
+          <RewardList rewards={rewards} refresh={refreshRewards}/>
           <div style={{textAlign:'right', marginRight:'10%'}}>
             <Button 
               style={{
@@ -227,7 +229,6 @@ function Profile({profile, handleClose}){
         </Grid>
       </Grid>
       <Grid item md={2} justifyContent="space-around">
-        {/* <Typography sx={{fontSize: '30px'}}></Typography> */}
         <CancelButton onClick={()=>{setOpen(true)}}>
           계정 삭제
         </CancelButton>
@@ -274,7 +275,7 @@ export function StatDialog(props) {
             <CloseIcon />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Statistics
+              플레이어 현황
           </Typography>
         </Toolbar>
       </FullDialogBar>

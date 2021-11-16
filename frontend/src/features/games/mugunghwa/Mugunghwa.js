@@ -9,13 +9,15 @@ import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
 import EndDialog from './EndDialog';
-
+import game_clear from '../../../sounds/game_clear.mp3'
+import game_fail from '../../../sounds/game_fail.mp3'
 const size = 800;
-const width = 260;
-const height = 500;
+const width = 500; //260
+const height = 600;
 const flip = true;
 const faceImg = new Image()
-faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
+// faceImg.src = "https://k5d205.p.ssafy.io/api/img/bear.png";
+faceImg.src = require('../../../images/mugunghwa/mug_face.png').default
 
 export function Mugunghwa(props){
   const [replay, setReplay] = useState(false)
@@ -56,7 +58,7 @@ export function Mugunghwa(props){
 
   const startWebcam = async() => {
     try {
-      webcamRef.current = new window.tmPose.Webcam(500, 500, flip);
+      webcamRef.current = new window.tmPose.Webcam(600, 600, flip);
       await webcamRef.current.setup()
       await webcamRef.current.play();
     } catch {
@@ -254,9 +256,10 @@ export function Mugunghwa(props){
   const [gameRes, setGameRes] = useState(0)
   useEffect(()=>{
     if(isEnd){ // 모든 턴이 다 끝나서 게임 종료 시점
-      if(move == 4){
+      if(move == 2){
         // console.log('success')
         // 게임 성공 후 api 호출
+        document.getElementById('clear_sound').play()
         const param = {
           "user": localStorage.getItem('sub-user'),
           "gameid": 2 
@@ -268,6 +271,7 @@ export function Mugunghwa(props){
         setGameRes(1)
       }
       else{
+        document.getElementById('fail_sound').play()
         // console.log('fail')  
         setGameRes(-1) 
       }
@@ -302,7 +306,7 @@ export function Mugunghwa(props){
 
     // 새로 그리기
     const webcam = document.getElementById('webcam')
-    for(let i = 0; i<5; i++){
+    for(let i = 0; i<3; i++){
       document.getElementById(`box${i}`).innerHTML = ''
     }
     document.getElementById(`box0`).appendChild(webcam)
@@ -314,7 +318,7 @@ export function Mugunghwa(props){
   // onCheckMotion()에서 모션 성공 시 다음칸으로 넘어가기 위해 setMove 하면
   // 실제로 move 변경을 감지하고 webcam이동
   useEffect(async()=>{
-    if(move>=0 && move<4){
+    if(move>=0 && move<2){
       const before = document.getElementById(`box${move}`)
       const after = document.getElementById(`box${move+1}`)
 
@@ -323,15 +327,15 @@ export function Mugunghwa(props){
       after.appendChild(webcam)
 
       // 초록색 테두리 깜빡
-      webcam.style.border = '10px solid #A3C653'
-      webcam.style.boxSizing = 'border-box'
       const canvas = document.getElementById('canvas')
-      canvas.width = width-20;
-      canvas.height = height-20;
+      canvas.style.border = '10px solid #A3C653'
+      canvas.style.boxSizing = 'border-box'
+      // canvas.width = width-20;
+      // canvas.height = height-20;
       setTimeout(function(){
-        webcam.style.border = 'none'
-        canvas.width = width;
-        canvas.height = height;
+        canvas.style.border = 'none'
+        // canvas.width = width;
+        // canvas.height = height;
       }, 1000)
 
       // const canvas = document.getElementById('canvas')
@@ -362,24 +366,17 @@ export function Mugunghwa(props){
     }, 1000)
     setTimeout(function(){
       // console.log(isSuccess.current)
-      if(isSuccess.current){ // 자세 유지 성공 시 -> move
+      if(!isSuccess.current){ // 자세 유지 성공 시 -> move
         // console.log('자세유지성공~~~~')
         setMove(move=>move+1)
         isSuccess.current = false
       }
       else{ // 자세 유지 실패 시
         // console.log('자세유지실패ㅠㅠㅠ')
-        const webcam = document.getElementById('webcam')
-        webcam.style.border = '10px solid #AC3943'
-        webcam.style.boxSizing = 'border-box'
-
         const canvas = document.getElementById('canvas')
-        canvas.width = width-20;
-        canvas.height = height-20;
+        canvas.style.border = '10px solid #AC3943'
         setTimeout(function(){
-          webcam.style.border = 'none'
-          canvas.width = width;
-          canvas.height = height;
+          canvas.style.border = 'none'
         }, 1000)
         cancelAnimationFrame(requestRef.current)
         requestRef.current = requestAnimationFrame(loop)
@@ -408,7 +405,7 @@ export function Mugunghwa(props){
 
   return(
     <div className={styles.mugunghwa_container} id='mug'>
-      <GameHeader progress={(move+1)*20} onEndgameClick={endGame}/>
+      <GameHeader progress={(move+1)*33} onEndgameClick={endGame}/>
       <BeforeStart />
       <Grid 
         container
@@ -423,24 +420,27 @@ export function Mugunghwa(props){
           <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
         </Grid>
 
-        <Grid item md={2} className={styles.nomalLine} id='box4'>
+        <Grid item md={3} className={styles.nomalLine} id='box2'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box3'>
+        {/* <Grid item md={3} className={styles.stepLine} id='box3'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box2'> 
+        <Grid item md={3} className={styles.stepLine} id='box2'> 
+        </Grid> */}
+
+        <Grid item md={3} className={styles.stepLine} id='box1'>
         </Grid>
 
-        <Grid item md={2} className={styles.stepLine} id='box1'>
-        </Grid>
-
-        <Grid item md={2} className={styles.stepLine} id='box0'>
+        <Grid item md={3} className={styles.stepLine} id='box0'>
           <div id='webcam' className={styles.userBox}>
             <canvas id='canvas' ref={canvasRef}/>
           </div>
         </Grid>
       </Grid>
+      <audio id='clear_sound' style={{display:'none'}} controls src={game_clear} > Your user agent does not support the HTML5 Audio element. </audio>
+      <audio id='fail_sound' style={{display:'none'}} controls src={game_fail} > Your user agent does not support the HTML5 Audio element. </audio>
+
 
       <MotionDialog open={imgOpen} img={motionImg} getClose={onGetClose}/>
       <EndDialog open={endOpen} gameRes={gameRes} getEndClose={onGetEndClose} getReplay={onGetReplay}/>

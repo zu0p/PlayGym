@@ -11,6 +11,8 @@ import Logout from '../logout/Logout'
 import ProfileButton from '../profile/ProfileButton'
 import { requestGetGameList } from '../../app/actions/userActions'
 import { useDispatch } from 'react-redux';
+import Logo from '../Logo'
+import LockIcon from '@mui/icons-material/Lock'
 
 export function Home(props) {
   const dispatch = useDispatch()
@@ -51,9 +53,12 @@ export function Home(props) {
         <CircleButton onClick={() => {props.history.push('/mypage')}} style={{position:'fixed', top:'10px', left:'110px'}}>
           <AccountCircleOutlinedIcon fontSize="large" />
         </CircleButton>
+        <Grid item md={12} mt={3}>
+          <Logo/>
+        </Grid>
 
-        <Grid item md={1} mt={'5%'}></Grid>
-        <Grid item md={4} mt={'5%'}>
+        <Grid item md={1}></Grid>
+        <Grid item md={4}>
           <div 
             className={styles.img_container} 
             style={{
@@ -63,9 +68,9 @@ export function Home(props) {
             <AddButton onClick={onMugunghwaClick} className={styles.game_start_button}>무궁화 꽃이 피었습니다</AddButton>
           </div>
         </Grid>
-        <Grid item md={2} mt={'5%'}>
+        <Grid item md={2}>
         </Grid>
-        <Grid item md={4} mt={'5%'}>
+        <Grid item md={4}>
           <div 
             className={styles.img_container} 
             style={{
@@ -74,18 +79,19 @@ export function Home(props) {
             <AddButton onClick={onFollowMeClick} className={styles.game_start_button}>나 처럼 해봐요</AddButton>
           </div>
         </Grid>
-        <Grid item md={1} mt={'5%'}></Grid>
+        <Grid item md={1}></Grid>
 
-        
-        
         <Grid item md={4} mt={'5%'}></Grid>
-        <Grid item md={4} mt={'5%'}>
+        <Grid item md={4} style={{position: 'relative'}}>
+          <LockIcon fontSize="large" style={{position: 'absolute', zIndex: 2, top: '45%', left: '45%'}}/>
           <div 
             className={styles.img_container} 
             style={{
-              backgroundImage: `url(${word})`
+              backgroundImage: `url(${word})`,
+              backgroundColor: 'gray',
+              opacity: 0.5
             }}>
-            <AddButton onClick={onWordClick} className={styles.game_start_button}>단어 맞추기</AddButton>
+            <AddButton disabled={true} onClick={onWordClick} className={styles.game_start_button}>단어 맞추기</AddButton>
           </div>
         </Grid>
         <Grid item md={4} mt={'5%'}></Grid>

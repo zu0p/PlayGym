@@ -288,7 +288,7 @@ export default function EditMainUserInfoDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              My page
+              나의 정보
             </Typography>
             <Button color="inherit" onClick={onOutClick} id="outButton" style={{display:'none'}}>
               회원탈퇴
@@ -303,9 +303,9 @@ export default function EditMainUserInfoDialog(props) {
           direction="column"
           // justifyContent="center"
           alignItems="center"
-          spacing={3}
+          // spacing={3}
         >
-          <Grid item mt={5}>
+          <Grid item mt={2}>
             <h5>Name</h5>
             <AddTextField 
               disabled={inputDisable} 
