@@ -194,7 +194,20 @@ export function Mypage(props) {
               <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
               </Typography>
               <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
-              <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px'}} />
+              <motion.div 
+                animate={{scale: [1, 1.1, 1.2, 1.25, 1.3, 1.25, 1.2, 1.1, 1]}}
+                transition={{ repeat: Infinity, duration: 1.2, damping: 0, stiffness: 100 }} 
+                style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 30}}
+              >
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30}} />
+              </motion.div>
+              {/* <motion.div 
+                animate={{scale: [1, 3.5], opacity: [0.3, 0]}}
+                transition={{ duration: 0.4 }} 
+                style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 20}}
+              >
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#black', zIndex: 20}} />
+              </motion.div> */}
               <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={parseInt((info.exp / info.max) * 100) > 100 ? 100 : parseInt((info.exp / info.max) * 100)} />
             </div>
           </Paper>

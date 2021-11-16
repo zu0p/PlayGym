@@ -50,9 +50,10 @@ export function FollowMe(props) {
 
   const eyeSizeArr = useRef([-1, -1, -1, -1])
   const msAppeared = useRef(0)
-  const [isAppeared, setIsAppeared] = useState(false)
   const msFullbody = useRef(0)
+  const [isAppeared, setIsAppeared] = useState(false)
   const [isFullbody, setIsFullbody] = useState(false)
+  const [stepSuccess, setStepSuccess] = useState(null)
 
   const [endOpen, setEndOpen] = useState(false)
   const [gameRes, setGameRes] = useState(0)
@@ -165,14 +166,8 @@ export function FollowMe(props) {
           handleStart()
         break
       case true:
-        if (audioRef.current.paused) {
-          // console.log(successCount.current)
-          
-          if (!isMount.current) return;
-          idx.current += 1
-          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
-          isStarted.current = false
-        }
+        
+
         await predict(posenetOutput)
           .then(res => {
             // console.log(res)
@@ -185,6 +180,18 @@ export function FollowMe(props) {
               }
           })
           .catch(err => console.log)
+
+        if (audioRef.current.paused) {
+          // console.log(successCount.current)
+          
+          if (!isMount.current) return;
+          
+          successFlag.current ? stepHandler(true) : stepHandler(false)            
+          idx.current += 1
+          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
+          isStarted.current = false
+        }
+
         break
       default:
     }
@@ -365,6 +372,41 @@ export function FollowMe(props) {
     requestRef.current = requestAnimationFrame(loop)
   }
 
+  const stepHandler = async(res) => {
+    switch(res) {
+      case true:
+        setStepSuccess(true)
+        await delay(1000)
+        setStepSuccess(null)
+        break
+      case false:
+        setStepSuccess(false)
+        await delay(1000)
+        setStepSuccess(null)
+        break
+      default:
+    }
+  }
+  // useEffect(() => {
+  //   switch(stepSuccess) {
+  //     case true:
+  //       console.log('true')
+  //       setSuccessCue({
+  //         border: '5px green solid'
+  //       })
+  //       break
+  //     case false:
+  //       console.log('false')
+  //       setSuccessCue({
+  //         border: '5px red solid'
+  //       })
+  //       break
+  //     case null:
+  //       setSuccessCue({})
+  //     default:
+  //   }
+  // }, [stepSuccess])
+  // const [successCue, setSuccessCue] = {}
   // const handleResize = debounce(() => {
   //   console.dir(canvasRef.current)
   //   // canvasSize.current = {w: rightScreenRef.current}
@@ -391,6 +433,7 @@ export function FollowMe(props) {
         </Grid>
         <Grid item md={1} mt={'5%'}></Grid>
         <Grid item md={4} mt={'5%'}>
+          {/* <RightGameScreen style={successCue}> */}
           <RightGameScreen>
             <canvas ref={canvasRef} />
           </RightGameScreen>
