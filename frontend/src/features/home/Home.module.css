@@ -1,6 +1,7 @@
 .home_container{
   height: 100vh;
   background-color: #D5E8A6;
+  position: relative;
 }
 
 .img_container{
@@ -9,11 +10,13 @@
   background-color: white;
   text-align: center;
   align-items: center;
+  border: solid 5px #22220B;
   border-radius: 50%;
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   position: relative;
+  z-index: 2 !important;
   margin-left: 20%;
 }
 
