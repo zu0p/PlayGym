@@ -193,36 +193,38 @@ export function Mypage(props) {
             onClick={onClickLevelUp}
             style={info.exp >= info.max ? {cursor: 'pointer'} : {}}
           >
-            <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
-            <div className={styles.progressbar__container}>
-              {/* note: negative ml value === width or fontSize / 2 */}
-              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
-              </Typography>
-              <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
-              </Typography>
-              <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
-              {info.exp < info.max &&
-                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
-              }
-              {info.exp >= info.max &&
-              <>
-              <motion.div 
-                animate={{scale: [1, 1.4]}}
-                transition={{ repeat: Infinity, delay: 1, duration: 0.3, type: 'tween', ease: [0, 0, 0, 0.8], repeatType: 'reverse', repeatDelay: 0.4}} 
-                style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 30}}
-              >
-                <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
-              </motion.div>
-              <motion.div 
-                animate={{scale: [1, 2], opacity: [0.1, 0]}}
-                transition={{ repeat: Infinity, delay: 1.98, duration: 0.4, type: 'tween', repeatDelay: 1 }} 
-                style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 20}}
-              >
-                <StarRoundedIcon sx={{fontSize: '100px', color: '#black', zIndex: 20, cursor: 'defalut'}} />
-              </motion.div>
-              </>
-              }
-              <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={parseInt((info.exp / info.max) * 100) > 100 ? 100 : parseInt((info.exp / info.max) * 100)} />
+            <div style={{width: '100%', height: '100%', filter: 'drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3))'}}>
+              <StarRoundedIcon fontSize={'large'} sx={{position: 'absolute', color: '#A3C653', mt: '7px', ml: '7px'}} />
+              <div className={styles.progressbar__container}>
+                {/* note: negative ml value === width or fontSize / 2 */}
+                <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/2/2/3', ml: '-20px'}}>
+                </Typography>
+                <Typography sx={{width: '40px', zIndex: 40, fontSize: '30px', color: '#000', gridArea: '1/6/2/7', ml: '-20px'}}>
+                </Typography>
+                <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
+                {info.exp < info.max &&
+                  <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
+                }
+                {info.exp >= info.max &&
+                <>
+                <motion.div 
+                  animate={{scale: [1, 1.4]}}
+                  transition={{ repeat: Infinity, delay: 1, duration: 0.3, type: 'tween', ease: "circOut", repeatType: 'reverse', repeatDelay: 0.4}} 
+                  style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 30}}
+                >
+                  <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
+                </motion.div>
+                <motion.div 
+                  animate={{scale: [1, 2], opacity: [0.1, 0]}}
+                  transition={{ repeat: Infinity, delay: 1.98, duration: 0.4, type: 'tween', repeatDelay: 1 }} 
+                  style={{gridArea: '1/5/2/7', display: 'inline-block', zIndex: 20}}
+                >
+                  <StarRoundedIcon sx={{fontSize: '100px', color: '#black', zIndex: 20, cursor: 'defalut'}} />
+                </motion.div>
+                </>
+                }
+                <BorderLinearProgress sx={{gridArea: '1/2/2/6', zIndex: 20}} variant="determinate" value={parseInt((info.exp / info.max) * 100) > 100 ? 100 : parseInt((info.exp / info.max) * 100)} />
+              </div>
             </div>
           </Paper>
           <Paper elevation={0} sx={{width: '100%', height: '22vh', mt: '10px'}}>
