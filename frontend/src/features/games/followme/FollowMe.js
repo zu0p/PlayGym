@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import { Route, Link, NavLink } from 'react-router-dom';
 import GameStartCount from '../gameStartCount'
 import { useDispatch, useSelector } from 'react-redux';
-import { requestRandomGameByAge } from '../../../app/actions/userActions'
+import { requestRandomGameByAge, requestSubInfo } from '../../../app/actions/userActions'
 import f_text from '../../../images/followMe/f_text.png'
 import baseMonkey from '../../../images/games/base_monkey.gif'
 import { request } from '../../../utils/axios'
@@ -27,7 +27,6 @@ const flip = true;
 
 export function FollowMe(props) {
   const faceImg = new Image()
-  faceImg.src = "http://k5d205.p.ssafy.io:8080/api/img/cat.png";
   
   const dispatch = useDispatch()
   const isMount = useIsMount()
@@ -49,12 +48,12 @@ export function FollowMe(props) {
   const successThreshold = useRef(0)
   const isDrawing = useRef(false)
 
-  const canvasSize = useRef({w: 0, h: 0})
   const eyeSizeArr = useRef([-1, -1, -1, -1])
   const msAppeared = useRef(0)
-  const [isAppeared, setIsAppeared] = useState(false)
   const msFullbody = useRef(0)
+  const [isAppeared, setIsAppeared] = useState(false)
   const [isFullbody, setIsFullbody] = useState(false)
+  const [stepSuccess, setStepSuccess] = useState(null)
 
   const [endOpen, setEndOpen] = useState(false)
   const [gameRes, setGameRes] = useState(0)
@@ -70,7 +69,6 @@ export function FollowMe(props) {
     } catch {
       throw new Error('camera issue')
     }
-    // webcamRef.current.update();
   }
 
   const requestGameData = async() => {
@@ -82,6 +80,14 @@ export function FollowMe(props) {
       })
       .catch(() => {throw new Error('server connection issue')})
 }
+
+  const requestProfileImage = async() => {
+    return dispatch(requestSubInfo(localStorage.getItem('sub-user')))
+      .then(res => {
+        faceImg.src = res.payload.data.image
+      })
+      .catch(() => {throw new Error('server connection issue')})
+  }
 
   // init()
   const init = () => {
@@ -96,7 +102,7 @@ export function FollowMe(props) {
     contextRef.current.scale(1, 1)
 
     // getWebcam, requestGameData
-    Promise.all([startWebcam(), requestGameData()])
+    Promise.all([startWebcam(), requestGameData(), requestProfileImage()])
       .then(async() => {
         const modelURL = exerciseList.current.modelLink
         const metaURL = exerciseList.current.metaLink
@@ -148,8 +154,8 @@ export function FollowMe(props) {
 
     drawPose(pose)
     
-    // if (idx.current === exerciseList.current.asset.length) {
-    if (idx.current === 1) {
+    // if (idx.current === 1) {
+    if (idx.current === exerciseList.current.asset.length) {
       handleEnd()
       return
     }
@@ -160,14 +166,8 @@ export function FollowMe(props) {
           handleStart()
         break
       case true:
-        if (audioRef.current.paused) {
-          // console.log(successCount.current)
-          
-          if (!isMount.current) return;
-          idx.current += 1
-          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
-          isStarted.current = false
-        }
+        
+
         await predict(posenetOutput)
           .then(res => {
             // console.log(res)
@@ -180,6 +180,18 @@ export function FollowMe(props) {
               }
           })
           .catch(err => console.log)
+
+        if (audioRef.current.paused) {
+          // console.log(successCount.current)
+          
+          if (!isMount.current) return;
+          
+          successFlag.current ? stepHandler(true) : stepHandler(false)            
+          idx.current += 1
+          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
+          isStarted.current = false
+        }
+
         break
       default:
     }
@@ -190,7 +202,7 @@ export function FollowMe(props) {
 
   const predict = async(posenetOutput) => {
     const prediction = await modelRef.current.predict(posenetOutput)
-    const exerciseIdx = exerciseList.current.asset[idx.current].aid
+    const exerciseIdx = exerciseList.current.asset[idx.current].classNumber
     const current = prediction[exerciseIdx]
     if (current === undefined)
       throw new Error('undefined prediction')
@@ -360,6 +372,41 @@ export function FollowMe(props) {
     requestRef.current = requestAnimationFrame(loop)
   }
 
+  const stepHandler = async(res) => {
+    switch(res) {
+      case true:
+        setStepSuccess(true)
+        await delay(1000)
+        setStepSuccess(null)
+        break
+      case false:
+        setStepSuccess(false)
+        await delay(1000)
+        setStepSuccess(null)
+        break
+      default:
+    }
+  }
+  // useEffect(() => {
+  //   switch(stepSuccess) {
+  //     case true:
+  //       console.log('true')
+  //       setSuccessCue({
+  //         border: '5px green solid'
+  //       })
+  //       break
+  //     case false:
+  //       console.log('false')
+  //       setSuccessCue({
+  //         border: '5px red solid'
+  //       })
+  //       break
+  //     case null:
+  //       setSuccessCue({})
+  //     default:
+  //   }
+  // }, [stepSuccess])
+  // const [successCue, setSuccessCue] = {}
   // const handleResize = debounce(() => {
   //   console.dir(canvasRef.current)
   //   // canvasSize.current = {w: rightScreenRef.current}
@@ -386,6 +433,7 @@ export function FollowMe(props) {
         </Grid>
         <Grid item md={1} mt={'5%'}></Grid>
         <Grid item md={4} mt={'5%'}>
+          {/* <RightGameScreen style={successCue}> */}
           <RightGameScreen>
             <canvas ref={canvasRef} />
           </RightGameScreen>

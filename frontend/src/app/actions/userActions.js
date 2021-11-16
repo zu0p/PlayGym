@@ -179,3 +179,13 @@ export const requestGameSuccessSave = createAction('SAVE_SUCCESS_GAME', function
 
   return {payload: returnData}
 })
+
+export const requestSubInfo = createAction('SUB_INFO', function prepare(profileId) {
+  const returnData = requestAuth('get', `/user/sub/profile/${profileId}`)
+  return { payload: returnData }
+})
+
+export const requestChangeCharacter = createAction('CHANGE_CHARACTER', function prepare(payload) {
+  const returnData = requestAuth('put', `/user/sub/setch`, payload)
+  return { payload: returnData }
+})
