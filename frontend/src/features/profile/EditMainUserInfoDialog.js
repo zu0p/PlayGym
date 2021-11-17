@@ -99,13 +99,13 @@ export default function EditMainUserInfoDialog(props) {
       // action: modify main user info
       
       let userInfo = {
-        id: userState.mainUser.id,
+        id: localStorage.getItem('main-user'),
         email: email,
         name: name,
         phone: phone,
         password: newPassword==''?password:newPassword
       }
-      // console.log(userInfo)
+      console.log(userInfo)
       dispatch(
         requestUpdateUser(userInfo)
       )

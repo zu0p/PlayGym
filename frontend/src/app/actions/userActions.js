@@ -30,7 +30,7 @@ export function requestUpdateUser(userInfo){
     "name": userInfo.name,
     "phone" : userInfo.phone
   }
-  const returnData = requestWithAuth('put', `/user/update?id=${id}`, param)
+  const returnData = requestAuth('put', `/user/update?id=${id}`, param)
   return{
     type: UPDATE_USER,
     payload: returnData
