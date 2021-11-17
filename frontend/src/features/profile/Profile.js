@@ -23,7 +23,7 @@ import rabbit from '../../images/characters/rabbit.png'
 import {requestGetChildren} from '../../app/actions/userActions'
 import Logout from '../logout/Logout'
 
-function Player({player}){
+function Player({player, editPlayer}){
   const selectPlayer=()=>{
     // console.log(player)
     localStorage.setItem('sub-user', player.sid)
@@ -33,6 +33,7 @@ function Player({player}){
   const onEditPlayerClick = (e) => {
     console.log('edit?')
     e.stopPropagation()
+    editPlayer(player)
     // console.log(player)
   }
   return(
@@ -42,7 +43,7 @@ function Player({player}){
           <img src={player.image} width='100px'/>
         </div>
 
-        {/* <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton> */}
+        <EditButton onClick={onEditPlayerClick}><GavelIcon fontSize="small"/></EditButton>
         {player.nickName}
       </Grid>
     </div>
@@ -52,6 +53,8 @@ function Player({player}){
 export function Profile(){
   const players = useSelector(state=>state.user.subUser)
   const dispatch = useDispatch()
+  const [addOrEdit, setAddOrEdit] = useState('add')
+  const [playerInfo, setPlayerInfo] = useState(null)
   // const [players, setPlayers] = useState([])
   useEffect(()=>{
     if(players.length === 0 || players === null || players === []){
@@ -74,7 +77,9 @@ export function Profile(){
   }
 
   const onAddProfileClose = () => {
-    setAddOpen(false);
+    setAddOpen(false)
+    setAddOrEdit('add')
+    setPlayerInfo(null)
   };
 
   // main user info edit dialog
@@ -95,6 +100,13 @@ export function Profile(){
 
   const onStatClose = () => {
     setStatOpen(false)
+  }
+
+  const onEditPlayer=(info)=>{
+    setAddOrEdit('edit')
+    setPlayerInfo(info)
+    setAddOpen(true)
+    // console.log(info)
   }
 
   return(
@@ -170,7 +182,7 @@ export function Profile(){
             alignItems="center"
             spacing={3}
           >
-            {players.map(item=>(<Player key={item.sid} player={item}/>))}
+            {players.map(item=>(<Player key={item.sid} player={item} editPlayer={onEditPlayer}/>))}
 
             <Tooltip title="Add Player">
               <IconButton onClick={onAddProfileClick}>
@@ -196,7 +208,7 @@ export function Profile(){
           </Grid>
         </Grid>
       </Grid>
-      <AddProfileDialog open={addOpen} getClose={onAddProfileClose} />
+      <AddProfileDialog open={addOpen} getClose={onAddProfileClose} flag={addOrEdit} info={playerInfo}/>
       <EditMainUserInfoDialog open={editOpen} getClose={onEditProfileClose} />
       <StatDialog open={statOpen} getClose={onStatClose} />
     </div>

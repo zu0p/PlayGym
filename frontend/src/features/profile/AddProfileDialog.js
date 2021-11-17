@@ -9,7 +9,7 @@ import styles from './Profile.module.css'
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { AddButton, CancelButton, AddTextField, SelectInput, SliderInput } from './customProfileStyle';
 import { Grid, Select } from '@mui/material';
-import { requestAddChild, requestGetChildren } from '../../app/actions/userActions'
+import { requestAddChild, requestGetChildren, requestUpdateSubUser } from '../../app/actions/userActions'
 import { useDispatch } from 'react-redux';
 
 export default function AddProfileDialog(props) {
@@ -21,6 +21,24 @@ export default function AddProfileDialog(props) {
   const [nickName, setNickName] = useState('')
   const [nickNameError, setNickNameError] = useState('')
   const [clickedNickName, setClickedNickName] = useState(false)
+
+  useEffect(()=>{
+    if(props.flag=='edit'){
+      setTall(props.info.tall)
+      setWeight(props.info.weight)
+      setAge(props.info.age)
+      setNickName(props.info.nickName)
+      setClickedNickName(true)
+      setAdd(false)
+    }
+    else{
+      setTall(90)
+      setWeight(20)
+      setAge(3)
+      setNickName('')
+      setClickedNickName(false)
+    }
+  },[props.flag])
   
   const [add, setAdd] = useState(true)
   const handleTallChange = (e, newTall) => {
@@ -66,19 +84,37 @@ export default function AddProfileDialog(props) {
 
   const onAdd = () => {
     // add sub proflie
-    const param = {
-      "nickName" : nickName, 
-      "age" : age, 
-      "tall" : tall,
-      "weight" : weight,
-      "id" : localStorage.getItem('main-user') // mainUser id
+    if(props.flag==='add'){
+      const param = {
+        "nickName" : nickName, 
+        "age" : age, 
+        "tall" : tall,
+        "weight" : weight,
+        "id" : localStorage.getItem('main-user') // mainUser id
+      }
+      dispatch(requestAddChild(param))
+        .then(res=>{
+          if(res.payload.status){
+            dispatch(requestGetChildren(param.id))
+          }
+        })
     }
-    dispatch(requestAddChild(param))
-      .then(res=>{
-        if(res.payload.status){
-          dispatch(requestGetChildren(param.id))
-        }
-      })
+    // edit sub profile
+    else{
+      const param = {
+        "nickName" : nickName, 
+        "age" : age, 
+        "tall" : tall,
+        "weight" : weight,
+        "sid" : props.info.sid // subUser id
+      }
+      dispatch(requestUpdateSubUser(param))
+        .then(res=>{
+          if(res.payload.status){
+            dispatch(requestGetChildren(localStorage.getItem('main-user')))
+          }
+        })
+    }
 
     onClose()
   }
@@ -86,7 +122,10 @@ export default function AddProfileDialog(props) {
   return (
     <div>
       <Dialog open={props.open} className={styles.dialog}>
-        <DialogTitle style={{color: '#A3C653', fontSize: '30px', fontWeight:'bold'}}>플레이어 추가하기 <AddReactionIcon fontSize="large"/> </DialogTitle>
+        <DialogTitle style={{color: '#A3C653', fontSize: '30px', fontWeight:'bold'}}>
+          플레이어 {props.flag==='add'?'추가':'수정'}하기 
+          <AddReactionIcon fontSize="large"/> 
+        </DialogTitle>
         <DialogContent style={{height: '430px', width: '400px'}}>
           <Grid container spacing={4} mt={'5px'}>
             <Grid item>
@@ -96,6 +135,7 @@ export default function AddProfileDialog(props) {
                 error={ nickNameValidation() }
                 helperText={ nickNameError }
                 id="outlined-required"
+                value={nickName}
                 onFocus={ () => { if (!clickedNickName) { setNickNameError('닉네임은 필수 항목입니다.'); setClickedNickName(true); } } }
                 onChange={ handleNickNameChange }
               />
@@ -143,8 +183,8 @@ export default function AddProfileDialog(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
-          <AddButton id={'add-button'} onClick={onAdd} disabled={add}>Add</AddButton>
+          <CancelButton onClick={onClose}>취소</CancelButton>
+          <AddButton id={'add-button'} onClick={onAdd} disabled={add}>{props.flag==='add'?'추가':'수정'}</AddButton>
         </DialogActions>
       </Dialog>
     </div>

@@ -189,3 +189,9 @@ export const requestChangeCharacter = createAction('CHANGE_CHARACTER', function 
   const returnData = requestAuth('put', `/user/sub/setch`, payload)
   return { payload: returnData }
 })
+
+// 자녀 계정 수정
+export const requestUpdateSubUser = createAction('UPDATE_SUB_USER', function prepare(info) {
+  const returnData = requestAuth('put', `/user/sub/modify`, info)
+  return { payload: returnData }
+})
