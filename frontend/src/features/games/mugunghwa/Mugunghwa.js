@@ -9,7 +9,7 @@ import styles from './Mugunghwa.module.css'
 import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
 import GameHeader from '../gameHeader'
-import EndDialog from './EndDialog';
+import EndDialog from '../EndDialog';
 import game_clear from '../../../sounds/game_clear.mp3'
 import game_fail from '../../../sounds/game_fail.mp3'
 const size = 800;
@@ -258,9 +258,7 @@ export function Mugunghwa(props){
   useEffect(()=>{
     if(isEnd){ // 모든 턴이 다 끝나서 게임 종료 시점
       if(move == 2){
-        // console.log('success')
         // 게임 성공 후 api 호출
-        document.getElementById('clear_sound').play()
         const param = {
           "user": localStorage.getItem('sub-user'),
           "gameid": 2 
@@ -272,8 +270,6 @@ export function Mugunghwa(props){
         setGameRes(1)
       }
       else{
-        document.getElementById('fail_sound').play()
-        // console.log('fail')  
         setGameRes(-1) 
       }
     }
@@ -352,7 +348,7 @@ export function Mugunghwa(props){
     }
   }, [move])
 
-  const onChcekMotion = async() =>{
+  const onCheckMotion = async() =>{
     loopFlag.current = false // == predict를 하겠다
     // console.log("check motion")
     motionCnt.current++
@@ -421,7 +417,7 @@ export function Mugunghwa(props){
           <img src={m_text} width={400}/>
         </Grid>
         <Grid item md={2} className={styles.goalLine}>
-          <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onChcekMotion} showMotion={onShowMotion}/>
+          <MoveCharactor replay={replay} getEndGame={onEndGame} getCheckMotion={onCheckMotion} showMotion={onShowMotion}/>
         </Grid>
 
         <Grid item md={3} className={styles.nomalLine} id='box2'>

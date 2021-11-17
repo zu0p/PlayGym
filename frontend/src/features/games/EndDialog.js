@@ -3,13 +3,25 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { Grid } from '@mui/material'
-import success from '../../../images/mugunghwa/success.png'
-import fail from '../../../images/mugunghwa/fail.png'
+import success from '../../images/mugunghwa/success.png'
+import fail from '../../images/mugunghwa/fail.png'
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded'
 import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded';
 import IconButton from '@mui/material/IconButton'
 
 export default function EndDialog(props) {
+  React.useEffect(()=>{
+    if(props.open){
+      if(props.gameRes===1){
+        // 성공
+        document.getElementById('clear_sound').play()
+      }
+      else{
+        // 실패
+        document.getElementById('fail_sound').play()
+      }
+    }
+  },[props.open])
   
   const onClose = () => {
     props.getEndClose(true)

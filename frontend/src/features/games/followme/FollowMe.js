@@ -23,7 +23,9 @@ import monkey1 from '../../../images/games/game_followMe_1.jpg'
 import monkey2 from '../../../images/games/game_followMe_2.jpg'
 import monkey3 from '../../../images/games/game_followMe_3.jpg'
 import useIsMount from '../../../utils/useIsMount'
-import EndDialog from './EndDialog'
+import EndDialog from '../EndDialog'
+import game_clear from '../../../sounds/game_clear.mp3'
+import game_fail from '../../../sounds/game_fail.mp3'
 import { BackFollow } from '../../background/BackFollow'
 // import debounce from 'lodash/debounce'
 
@@ -411,6 +413,10 @@ export function FollowMe(props) {
       {/* send progress data as props to Header */}
       {/* <img src={baseMonkey} loop={'infinte'} width={'600px'}/> */}
       <GameStartCount open={openStartCount} text={seconds ? seconds : '시작!'} />
+      
+      <audio id='clear_sound' style={{display:'none'}} controls src={game_clear} > Your user agent does not support the HTML5 Audio element. </audio>
+      <audio id='fail_sound' style={{display:'none'}} controls src={game_fail} > Your user agent does not support the HTML5 Audio element. </audio>
+
       <EndDialog open={endOpen} gameRes={gameRes} getEndClose={onClickGameEnd} getReplay={onClickReplay}/>
     </div>
   )
