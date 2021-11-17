@@ -24,6 +24,7 @@ import monkey2 from '../../../images/games/game_followMe_2.jpg'
 import monkey3 from '../../../images/games/game_followMe_3.jpg'
 import useIsMount from '../../../utils/useIsMount'
 import EndDialog from './EndDialog'
+import { BackFollow } from '../../background/BackFollow'
 // import debounce from 'lodash/debounce'
 
 const size = 800;
@@ -382,6 +383,7 @@ export function FollowMe(props) {
   return(
     <div className={styles.container}>
       {/* {seconds} */}
+      <BackFollow />
 
       <Header progress={progressData} onEndgameClick={onClickGameEnd} />
       {/* <button onClick={() => {setSeconds(3); setOpenStartCount(true);}}>set 3sec timer</button> */}

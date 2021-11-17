@@ -4,6 +4,7 @@ import { requestMugunghwaGame, requestGameSuccessSave } from '../../../app/actio
 import Grid from '@mui/material/Grid'
 import { MoveCharactor } from './MoveCharactor'
 import { BeforeStart } from '../BeforeStart'
+import {BackMug} from '../../background/BackMug'
 import styles from './Mugunghwa.module.css'
 import MotionDialog from './MotionDialog'
 import m_text from '../../../images/mugunghwa/m_text.png'
@@ -409,6 +410,7 @@ export function Mugunghwa(props){
     <div className={styles.mugunghwa_container} id='mug'>
       <GameHeader progress={(move+1)*33} onEndgameClick={endGame}/>
       <BeforeStart />
+      <BackMug />
       <Grid 
         container
         // direction="column"
