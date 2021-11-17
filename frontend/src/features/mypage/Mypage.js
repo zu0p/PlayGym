@@ -133,7 +133,10 @@ export function Mypage(props) {
       // console.log('requestReward')
       // getReward
       // const nextId = rewards.find(reward => reward.status === 'wait').cid
-      dispatch(requestNextReward(info.profileId))
+      const body = {
+        sid: info.profileId
+      }
+      dispatch(requestNextReward(body))
         .then(() => update())
         .catch()
     }
