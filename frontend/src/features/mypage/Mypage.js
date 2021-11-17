@@ -206,7 +206,7 @@ export function Mypage(props) {
                 </Typography>
                 <StarRoundedIcon sx={{fontSize: '100px', color: '#F5EAB3', zIndex: 30, gridArea: '1/2/2/3', ml: '-50px'}} />
                 {info.exp < info.max &&
-                  <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, cursor: 'defalut'}} />
+                  <StarRoundedIcon sx={{fontSize: '100px', color: '#E8C517', zIndex: 30, gridArea: '1/6/2/7', ml: '-50px', cursor: 'defalut'}} />
                 }
                 {info.exp >= info.max &&
                 <>
