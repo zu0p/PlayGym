@@ -3,6 +3,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import styles from './Mypage.module.css'
 import styled from '@emotion/styled'
 import { style } from "@mui/system";
+import rewardBox from '../../images/reward.png'
 
 const Div = styled.div`
   width: 100%;
@@ -13,6 +14,7 @@ const Div = styled.div`
 `;
 
 export default function Slide(props) {
+
   return (
     <Div>
       {Array.from(props.data).map((reward, idx) => {
@@ -21,7 +23,8 @@ export default function Slide(props) {
             <div style={{ display: 'flex', justifyContent: 'end'}}>
               
             </div>
-            <p className={styles.reward__tag}>{reward.title}</p>
+            <p style={{display: reward.status==='Wait'?'none':'block'}} className={styles.reward__tag}>{reward.title}</p>
+            <img style={{display: reward.status==='Wait'?'block':'none'}} src={rewardBox} width={'100px'}/>
           </div>
         )
       })}

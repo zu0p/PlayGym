@@ -27,6 +27,7 @@ import cat from '../../images/characters/cat_full.png'
 import rabbit from '../../images/characters/rabbit_full.png'
 import { motion } from 'framer-motion'
 import chick from '../../images/characters/chick_full.png'
+import Award from './Award';
 
 const BorderLinearProgress = styled(LinearProgress)(_ => ({
   height: 20,
@@ -43,6 +44,8 @@ const BorderLinearProgress = styled(LinearProgress)(_ => ({
 export function Mypage(props) {
   const dispatch = useDispatch()
   const isMount = useIsMount()
+  const [awardOpen, setAwardOpen] = useState(false)
+  const [getReward, setGetReward] = useState('')
   
   const [info, setInfo] = useState({
     img: '',
@@ -96,7 +99,7 @@ export function Mypage(props) {
     })
     setCharacters(tmp)
     setRewards(res[1].goals)
-    console.log(info.exp, info.max)
+    // console.log(info.exp, info.max)
   }
 
   const update = () => {
@@ -117,6 +120,7 @@ export function Mypage(props) {
     if (info.exp < info.max)
       // 경험치 부족하면 do nothing
       return
+    
 
     if (characters.reduce((acc, cv) => acc + cv.owned | 0, 0) < 4) {
       // console.log('requestCharacter')
@@ -133,6 +137,8 @@ export function Mypage(props) {
       // console.log('requestReward')
       // getReward
       // const nextId = rewards.find(reward => reward.status === 'wait').cid
+
+      setAwardOpen(true)
       const body = {
         sid: info.profileId
       }
@@ -142,16 +148,24 @@ export function Mypage(props) {
     }
   }
 
+  const onClose=()=>{
+    setAwardOpen(false)
+  }
+
   useEffect(() => {
     update()
   }, [])
 
   useEffect(() => {
     // change total size ^^
-    if (rewards.length === 0)
+    if (rewards.length === 0){
+      setGetReward('아직 등록된 보상이 없어요')
       setTotal(0);
-    else
+    }
+    else{
+      setGetReward(rewards[0].title)
       setTotal(parseInt((rewards.length - 1) / 2) + 1);
+    }
   }, [rewards])
 
   return (
@@ -250,6 +264,7 @@ export function Mypage(props) {
           </Paper>
         </Grid>
       </Grid>
+      <Award open={awardOpen} getEndClose={onClose} title={getReward}/>
     </div>
   )
 }
