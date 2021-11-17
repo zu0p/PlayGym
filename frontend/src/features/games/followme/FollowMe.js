@@ -7,7 +7,11 @@ import Grid from '@mui/material/Grid';
 import { Route, Link, NavLink } from 'react-router-dom';
 import GameStartCount from '../gameStartCount'
 import { useDispatch, useSelector } from 'react-redux';
-import { requestRandomGameByAge, requestSubInfo } from '../../../app/actions/userActions'
+import { 
+  requestRandomGameByAge, 
+  requestSubInfo,
+  requestGameSuccessSave,
+} from '../../../app/actions/userActions'
 import f_text from '../../../images/followMe/f_text.png'
 import baseMonkey from '../../../images/games/base_monkey.gif'
 import { request } from '../../../utils/axios'
@@ -53,13 +57,13 @@ export function FollowMe(props) {
   const msFullbody = useRef(0)
   const [isAppeared, setIsAppeared] = useState(false)
   const [isFullbody, setIsFullbody] = useState(false)
-  const [stepSuccess, setStepSuccess] = useState(null)
 
   const [endOpen, setEndOpen] = useState(false)
   const [gameRes, setGameRes] = useState(0)
   const [progressData, setProgressData] = useState(0)
   const [seconds, setSeconds] = useState(0)
   const [openStartCount, setOpenStartCount] = useState(false)
+
 
   const startWebcam = async() => {
     try {
@@ -186,7 +190,7 @@ export function FollowMe(props) {
           
           if (!isMount.current) return;
           
-          // successFlag.current ? stepHandler(true) : stepHandler(false)            
+          successFlag.current ? stepHandler(true) : stepHandler(false)            
           idx.current += 1
           setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
           isStarted.current = false
@@ -327,27 +331,10 @@ export function FollowMe(props) {
     }
   }, [])
 
-  // useEffect(() => {
-  //   console.log('second changed')
-  //   const interval = setInterval(() => {
-  //     if (seconds > 0) {
-  //       console.log('tick tock')
-  //       setSeconds(c => c - 1);
-  //       // setSeconds(seconds => seconds - 1); // same code
-  //     }
-  //     else {
-  //       console.log('times up!')
-  //       clearInterval(interval)
-  //       setOpenStartCount(false)
-  //     }
-  //   }, 1000)
-  //   // returned function => for clean up (leaving)
-  //   return () => clearInterval(interval)
-  // }, [seconds])
-
   const handleEnd = () => {
     cancelAnimationFrame(requestRef.current)
     if (successCount.current > 4)
+      dispatch(requestGameSuccessSave)
       setGameRes(1)
     setEndOpen(true)    
     // webcamRef.current.stop()
@@ -372,41 +359,21 @@ export function FollowMe(props) {
     requestRef.current = requestAnimationFrame(loop)
   }
 
-  // const stepHandler = async(res) => {
-  //   switch(res) {
-  //     case true:
-  //       setStepSuccess(true)
-  //       await delay(1000)
-  //       setStepSuccess(null)
-  //       break
-  //     case false:
-  //       setStepSuccess(false)
-  //       await delay(1000)
-  //       setStepSuccess(null)
-  //       break
-  //     default:
-  //   }
-  // }
-  // useEffect(() => {
-  //   switch(stepSuccess) {
-  //     case true:
-  //       console.log('true')
-  //       setSuccessCue({
-  //         border: '5px green solid'
-  //       })
-  //       break
-  //     case false:
-  //       console.log('false')
-  //       setSuccessCue({
-  //         border: '5px red solid'
-  //       })
-  //       break
-  //     case null:
-  //       setSuccessCue({})
-  //     default:
-  //   }
-  // }, [stepSuccess])
-  // const [successCue, setSuccessCue] = useState({})
+  const stepHandler = async(res) => {
+    switch(res) {
+      case true:
+        canvasRef.current.style.border = '10px #A3C653 solid'
+        await delay(1000)
+        canvasRef.current.style.border = ''
+        break
+      case false:
+        canvasRef.current.style.border = '10px #AC3943 solid'
+        await delay(1000)
+        canvasRef.current.style.border = ''
+        break
+      default:
+    }
+  }
   // const handleResize = debounce(() => {
   //   console.dir(canvasRef.current)
   //   // canvasSize.current = {w: rightScreenRef.current}
