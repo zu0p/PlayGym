@@ -105,7 +105,6 @@ export default function EditMainUserInfoDialog(props) {
         phone: phone,
         password: newPassword==''?password:newPassword
       }
-      console.log(userInfo)
       dispatch(
         requestUpdateUser(userInfo)
       )
