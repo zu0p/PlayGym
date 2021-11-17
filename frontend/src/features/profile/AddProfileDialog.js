@@ -86,7 +86,7 @@ export default function AddProfileDialog(props) {
   return (
     <div>
       <Dialog open={props.open} className={styles.dialog}>
-        <DialogTitle><h1><AddReactionIcon fontSize="large"/> Add Player</h1></DialogTitle>
+        <DialogTitle style={{color: '#A3C653', fontSize: '30px', fontWeight:'bold'}}>플레이어 추가하기 <AddReactionIcon fontSize="large"/> </DialogTitle>
         <DialogContent style={{height: '430px', width: '400px'}}>
           <Grid container spacing={4} mt={'5px'}>
             <Grid item>
