@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import styles from './Mypage.module.css'
 import styled from '@emotion/styled'
 import { style } from "@mui/system";
-import CheckIcon from '@mui/icons-material/Check';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { requestChangeCharacter } from '../../app/actions/userActions'
 import { useDispatch } from "react-redux";

@@ -33,7 +33,7 @@ const size = 800;
 const flip = true;
 
 export function FollowMe(props) {
-  const faceImg = new Image()
+  const faceImg = useRef(new Image())
   
   const dispatch = useDispatch()
   const isMount = useIsMount()
@@ -50,6 +50,7 @@ export function FollowMe(props) {
   const idx = useRef(0)
   const isStarted = useRef(false)
   const isEngaged = useRef(false)
+  const isNextLoading = useRef(false)
   const successCount = useRef(0)
   const successFlag = useRef(0)
   const successThreshold = useRef(0)
@@ -91,7 +92,7 @@ export function FollowMe(props) {
   const requestProfileImage = async() => {
     return dispatch(requestSubInfo(localStorage.getItem('sub-user')))
       .then(res => {
-        faceImg.src = res.payload.data.image
+        faceImg.current.src = res.payload.data.image
       })
       .catch(() => {throw new Error('server connection issue')})
   }
@@ -127,7 +128,6 @@ export function FollowMe(props) {
   }
 
   const loopIdentity = async(timestamp) => {
-
     webcamRef.current.update()
     const { pose, posenetOutput } = await modelRef.current.estimatePose(webcamRef.current.canvas)
 
@@ -160,7 +160,6 @@ export function FollowMe(props) {
       })
 
     drawPose(pose)
-    
     // if (idx.current === 1) {
     if (idx.current === exerciseList.current.asset.length) {
       handleEnd()
@@ -171,28 +170,33 @@ export function FollowMe(props) {
       case false:
         if (!isEngaged.current) 
           handleStart()
+          isNextLoading.current = false
         break
       case true:
-        
-
         await predict(posenetOutput)
           .then(res => {
             // console.log(res)
             if (res === true) {
+              if (successFlag.current) return;
+              
               successThreshold.current += 1
-              handleSuccess()
-            } else {
-              if (successThreshold.current > 0)
-                successThreshold.current -= 2
+              if (successThreshold.current > 20) {
+                successThreshold.current = 0
+                successCount.current += 1
+                successFlag.current = true
               }
+            } else {
+              if (successThreshold.current >= 1)
+                successThreshold.current -= 2
+            }
           })
           .catch(err => console.log)
 
         if (audioRef.current.paused) {
-          // console.log(successCount.current)
-          
+          if (isNextLoading.current) return;
+          isNextLoading.current = true
           if (!isMount.current) return;
-          
+
           successFlag.current ? stepHandler(true) : stepHandler(false)            
           idx.current += 1
           setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
@@ -204,8 +208,6 @@ export function FollowMe(props) {
     }
     isDrawing.current = false
   }
-
-
 
   const predict = async(posenetOutput) => {
     const prediction = await modelRef.current.predict(posenetOutput)
@@ -267,7 +269,7 @@ export function FollowMe(props) {
   
       if (pose.keypoints[0].score > 0.8) {
         contextRef.current.drawImage(
-          faceImg,
+          faceImg.current,
           pose.keypoints[0].position.x - eyeSize * 2,
           pose.keypoints[0].position.y - eyeSize * 3,
           eyeSize * 5,
@@ -308,17 +310,6 @@ export function FollowMe(props) {
     isEngaged.current = false
   }
 
-  const handleSuccess = async() => {
-    if (successFlag.current)
-      return
-
-    successThreshold.current += 1
-    if (successThreshold.current > 20) {
-      successFlag.current = true
-      successCount.current += 1
-    }
-  }
-
   const delay = (t) => new Promise(resolve => {
     setTimeout(resolve, t)
   })
@@ -336,9 +327,10 @@ export function FollowMe(props) {
 
   const handleEnd = () => {
     cancelAnimationFrame(requestRef.current)
-    if (successCount.current > 4)
-      dispatch(requestGameSuccessSave)
+    if (successCount.current > 4) {
+      dispatch(requestGameSuccessSave())
       setGameRes(1)
+    }
     setEndOpen(true)    
     // webcamRef.current.stop()
   }
@@ -356,9 +348,9 @@ export function FollowMe(props) {
     successCount.current = 0
     successFlag.current = false
     successThreshold.current = 0
-    isDrawing.current = false
     setProgressData(0)
     setEndOpen(false)
+    isDrawing.current = false
     requestRef.current = requestAnimationFrame(loop)
   }
 

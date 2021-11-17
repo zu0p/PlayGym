@@ -20,8 +20,8 @@ import {
   requestNextReward, 
   requestNextCharacter,
 } from '../../app/actions/userActions';
-
-import Logo from '../Logo'
+import { BackLogo } from '../background/BackLogo';
+// import Logo from '../Logo'
 import bear from '../../images/characters/bear_full.png'
 import cat from '../../images/characters/cat_full.png'
 import rabbit from '../../images/characters/rabbit_full.png'
@@ -171,11 +171,11 @@ export function Mypage(props) {
         </IconButton>
       </div>
       <div style={{position: 'absolute', top: '24px', display: 'flex', justifyContent: 'center', width: '100%'}}>
-        <Logo />
+        <BackLogo />
       </div>
       <Grid container item 
         textAlign="start" justifyContent="center" alignItems="center" 
-        sx={{height: '100%'}}
+        sx={{height: '100%', paddingTop: '6%'}}
       >  
         <Grid container item
           direction="column" alignItems="end"
