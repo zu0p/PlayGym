@@ -1,4 +1,4 @@
-## <img src="README.assets/team.png" alt="team-50px" style="height:10px" />Member
+## 👨‍👨‍👦‍👦Member
 
 | Name     | 여정동 | 김동윤 | 박주영 | 문영화 | 최정훈 |
 | -------- | ------ | ------ | ------ | ------ | ------ |
@@ -6,7 +6,7 @@
 | Position | BE     | FE     | FE     | BE     | BE     |
 | Git      |        |        |        |        |        |
 
-## <img src="README.assets/service.png" alt="service" style="zoom:6%;" />Service
+## 🤩Service
 
 ### Main
 
@@ -62,7 +62,7 @@
 
 
 
-## <img src="README.assets/flow-diagram.png" alt="flow-diagram" style="zoom:6%;" />배포 플로우
+## 😎배포 플로우
 
 <img src="README.assets/image-20211118094633070.png" alt="image-20211118094633070" style="zoom:140%;" />
 
@@ -70,7 +70,7 @@
 
 
 
-## <img src="README.assets/skill.png" alt="skill" style="zoom:6%;" />기술 스택
+## ✨ 기술 스택
 
 ### BackEnd
 
@@ -126,7 +126,7 @@
 
 
 
-## <img src="README.assets/docs.png" alt="docs" style="zoom:6%;" />Project Docs
+## 📜Project Docs
 
 [Notion](https://www.notion.so/a8fb48ff8642477197050c4d672b69a4)
 
