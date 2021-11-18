@@ -160,17 +160,19 @@ export function FollowMe(props) {
       })
 
     drawPose(pose)
-    // if (idx.current === 1) {
-    if (idx.current === exerciseList.current.asset.length) {
+    if (idx.current === 4) {
+    // if (idx.current === exerciseList.current.asset.length) {
       handleEnd()
       return
     }
 
     switch (isStarted.current) {
       case false:
-        if (!isEngaged.current) 
-          handleStart()
+        if (!isEngaged.current) {
           isNextLoading.current = false
+          successFlag.current = false
+          handleStart()
+        }
         break
       case true:
         await predict(posenetOutput)
@@ -180,29 +182,30 @@ export function FollowMe(props) {
               if (successFlag.current) return;
               
               successThreshold.current += 1
-              if (successThreshold.current > 20) {
+              if (successThreshold.current > 40) {
                 successThreshold.current = 0
                 successCount.current += 1
                 successFlag.current = true
               }
             } else {
               if (successThreshold.current >= 1)
-                successThreshold.current -= 2
+                successThreshold.current -= 2;
             }
           })
           .catch(err => console.log)
 
+        // 아이참재미있다 이후
         if (audioRef.current.paused) {
           if (isNextLoading.current) return;
           isNextLoading.current = true
+          
           if (!isMount.current) return;
-
           successFlag.current ? stepHandler(true) : stepHandler(false)            
           idx.current += 1
-          setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
+          setProgressData(Number((idx.current / 4).toFixed(2)) * 100)
+          // setProgressData(Number((idx.current / exerciseList.current.asset.length).toFixed(2)) * 100)
           isStarted.current = false
         }
-
         break
       default:
     }
@@ -289,6 +292,7 @@ export function FollowMe(props) {
     isEngaged.current = true
     idx.current % 2 ? playBGM(interlude2) : playBGM(interlude1)
 
+    // 동물사진넣으려면여기수정
     await (async function() {
       for (let sec = 0; sec < 4; sec++) {
         for (let i = 0; i < 4; i++) {
@@ -301,7 +305,10 @@ export function FollowMe(props) {
       setImage(monkey1)
     })()
 
-    await delay(2600)
+    // if (!isMount.current) return;
+    // setImage(doggy)
+
+    await delay(2600)  // 4000 + 2600 = 6600
     if(!isMount.current)
       return
     setImage(`${exerciseList.current.asset[idx.current].image}`)
@@ -327,7 +334,7 @@ export function FollowMe(props) {
 
   const handleEnd = () => {
     cancelAnimationFrame(requestRef.current)
-    if (successCount.current > 4) {
+    if (successCount.current >= 2) {
       dispatch(requestGameSuccessSave())
       setGameRes(1)
     }
@@ -359,11 +366,13 @@ export function FollowMe(props) {
       case true:
         canvasRef.current.style.border = '10px #A3C653 solid'
         await delay(1000)
+        if (!isMount.current) return
         canvasRef.current.style.border = ''
         break
       case false:
         canvasRef.current.style.border = '10px #AC3943 solid'
         await delay(1000)
+        if (!isMount.current) return
         canvasRef.current.style.border = ''
         break
       default:
