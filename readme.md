@@ -1,4 +1,4 @@
-## <img src="README.assets/team.png" alt="team-50px" style="zoom:6%;" />Member
+## <img src="README.assets/team.png" alt="team-50px" style="height:10px" />Member
 
 | Name     | 여정동 | 김동윤 | 박주영 | 문영화 | 최정훈 |
 | -------- | ------ | ------ | ------ | ------ | ------ |
