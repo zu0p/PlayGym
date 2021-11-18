@@ -57,6 +57,10 @@ public class GameServiceImpl implements GameService {
 			}
 			List<Map<String, Object>> assets = new ArrayList<Map<String, Object>>(); 
 			for(int i = 0; i < temp.length; i++) {
+				
+				// 악어 제외
+				if(model.getFollowmeAsset().get(temp[i]).getName().equals("악어")) continue;
+				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("aid", model.getFollowmeAsset().get(temp[i]).getId());
 				map.put("image", model.getFollowmeAsset().get(temp[i]).getImgLink());
