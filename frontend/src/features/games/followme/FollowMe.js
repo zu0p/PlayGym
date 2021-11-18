@@ -266,9 +266,9 @@ export function FollowMe(props) {
       eyeSizeArr.current.push(eyeSize)
       eyeSizeArr.current.shift()
   
-      const minPartConfidence = 0.5
-      window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
-      window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
+      // const minPartConfidence = 0.5
+      // window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
+      // window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
   
       if (pose.keypoints[0].score > 0.8) {
         contextRef.current.drawImage(
