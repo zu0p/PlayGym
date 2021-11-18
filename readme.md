@@ -1,26 +1,132 @@
-## 모션인식을 이용한 유아 활동 게임 서비스
+## <img src="README.assets/team.png" alt="team-50px" style="zoom:6%;" />Member
 
-1. 개요
+| Name     | 여정동 | 김동윤 | 박주영 | 문영화 | 최정훈 |
+| -------- | ------ | ------ | ------ | ------ | ------ |
+| Profile  |        |        |        |        |        |
+| Position | BE     | FE     | FE     | BE     | BE     |
+| Git      |        |        |        |        |        |
 
-   1-1. 프로젝트 개요
+## <img src="README.assets/service.png" alt="service" style="zoom:6%;" />Service
 
-   - 아동을 대상으로 한 운동 플랫폼으로, 모션 인식을 통해 올바른 자세로 운동 효과를 극대화 시키고 게임을 접목시켜 흥미를 유발하여 꾸준한 운동 습관을 가질 수 있도록 돕는 서비스이다.
+### Main
 
-     부가적인 기능으로는 목표를 설정하여 달성 시 보상을 통해 성취감을 증대시킬 수 있고 연속 출석 시 새로운 캐릭터를 얻을 수 있다.
+#### 무궁화 꽃이 피었습니다
 
-   1-2. 배경
+![무꽃피 성공](README.assets/무꽃피 성공.gif)
 
-   - 소아비만 문제의 심각성 → 이후로도 비만일 확률이 높음
-   - 코로나19 사태가 장기화하면서 집안에 머무는 시간이 늘면서 운동 부족과 소아 비만율이 증가
-   - 비만은 생활 환경의 영향을 받는데 원격 수업을 통한 외부 활동 제한
-   - 원격 수업으로 체육 수업 활동이 힘들어졌기 때문에 체육 수업에 해당 웹 서비스를 접목
-   - 어린이들의 경우 기존의 목표 중심인 홈트레이닝 서비스에 흥미를 느끼기가 어려움
-   - 기존 홈트레이닝 서비스는 어린이에 맞춤 운동 과정이 부족
-   - 어린이들의 눈높이에 맞추어 꾸준히 운동시키는 Gamification 적용
+#### 나 처럼 해봐요
 
-2. 차별성
+![나처럼 해봐요](README.assets/나처럼 해봐요.gif)
 
-   - 성인을 중심으로 한 현재 홈 트레이닝과 다르게 아동을 대상으로 한 운동 과정 중심 서비스
-   - 운동을 접해보지 못한 아이들에게 자연스럽게 운동과 친해질 수 있는 기회 제공
-   - 놀이와 같은 체육 프로그램을 통해 아이들의 흥미를 유발하여 정서발달과 건강증진을 함께 도모
+
+
+
+
+### AUTH
+
+#### JOIN
+
+![회원가입](README.assets/회원가입.gif)
+
+
+
+#### LOGIN
+
+![로그인](README.assets/로그인.gif)
+
+
+
+#### UPDATE & DELETE
+
+![회원정보 수정](README.assets/회원정보 수정.gif)
+
+
+
+![회원탈퇴](README.assets/회원탈퇴.gif)
+
+
+
+#### Player ADD
+
+![플레이어 추가](README.assets/플레이어 추가.gif)
+
+#### Player Detail
+
+![플레이어현황](README.assets/플레이어현황.gif)
+
+#### COMPENSATION
+
+![자녀 마이페이지](README.assets/자녀 마이페이지.gif)
+
+
+
+
+
+## <img src="README.assets/flow-diagram.png" alt="flow-diagram" style="zoom:6%;" />배포 플로우
+
+<img src="README.assets/image-20211118094633070.png" alt="image-20211118094633070" style="zoom:140%;" />
+
+
+
+
+
+## <img src="README.assets/skill.png" alt="skill" style="zoom:6%;" />기술 스택
+
+### BackEnd
+
+<details>
+    <summary>기술스택 & 라이브러리</summary>
+    <h4>기술스택 ⚙</h4>
+    <ul>
+        <li>JAVA @openjdk 1.8.0_192</li>
+        <li>Spring-boot @2.5.5</li>
+        <li>MYSQL @8.0.27</li>
+        <li>STS @3.9.14.RELLASE</li>
+    </ul>
+    <h4>라이브러리 📚</h4>
+    <ul>
+        <li>JPA</li>
+        <li>JWT</li>
+        <li>Spring Security</li>
+        <li>lombok</li>
+        <li>modelmapper</li>
+        <li>mysql-connector-java</li>
+        <li>MobileNet</li>
+        <li>Tensorflow</li>
+    </ul>
+</details>
+
+
+
+### FrontEnd
+
+<details>
+    <summary>기술스택 & 라이브러리</summary>
+    <h4>기술스택 ⚙</h4>
+    <ul>
+        <li>JAVA @openjdk 1.8.0_192</li>
+        <li>Spring-boot @2.5.5</li>
+        <li>MYSQL @8.0.27</li>
+        <li>STS @3.9.14.RELLASE</li>
+    </ul>
+    <h4>라이브러리 📚</h4>
+    <ul>
+        <li>JPA</li>
+        <li>JWT</li>
+        <li>Spring Security</li>
+        <li>lombok</li>
+        <li>modelmapper</li>
+        <li>mysql-connector-java</li>
+        <li>MobileNet</li>
+        <li>Tensorflow</li>
+    </ul>
+</details>
+
+
+
+
+
+## <img src="README.assets/docs.png" alt="docs" style="zoom:6%;" />Project Docs
+
+[Notion](https://www.notion.so/a8fb48ff8642477197050c4d672b69a4)
 
