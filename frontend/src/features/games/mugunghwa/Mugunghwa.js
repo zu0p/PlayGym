@@ -75,26 +75,23 @@ export function Mugunghwa(props){
       // console.log('loop')
       await predict()
         .then(res => {
-          isSuccess.current = true
-          cancelAnimationFrame(requestRef.current)
-          requestRef.current = requestAnimationFrame(loop)
-          // if (res === true) {
-          //   successThreshold.current += 1
-          //   // console.log(successThreshold.current)
-          //   if (successThreshold.current > 50){
-          //     isSuccess.current = true
-          //     // console.log('success!!!!!!!!!!!');
-          //   }
-          //   else{
-          //     cancelAnimationFrame(requestRef.current)
-          //     requestRef.current = requestAnimationFrame(loop)
-          //   }
-          // } else {
-          //   if (successThreshold.current > 0)
-          //     successThreshold.current -= 2
-          //   cancelAnimationFrame(requestRef.current)
-          //   requestRef.current = requestAnimationFrame(loop)
-          // }
+          if (res === true) {
+            successThreshold.current += 1
+            // console.log(successThreshold.current)
+            if (successThreshold.current > 50){
+              isSuccess.current = true
+              // console.log('success!!!!!!!!!!!');
+            }
+            else{
+              cancelAnimationFrame(requestRef.current)
+              requestRef.current = requestAnimationFrame(loop)
+            }
+          } else {
+            if (successThreshold.current > 0)
+              successThreshold.current -= 2
+            cancelAnimationFrame(requestRef.current)
+            requestRef.current = requestAnimationFrame(loop)
+          }
           // if(res == true)console.log("true")
           // else console.log("false")
           
