@@ -91,8 +91,9 @@
         <li>lombok</li>
         <li>modelmapper</li>
         <li>mysql-connector-java</li>
+        <li>Teachable Machine</li>
         <li>MobileNet</li>
-        <li>Tensorflow</li>
+        <li>PoseNet</li>
     </ul>
 </details>
 
@@ -104,21 +105,18 @@
     <summary>기술스택 & 라이브러리</summary>
     <h4>기술스택 ⚙</h4>
     <ul>
-        <li>JAVA @openjdk 1.8.0_192</li>
-        <li>Spring-boot @2.5.5</li>
-        <li>MYSQL @8.0.27</li>
-        <li>STS @3.9.14.RELLASE</li>
+        <li>HTML5/CSS3</li>
+        <li>JavaScript</li>
+        <li>React.js</li>
+        <li>VSCode</li>
     </ul>
     <h4>라이브러리 📚</h4>
     <ul>
-        <li>JPA</li>
-        <li>JWT</li>
-        <li>Spring Security</li>
-        <li>lombok</li>
-        <li>modelmapper</li>
-        <li>mysql-connector-java</li>
-        <li>MobileNet</li>
-        <li>Tensorflow</li>
+        <li>axios</li>
+        <li>react-router</li>
+        <li>redux</li>
+        <li>redux-toolkit</li>
+        <li>Material UI</li>
     </ul>
 </details>
 
