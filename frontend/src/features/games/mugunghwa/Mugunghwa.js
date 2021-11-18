@@ -75,25 +75,29 @@ export function Mugunghwa(props){
       // console.log('loop')
       await predict()
         .then(res => {
-          if (res === true) {
-            successThreshold.current += 1
-            // console.log(successThreshold.current)
-            if (successThreshold.current > 50){
-              isSuccess.current = true
-              // console.log('success!!!!!!!!!!!');
-            }
-            else{
-              cancelAnimationFrame(requestRef.current)
-              requestRef.current = requestAnimationFrame(loop)
-            }
-          } else {
-            if (successThreshold.current > 0)
-              successThreshold.current -= 2
-            cancelAnimationFrame(requestRef.current)
-            requestRef.current = requestAnimationFrame(loop)
-          }
+          isSuccess.current = true
+          cancelAnimationFrame(requestRef.current)
+          requestRef.current = requestAnimationFrame(loop)
+          // if (res === true) {
+          //   successThreshold.current += 1
+          //   // console.log(successThreshold.current)
+          //   if (successThreshold.current > 50){
+          //     isSuccess.current = true
+          //     // console.log('success!!!!!!!!!!!');
+          //   }
+          //   else{
+          //     cancelAnimationFrame(requestRef.current)
+          //     requestRef.current = requestAnimationFrame(loop)
+          //   }
+          // } else {
+          //   if (successThreshold.current > 0)
+          //     successThreshold.current -= 2
+          //   cancelAnimationFrame(requestRef.current)
+          //   requestRef.current = requestAnimationFrame(loop)
+          // }
           // if(res == true)console.log("true")
           // else console.log("false")
+          
         }) 
       
         return
@@ -195,9 +199,9 @@ export function Mugunghwa(props){
       Math.pow(pose.keypoints[1].position.y - pose.keypoints[2].position.y, 2)
     )
 
-    const minPartConfidence = 0.5
-    window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
-    window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
+    // const minPartConfidence = 0.5
+    // window.tmPose.drawKeypoints(pose.keypoints, minPartConfidence, contextRef.current);
+    // window.tmPose.drawSkeleton(pose.keypoints, minPartConfidence, contextRef.current);
 
     if (pose.keypoints[0].score > 0.8) {
       contextRef.current.drawImage(

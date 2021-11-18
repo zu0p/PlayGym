@@ -177,20 +177,21 @@ export function FollowMe(props) {
       case true:
         await predict(posenetOutput)
           .then(res => {
-            // console.log(res)
-            if (res === true) {
-              if (successFlag.current) return;
+            // 무조건 넘어감
+            successFlag.current = true
+            // if (res === true) {
+            //   if (successFlag.current) return;
               
-              successThreshold.current += 1
-              if (successThreshold.current > 40) {
-                successThreshold.current = 0
-                successCount.current += 1
-                successFlag.current = true
-              }
-            } else {
-              if (successThreshold.current >= 1)
-                successThreshold.current -= 2;
-            }
+            //   successThreshold.current += 1
+            //   if (successThreshold.current > 40) {
+            //     successThreshold.current = 0
+            //     successCount.current += 1
+            //     successFlag.current = true
+            //   }
+            // } else {
+            //   if (successThreshold.current >= 1)
+            //     successThreshold.current -= 2;
+            // }
           })
           .catch(err => console.log)
 
