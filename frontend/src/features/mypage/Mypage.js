@@ -163,7 +163,14 @@ export function Mypage(props) {
       setTotal(0);
     }
     else{
-      setGetReward(rewards[0].title)
+      for(let i = 0; i<rewards.length; i++){
+        if(rewards[i].status == 'Wait'){        
+          console.log(rewards[i])
+          setGetReward(rewards[i].title)
+          break
+        }
+      }
+      // setGetReward(rewards[0].title)
       setTotal(parseInt((rewards.length - 1) / 2) + 1);
     }
   }, [rewards])
