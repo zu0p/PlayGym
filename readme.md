@@ -66,13 +66,46 @@
 
 <img src="README.assets/image-20211118094633070.png" alt="image-20211118094633070" style="zoom:140%;" />
 
+## 🎨화면 설계서
 
+#### Auth
 
+![image-20211118105056488](README.assets/image-20211118105056488.png)
 
+![image-20211118105152475](README.assets/image-20211118105152475.png)
 
-## ✨ 기술 스택
+![image-20211118105250991](README.assets/image-20211118105250991.png)
 
-### BackEnd
+#### Game
+
+![image-20211118105305840](README.assets/image-20211118105305840.png)
+
+## 👨‍👩‍👧ERD
+
+![image-20211118105450577](README.assets/image-20211118105450577.png)
+
+## 🖥️ EC2 포트
+
+| Port    | 이름                          |
+| ------- | ----------------------------- |
+| 443     | HTTPS                         |
+| 80      | HTTP - HTTPS로 리다이렉트     |
+| 3306    | MYSQL                         |
+| 9090    | Jenkins                       |
+| 8080    | Spring boot Docker Container  |
+| 80, 443 | React, Nginx Docker Container |
+
+## 👨‍👨‍👦‍👦 협업 툴
+
+- Git
+- JIRA
+- Notion
+- Mattermost
+- Gather town
+
+## ✨기술 스택
+
+#### BackEnd
 
 <details>
     <summary>기술스택 & 라이브러리</summary>
@@ -91,32 +124,34 @@
         <li>lombok</li>
         <li>modelmapper</li>
         <li>mysql-connector-java</li>
-        <li>Teachable Machine</li>
         <li>MobileNet</li>
-        <li>PoseNet</li>
+        <li>Tensorflow</li>
     </ul>
 </details>
 
 
 
-### FrontEnd
+#### FrontEnd
 
 <details>
     <summary>기술스택 & 라이브러리</summary>
     <h4>기술스택 ⚙</h4>
     <ul>
-        <li>HTML5/CSS3</li>
-        <li>JavaScript</li>
-        <li>React.js</li>
-        <li>VSCode</li>
+        <li>JAVA @openjdk 1.8.0_192</li>
+        <li>Spring-boot @2.5.5</li>
+        <li>MYSQL @8.0.27</li>
+        <li>STS @3.9.14.RELLASE</li>
     </ul>
     <h4>라이브러리 📚</h4>
     <ul>
-        <li>axios</li>
-        <li>react-router</li>
-        <li>redux</li>
-        <li>redux-toolkit</li>
-        <li>Material UI</li>
+        <li>JPA</li>
+        <li>JWT</li>
+        <li>Spring Security</li>
+        <li>lombok</li>
+        <li>modelmapper</li>
+        <li>mysql-connector-java</li>
+        <li>MobileNet</li>
+        <li>Tensorflow</li>
     </ul>
 </details>
 
