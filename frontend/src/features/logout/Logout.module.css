@@ -1,0 +1,15 @@
+.logout_btn{
+  color: #AC3943 !important;
+  background-color: white !important;
+  position: fixed !important;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+}
+
+.logout_btn:hover{
+  color: white !important;
+  background-color: #AC3943 !important;
+}

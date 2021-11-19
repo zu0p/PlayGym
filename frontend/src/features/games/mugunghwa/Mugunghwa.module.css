@@ -1,0 +1,34 @@
+.mugunghwa_container{
+  background-color: #D5E8A6;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.goalLine{
+  border-right: solid 5px #AC3943;
+  height: 600px;
+  margin-top: 5% !important;
+}
+
+.stepLine{
+  border-left: dotted 4px #22220B;
+  height: 600px;
+  margin-top: 5% !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.nomalLine{
+  height: 600px;
+  margin-top: 5% !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.userBox{
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}

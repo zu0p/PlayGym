@@ -1,0 +1,12 @@
+.login_container{
+  background: #D5E8A6;
+  height: 100vh;
+}
+
+.idAlert{
+  position: fixed;
+  top: 30px;
+  left: 30%;
+  width: 40%;
+  z-index: 100;
+}
