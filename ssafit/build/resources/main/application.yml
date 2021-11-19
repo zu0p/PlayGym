@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+   
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: j5d205
+
+spring:
+  datasource:
+    url: jdbc:mysql://k5d205.p.ssafy.io:3306/finalproject
+    username: ssafy205
+    password: k5d205
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+#    url: jdbc:mysql://localhost:3306/finalproject
+#    username: root
+#    password: ssafy
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hikari:
+#      maximumPoolSize : 50
+      
+  jpa:
+#    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+       show_sql: true
+       format_sql: true
+
+jwt:
+  secret: jwtsecret
+          
+logging.level:
+  org.hibernate.SQL: error
+  
+    
+
+  
